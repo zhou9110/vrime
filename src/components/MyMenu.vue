@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
-import { NButton, NButtonGroup, NIcon, NSpace, NSelect } from 'naive-ui'
+import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex } from 'naive-ui'
 import { WeatherMoon16Regular, Circle16Regular } from '@vicons/fluent'
 import {
   deployed,
@@ -58,6 +58,7 @@ function onSelectIME (value: string) {
 </script>
 
 <template>
+<n-flex justify="space-between">
   <n-space>
     <n-select
       style="width: 160px"
@@ -113,4 +114,5 @@ function onSelectIME (value: string) {
       </n-button>
     </n-button-group>
   </n-space>
+</n-flex>
 </template>

@@ -8,7 +8,8 @@ import {
   darkTheme,
   useOsTheme
 } from 'naive-ui'
-import { MyLayout, MyHeader, MyFooter } from '@libreservice/my-widget'
+import { MyLayout, MyFooter } from '@libreservice/my-widget'
+import MyHeader from "./components/MyHeader.vue"
 import MyPwa from './components/MyPwa.vue'
 import { homepage, appName } from '../package.json'
 
@@ -16,19 +17,15 @@ const osThemeRef = useOsTheme()
 </script>
 
 <template>
-  <my-pwa />
   <n-config-provider :theme="osThemeRef === 'dark' ? darkTheme : null">
     <my-layout>
       <template #header>
         <my-header
-          icon="./LibreService.svg"
+          icon="./icon.svg"
           :homepage="homepage"
         />
       </template>
       <template #content>
-        <div style="cursor: pointer; text-align: center; margin-top: 16px">
-          <n-h1>{{ appName }}</n-h1>
-        </div>
         <n-notification-provider :max="1">
           <n-dialog-provider>
             <n-message-provider>
@@ -40,15 +37,6 @@ const osThemeRef = useOsTheme()
             </n-message-provider>
           </n-dialog-provider>
         </n-notification-provider>
-      </template>
-      <template #footer>
-        <my-footer
-          class="my-footer"
-          :homepage="homepage"
-          commit="__COMMIT__"
-          build-date="__BUILD_DATE__"
-          copyright="2022-2024 Qijia Liu and contributors"
-        />
       </template>
     </my-layout>
   </n-config-provider>

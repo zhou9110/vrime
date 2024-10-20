@@ -24,10 +24,12 @@ import { isMobile, getTextarea } from '../util'
 
 const props = defineProps<{
   debugMode?: boolean
+  showKeyboard: boolean
 }>()
 
 const {
-  debugMode
+  debugMode,
+  showKeyboard
 } = toRefs(props)
 
 const mouseX = ref<number>(0)
@@ -244,7 +246,14 @@ function onKeydown (e: KeyboardEvent) {
   // In edit mode, rime handles every keydown;
   // In non-edit mode, only when the textarea is focused and a printable key is down (w/o modifier) will activate rime.
   if (!editing.value) {
-    if (document.activeElement !== textarea || (!isPrintableKey && key !== 'F4')) {
+    // if (document.activeElement !== textarea || (!isPrintableKey && key !== 'F4')) {
+    if (key === 'Backspace' && showKeyboard.value) {
+      // Delete the last character in the input
+      text.value = text.value.slice(0, -1)
+      return
+    }
+
+    if (!isPrintableKey && key !== 'F4') {
       return
     }
     // Don't send Control+x, Meta+x, Alt+x to librime, but allow them with Shift
@@ -383,7 +392,8 @@ onUnmounted(() => { // Cleanup for HMR
 })
 
 defineExpose({
-  debug
+  debug,
+  onKeydown: onKeydown
 })
 </script>
 

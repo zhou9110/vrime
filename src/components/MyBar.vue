@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { NSpace, NButtonGroup, NButton, NIcon, NCheckbox } from 'naive-ui'
+import { defineProps, computed } from 'vue'
+import { NSpace, NButtonGroup, NButton, NIcon, NCheckbox, NFlex } from 'naive-ui'
 import {
   Cut20Regular,
   Copy20Regular,
@@ -15,6 +16,11 @@ import {
   variant
 } from '../control'
 
+const props = defineProps<{ showKeyboard: boolean }>()
+
+const notShowKeyboard = computed(() => !props.showKeyboard)
+
+
 function copy () {
   const textarea = getTextarea()
   textarea.focus()
@@ -24,6 +30,18 @@ function copy () {
 async function cut () {
   await copy()
   text.value = ''
+}
+
+function clear() {
+  text.value = ''
+}
+
+function notKeyboardShown() {
+  return !(props.showKeyboard)
+}
+
+function handleToggleKeyboard() {
+  this.$emit('toggleKeyboard')
 }
 
 async function copyLink () {
@@ -39,6 +57,7 @@ async function copyLink () {
 </script>
 
 <template>
+<n-flex>
   <n-space style="align-items: center">
     <n-button-group class="square-group">
       <n-button
@@ -64,9 +83,19 @@ async function copyLink () {
     </n-button-group>
     <!-- Least astonishment: user may explicitly cut, so shouldn't overwrite the clipboard. -->
     <n-checkbox v-model:checked="autoCopy">
-      Auto copy on commit
+      自动复制文字
     </n-checkbox>
   </n-space>
+  <n-button
+    secondary
+    @click="clear"
+  >
+    清空
+  </n-button>
+  <n-checkbox :checked="!props.showKeyboard" @update:checked="$emit('toggleKeyboard')">
+    使用系统键盘
+  </n-checkbox>
+</n-flex>
 </template>
 
 <style scoped>
