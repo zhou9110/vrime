@@ -28,6 +28,8 @@ const showAdvanced = ref<boolean>(advancedLoaded.value)
 const editorLoaded = ref<boolean>(advancedLoaded.value && !isMobile.value)
 const showEditor = computed(() => showAdvanced.value && !isMobile.value)
 
+const debugMode = ref<boolean>()
+
 watch(showEditor, (newValue: boolean) => {
   if (newValue) {
     editorLoaded.value = true
@@ -44,6 +46,9 @@ const props = defineProps<{
 }>()
 const { panel } = props
 
+defineExpose({
+  debugMode
+})
 </script>
 
 <template>
@@ -55,7 +60,7 @@ const { panel } = props
       <h3>高级</h3>
       <n-switch :value="showAdvanced" @update:value="toggleAdvanced" />
     </n-space>
-    <component :is="AsyncSimulator" v-if="advancedLoaded" v-show="showAdvanced" ref="simulator" :debug="panel?.debug" />
+    <component :is="AsyncSimulator" v-if="advancedLoaded" v-show="showAdvanced" ref="simulator" :debug="panel?.debug" :debugMode="debugMode" />
     <component :is="AsyncEditor" v-if="editorLoaded" v-show="showEditor" ref="editor" />
     <my-platform />
     <n-p style="margin-top: 10px;">

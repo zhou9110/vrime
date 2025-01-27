@@ -1,0 +1,71 @@
+__build_info:
+  rime_version: 1.8.5
+engine:
+  processors:
+    - key_binder
+    - speller
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - abc_segmentor
+    - fallback_segmentor
+  translators:
+    - table_translator
+key_binder:
+  bindings:
+    - {accept: "Control+p", send: Up, when: composing}
+    - {accept: "Control+n", send: Down, when: composing}
+    - {accept: "Control+b", send: Left, when: composing}
+    - {accept: "Control+f", send: Right, when: composing}
+    - {accept: "Control+a", send: Home, when: composing}
+    - {accept: "Control+e", send: End, when: composing}
+    - {accept: "Control+d", send: Delete, when: composing}
+    - {accept: "Control+k", send: "Shift+Delete", when: composing}
+    - {accept: "Control+h", send: BackSpace, when: composing}
+    - {accept: "Control+g", send: Escape, when: composing}
+    - {accept: "Control+bracketleft", send: Escape, when: composing}
+    - {accept: "Control+y", send: Page_Up, when: composing}
+    - {accept: "Alt+v", send: Page_Up, when: composing}
+    - {accept: "Control+v", send: Page_Down, when: composing}
+    - {accept: ISO_Left_Tab, send: "Shift+Left", when: composing}
+    - {accept: "Shift+Tab", send: "Shift+Left", when: composing}
+    - {accept: Tab, send: "Shift+Right", when: composing}
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+    - {accept: comma, send: Page_Up, when: paging}
+    - {accept: period, send: Page_Down, when: has_menu}
+    - {accept: "Control+Shift+1", select: .next, when: always}
+    - {accept: "Control+Shift+2", toggle: ascii_mode, when: always}
+    - {accept: "Control+Shift+3", toggle: full_shape, when: always}
+    - {accept: "Control+Shift+4", toggle: simplification, when: always}
+    - {accept: "Control+Shift+5", toggle: extended_charset, when: always}
+    - {accept: "Control+Shift+exclam", select: .next, when: always}
+    - {accept: "Control+Shift+at", toggle: ascii_mode, when: always}
+    - {accept: "Control+Shift+numbersign", toggle: full_shape, when: always}
+    - {accept: "Control+Shift+dollar", toggle: simplification, when: always}
+    - {accept: "Control+Shift+percent", toggle: extended_charset, when: always}
+  import_preset: default
+menu:
+  page_size: 5
+schema:
+  author:
+    - "Patrick <ipatrickmac@qq.com>"
+    - "GONG Chen <chen.sst@gmail.com>"
+  description: |
+    IPA input method in X-SAMPA.
+    http://en.wikipedia.org/wiki/X-SAMPA
+
+  name: "X-SAMPA"
+  schema_id: ipa_xsampa
+  version: 0.4
+speller:
+  alphabet: "ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba_<>\\`~.\"%':@{}1234567890&?!^|=-+/"
+  auto_select: true
+  delimiter: " "
+translator:
+  comment_format:
+    - "xform/^~//"
+  dictionary: ipa_xsampa
+  enable_sentence: false
+  enable_user_dict: false

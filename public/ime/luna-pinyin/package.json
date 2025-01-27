@@ -1,0 +1,1 @@
+{"name":"@rime-contrib/luna-pinyin","version":"0.10.9","files":["luna_pinyin.prism.bin","luna_pinyin.reverse.bin","luna_pinyin.schema.yaml","luna_pinyin.table.bin","luna_pinyin_fluency.schema.yaml","luna_quanpin.prism.bin","luna_quanpin.schema.yaml"],"license":"LGPL-3.0-only"}

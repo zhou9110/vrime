@@ -1,0 +1,72 @@
+__build_info:
+  rime_version: 1.8.5
+engine:
+  processors:
+    - key_binder
+    - speller
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - abc_segmentor
+    - fallback_segmentor
+  translators:
+    - table_translator
+key_binder:
+  bindings:
+    - {accept: "Control+p", send: Up, when: composing}
+    - {accept: "Control+n", send: Down, when: composing}
+    - {accept: "Control+b", send: Left, when: composing}
+    - {accept: "Control+f", send: Right, when: composing}
+    - {accept: "Control+a", send: Home, when: composing}
+    - {accept: "Control+e", send: End, when: composing}
+    - {accept: "Control+d", send: Delete, when: composing}
+    - {accept: "Control+k", send: "Shift+Delete", when: composing}
+    - {accept: "Control+h", send: BackSpace, when: composing}
+    - {accept: "Control+g", send: Escape, when: composing}
+    - {accept: "Control+bracketleft", send: Escape, when: composing}
+    - {accept: "Control+y", send: Page_Up, when: composing}
+    - {accept: "Alt+v", send: Page_Up, when: composing}
+    - {accept: "Control+v", send: Page_Down, when: composing}
+    - {accept: ISO_Left_Tab, send: "Shift+Left", when: composing}
+    - {accept: "Shift+Tab", send: "Shift+Left", when: composing}
+    - {accept: Tab, send: "Shift+Right", when: composing}
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+    - {accept: comma, send: Page_Up, when: paging}
+    - {accept: period, send: Page_Down, when: has_menu}
+    - {accept: "Control+Shift+1", select: .next, when: always}
+    - {accept: "Control+Shift+2", toggle: ascii_mode, when: always}
+    - {accept: "Control+Shift+3", toggle: full_shape, when: always}
+    - {accept: "Control+Shift+4", toggle: simplification, when: always}
+    - {accept: "Control+Shift+5", toggle: extended_charset, when: always}
+    - {accept: "Control+Shift+exclam", select: .next, when: always}
+    - {accept: "Control+Shift+at", toggle: ascii_mode, when: always}
+    - {accept: "Control+Shift+numbersign", toggle: full_shape, when: always}
+    - {accept: "Control+Shift+dollar", toggle: simplification, when: always}
+    - {accept: "Control+Shift+percent", toggle: extended_charset, when: always}
+  import_preset: default
+menu:
+  page_size: 5
+schema:
+  author:
+    - "編碼設計：潘悟雲、李龍"
+    - "整理：采采卷耳"
+    - "輸入方案設計：佛振"
+  description: |
+    通過字母、數字和符號轉寫輸入國際音標（IPA）
+    https://en.wikipedia.org/wiki/International_Phonetic_Alphabet
+
+  name: "雲龍國際音標"
+  schema_id: ipa_yunlong
+  version: 5.2
+speller:
+  alphabet: "!'()+-./0123456789:<=>?HL[\\]^`abcdefghijklmnopqrstuvwxyz|~"
+  auto_select: true
+  initials: "!()/0123456789:?HL\\]abcdefghijklmnopqrstuvwxyz|"
+translator:
+  comment_format:
+    - "xform/^~//"
+  dictionary: ipa_yunlong
+  enable_sentence: false
+  enable_user_dict: false

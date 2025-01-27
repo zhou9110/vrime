@@ -1,0 +1,1 @@
+{"name":"@rime-contrib/wubi","version":"0.10.9","files":["wubi86.prism.bin","wubi86.reverse.bin","wubi86.schema.yaml","wubi86.table.bin","wubi_pinyin.prism.bin","wubi_pinyin.schema.yaml","wubi_trad.prism.bin","wubi_trad.schema.yaml"],"license":"LGPL-3.0-only"}

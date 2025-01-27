@@ -52,6 +52,8 @@ function onFocus() {
 const inputInstRef = ref<InputInst>()
 const panel = ref<InstanceType<typeof MyPanel>>()
 
+const simulatorDebugMode = ref<boolean>()
+
 const showKeyboard = ref(true)
 
 // Select all
@@ -110,7 +112,7 @@ function triggerPanelKeyDown(button: string) {
 <template>
   <n-drawer v-model:show="showDrawer" width="85vw" placement="right">
     <n-drawer-content title="设置">
-      <SideDrawer :panel="panel" />
+      <SideDrawer ref="drawer" :debugMode="simulatorDebugMode" :panel="panel" />
     </n-drawer-content>
   </n-drawer>
   <n-flex vertical class="my-column">
@@ -125,6 +127,6 @@ function triggerPanelKeyDown(button: string) {
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard"
       @select-all="selectAll" />
     <SimpleKeyboard v-if="showKeyboard" @onKeyPress="triggerPanelKeyDown" />
-    <my-panel ref="panel" :debug-mode="simulator?.debugMode" :showKeyboard="showKeyboard" />
+    <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
   </n-flex>
 </template>
