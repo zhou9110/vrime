@@ -13,19 +13,19 @@ watchEffect(() => {
 })
 
 const options = [
-  { label: 'default', value: 0 },
+  { label: '默认', value: 0 },
   ...Array.from({ length: 10 }, (_, i) => ({ label: (i + 1).toString(), value: i + 1 }))
 ]
 </script>
 
 <template>
   <n-space style="align-items: center">
-    <h3>Appearance</h3>
+    <h3>外观</h3>
     <n-checkbox v-model:checked="forceVertical">
-      Force vertical
+      垂直排列候选词
     </n-checkbox>
     <n-space style="align-items: center">
-      Number of candidates
+      候选词个数
       <n-select
         v-model:value="pageSize"
         style="width: 96px"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import {
   NConfigProvider,
   NNotificationProvider,
@@ -6,24 +7,21 @@ import {
   NMessageProvider,
   NH1,
   darkTheme,
-  useOsTheme
+  useOsTheme,
+  zhCN
 } from 'naive-ui'
-import { MyLayout, MyFooter } from '@libreservice/my-widget'
-import MyHeader from "./components/MyHeader.vue"
-import MyPwa from './components/MyPwa.vue'
+import MyHeader from './components/MyHeader.vue'
+import MyLayout from './components/MyLayout.vue'
+import MyFooter from './components/MyFooter.vue'
+import { currentTheme } from "./util"
 import { homepage, appName } from '../package.json'
-
-const osThemeRef = useOsTheme()
 </script>
 
 <template>
-  <n-config-provider :theme="osThemeRef === 'dark' ? darkTheme : null">
+  <n-config-provider :theme="currentTheme === 'dark' ? darkTheme : null" :locale="zhCN">
     <my-layout>
       <template #header>
-        <my-header
-          icon="./icon.svg"
-          :homepage="homepage"
-        />
+        <my-header icon="./icon.svg" :homepage="homepage" />
       </template>
       <template #content>
         <n-notification-provider :max="1">

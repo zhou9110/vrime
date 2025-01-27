@@ -20,41 +20,6 @@
     "license": "LGPL-3.0-only"
   },
   {
-    "id": "jyut6ping3",
-    "name": "粤语拼音",
-    "group": "方言",
-    "target": "cantonese",
-    "dependencies": ["luna_pinyin", "stroke", "cangjie5"],
-    "variants": [
-      {
-        "id": "simplification",
-        "name": "简"
-      },
-      {
-        "id": "noop",
-        "name": "繁"
-      },
-      {
-        "id": "variants_hk",
-        "name": "港",
-        "languages": ["zh-HK"]
-      },
-      {
-        "id": "trad_tw",
-        "name": "臺",
-        "languages": ["zh-TW"]
-      }
-    ],
-    "hideComment": "emoji",
-    "family": [
-      {
-        "id": "jyut6ping3_ipa",
-        "name": "粤语拼音·IPA"
-      }
-    ],
-    "license": "CC-BY-4.0"
-  },
-  {
     "id": "double_pinyin",
     "name": "自然码双拼",
     "group": "双拼",
@@ -128,22 +93,6 @@
     "license": "LGPL-3.0-only"
   },
   {
-    "id": "ipa_xsampa",
-    "name": "X-SAMPA",
-    "group": "音标",
-    "target": "ipa",
-    "variants": [],
-    "license": "LGPL-3.0-only"
-  },
-  {
-    "id": "ipa_yunlong",
-    "name": "云龙国际音标",
-    "group": "音标",
-    "target": "ipa",
-    "variants": [],
-    "license": "LGPL-3.0-only"
-  },
-  {
     "id": "bopomofo",
     "name": "注音",
     "group": "音码",
@@ -205,28 +154,6 @@
     "dependencies": ["luna_quanpin"],
     "extended": true,
     "hideComment": "emoji",
-    "license": "GPL-3.0-only"
-  },
-  {
-    "id": "wugniu_lopha",
-    "name": "上海吴语·老派",
-    "group": "方言",
-    "target": "wugniu",
-    "dependencies": ["luna_pinyin"],
-    "family": [
-      {
-        "id": "wugniu",
-        "name": "上海吴语·新派"
-      }
-    ],
-    "license": "GPL-3.0-only"
-  },
-  {
-    "id": "soutzoe",
-    "name": "苏州吴语",
-    "group": "方言",
-    "target": "soutzoe",
-    "dependencies": ["luna_pinyin"],
     "license": "GPL-3.0-only"
   },
   {

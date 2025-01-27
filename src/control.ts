@@ -31,7 +31,7 @@ const SIMPLIFICATION = 'simplification'
 
 const deployed = ref<boolean>(false)
 
-function savedBooleanRef (key: string, initial: boolean) {
+export function savedBooleanRef (key: string, initial: boolean) {
   const box = ref<boolean>(initial ? localStorage.getItem(key) !== 'false' : localStorage.getItem(key) === 'true')
   watchEffect(() => {
     localStorage.setItem(key, box.value.toString())
@@ -41,6 +41,8 @@ function savedBooleanRef (key: string, initial: boolean) {
 
 const AUTO_COPY = 'autoCopy'
 const autoCopy = savedBooleanRef(AUTO_COPY, false)
+
+const copiedText = ref('')
 
 const FORCE_VERTICAL = 'forceVertical'
 const forceVertical = savedBooleanRef(FORCE_VERTICAL, false)
@@ -388,6 +390,7 @@ export {
   text,
   deployed,
   autoCopy,
+  copiedText,
   forceVertical,
   loading,
   schemaId,

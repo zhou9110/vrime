@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue'
-import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex } from 'naive-ui'
-import { WeatherMoon16Regular, Circle16Regular } from '@vicons/fluent'
+import { computed, watchEffect } from "vue";
+import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex, NTooltip } from "naive-ui";
+import { WeatherMoon16Regular, Circle16Regular } from "@vicons/fluent";
 import {
   deployed,
   loading,
@@ -23,96 +23,101 @@ import {
   changeCharset,
   changePunctuation,
   changeEmoji,
-  selectIME
-} from '../control'
-import { getTextarea } from '../util'
+  selectIME,
+} from "../control";
+import { getTextarea } from "../util";
 
-const variantLabel = computed(() => showVariant.value && !deployed.value ? variant.value.name : '')
-const singleVariant = computed(() => !deployed.value && variants.value.length === 1)
+const variantLabel = computed(() =>
+  showVariant.value && !deployed.value ? variant.value.name : ""
+);
+const singleVariant = computed(() => !deployed.value && variants.value.length === 1);
 
 watchEffect(() => {
   if (ime.value) {
-    localStorage.setItem('schemaId', ime.value)
+    localStorage.setItem("schemaId", ime.value);
   }
   if (variantLabel.value) {
-    localStorage.setItem('variantName', variantLabel.value)
+    localStorage.setItem("variantName", variantLabel.value);
   }
-})
+});
 
-async function switchVariant () {
-  showVariant.value = false
-  await changeVariant()
-  showVariant.value = true
+async function switchVariant() {
+  showVariant.value = false;
+  await changeVariant();
+  showVariant.value = true;
 }
 
-const extendedDisabled = computed(() => ime.value !== schemaId.value || !schemaExtended.includes(ime.value))
+const extendedDisabled = computed(
+  () => ime.value !== schemaId.value || !schemaExtended.includes(ime.value)
+);
 
-function resetFocus () {
-  getTextarea().focus()
+function resetFocus() {
+  getTextarea().focus();
 }
 
-function onSelectIME (value: string) {
-  resetFocus()
-  selectIME(value)
+function onSelectIME(value: string) {
+  resetFocus();
+  selectIME(value);
 }
 </script>
 
 <template>
-<n-flex justify="space-between">
-  <n-space>
-    <n-select
-      style="width: 160px"
-      :value="ime"
-      :options="selectOptions"
-      :loading="loading"
-      @update:value="onSelectIME"
-    />
-    <n-button-group
-      class="square-group"
-      @click="resetFocus"
-    >
-      <n-button
-        secondary
-        @click="changeLanguage"
-      >
-        {{ isEnglish ? 'En' : '中' }}
-      </n-button>
-      <n-button
-        secondary
-        :disabled="isEnglish || singleVariant || deployed"
-        @click="switchVariant"
-      >
-        {{ variantLabel }}
-      </n-button>
-      <n-button
-        secondary
-        @click="changeWidth"
-      >
-        <template #icon>
-          <n-icon :component="isFullWidth ? Circle16Regular : WeatherMoon16Regular" />
-        </template>
-      </n-button>
-      <n-button
-        secondary
-        :disabled="extendedDisabled"
-        @click="changeCharset"
-      >
-        {{ extendedDisabled ? '' : isExtendedCharset ? '增' : '常' }}
-      </n-button>
-      <n-button
-        secondary
-        :disabled="isEnglish"
-        @click="changePunctuation"
-      >
-        {{ isEnglishPunctuation ? '.' : '。' }}
-      </n-button>
-      <n-button
-        secondary
-        @click="changeEmoji"
-      >
-        {{ enableEmoji ? '😀' : '🚫' }}
-      </n-button>
-    </n-button-group>
-  </n-space>
-</n-flex>
+  <n-flex justify="space-between">
+    <n-space>
+      <n-select style="width: 160px" :value="ime" :options="selectOptions" :loading="loading"
+        @update:value="onSelectIME" size="large" />
+      <n-button-group class="square-group" @click="resetFocus" size="large">
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary @click="changeLanguage">
+              {{ isEnglish ? "En" : "中" }}
+            </n-button>
+          </template>
+          中英文切换
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary :disabled="isEnglish || singleVariant || deployed" @click="switchVariant">
+              {{ variantLabel }}
+            </n-button>
+          </template>
+          简/繁
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary @click="changeWidth">
+              <template #icon>
+                <n-icon :component="isFullWidth ? Circle16Regular : WeatherMoon16Regular" />
+              </template>
+            </n-button>
+          </template>
+          全角/半角
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary :disabled="extendedDisabled" @click="changeCharset">
+              {{ extendedDisabled ? "" : isExtendedCharset ? "增" : "常" }}
+            </n-button>
+          </template>
+          常用字符集/增强字符集
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary :disabled="isEnglish" @click="changePunctuation">
+              {{ isEnglishPunctuation ? "." : "。" }}
+            </n-button>
+          </template>
+          中文/英文标点符号
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-button secondary @click="changeEmoji">
+              {{ enableEmoji ? "😀" : "🚫" }}
+            </n-button>
+          </template>
+          在候选词里显示Emoji
+        </n-tooltip>
+      </n-button-group>
+    </n-space>
+  </n-flex>
 </template>

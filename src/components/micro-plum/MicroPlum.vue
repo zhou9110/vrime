@@ -102,7 +102,7 @@ async function onReset () {
 
 <template>
   <n-space style="align-items: center">
-    <h3>Add new schemas</h3>
+    <h3>添加新输入方案</h3>
     <n-button
       secondary
       type="info"

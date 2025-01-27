@@ -1,10 +1,13 @@
-# My RIME 梧桐输入法
+# 在线中文输入法 (VR用)
+
+### 该项目基于 My RIME 梧桐输入法 改造
 ![](https://img.shields.io/github/license/LibreService/my_rime)
 
-Online Chinese IME powered by [RIME](https://github.com/rime/librime).
+Online Chinese IME powered by [My RIME](https://github.com/LibreService/my_rime) and [RIME](https://github.com/rime/librime).
 
-https://my-rime.vercel.app/
+Site: https://vr-pinyin.netlify.app/
 
+#### 该项目的详细文档待补充，以下是原项目文档
 
 This is a **STATIC** website so you **DON'T** need to own a server to host it.
 
@@ -140,3 +143,6 @@ Let's say the IP address of the container is 172.17.0.2 (got by `docker inspect 
 
 ## License
 AGPLv3+
+
+## Donate
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O4O515LV4N)

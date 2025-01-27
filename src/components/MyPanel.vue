@@ -13,6 +13,7 @@ import {
 import {
   text,
   autoCopy,
+  copiedText,
   forceVertical,
   loading,
   hideComment,
@@ -55,13 +56,13 @@ const showMenu = ref<boolean>(false)
 const xOverflow = ref<boolean>(false)
 const exclusiveShift = ref<boolean>(false)
 
-async function debug (e: KeyboardEvent, rimeKey: string) {
+async function debug(e: KeyboardEvent, rimeKey: string) {
   editing.value = true
   await input(rimeKey);
   (e.target as HTMLElement).focus()
 }
 
-const RIME_KEY_MAP: {[key: string]: string | undefined} = {
+const RIME_KEY_MAP: { [key: string]: string | undefined } = {
   Escape: 'Escape',
   F4: 'F4',
   Backspace: 'BackSpace',
@@ -114,29 +115,58 @@ const RIME_KEY_MAP: {[key: string]: string | undefined} = {
 
 const CONTROL_ALLOWLIST = ['`']
 
-function isPrintable (key: string) {
+function isPrintable(key: string) {
   return /^[a-z0-9!"#$%&'()*+,./:;<=>?@[\] ^_`{|}~\\-]$/i.test(key)
 }
 
 const regex = emojiRegex()
-function isEmoji (c: string) {
+function isEmoji(c: string) {
   regex.lastIndex = 0
   return regex.test(c)
 }
 
-function insert (toInsert: string) {
+function insert(toInsert: string) {
   const textarea = getTextarea()
   const { selectionStart, selectionEnd } = textarea
   text.value = text.value.slice(0, selectionStart) + toInsert + text.value.slice(selectionEnd)
   if (autoCopy.value) {
     navigator.clipboard.writeText(text.value)
+    copiedText.value = text.value
   }
   nextTick(() => {
     textarea.selectionEnd = selectionStart + toInsert.length
+    textarea.selectionStart = selectionStart + toInsert.length
   })
 }
 
-async function analyze (result: RIME_RESULT, rimeKey: string) {
+function handleBackspace() {
+  const textarea = getTextarea()
+  const { selectionStart, selectionEnd } = textarea
+  console.log({ selectionStart, selectionEnd })
+  let newSelectionStart = undefined
+  let newSelectionEnd = undefined
+  if (selectionStart !== selectionEnd) {
+    // Just delete the selected part
+    text.value = text.value.slice(0, selectionStart) + text.value.slice(selectionEnd)
+    newSelectionStart = selectionStart
+    newSelectionEnd = selectionStart
+  } else {
+    // Remove the character before the cursor
+    text.value = text.value.slice(0, selectionStart - 1) + text.value.slice(selectionEnd)
+    newSelectionStart = selectionStart - 1
+    newSelectionEnd = selectionStart - 1
+  }
+  if (autoCopy.value) {
+    navigator.clipboard.writeText(text.value)
+    copiedText.value = text.value
+  }
+  nextTick(() => {
+    textarea.selectionStart = newSelectionStart
+    textarea.selectionEnd = newSelectionEnd
+  })
+}
+
+async function analyze(result: RIME_RESULT, rimeKey: string) {
   const textarea = getTextarea()
   if (!('updatedSchema' in result) && result.updatedOptions) {
     syncOptions(result.updatedOptions)
@@ -182,11 +212,17 @@ async function analyze (result: RIME_RESULT, rimeKey: string) {
     if (result.state === 3 && isPrintable(rimeKey)) {
       insert(rimeKey)
     }
+    if (result.state === 3 && rimeKey === "{BackSpace}") {
+      handleBackspace()
+    }
+    if (result.state === 3 && rimeKey === "{Return}") {
+      insert("\n")
+    }
   }
   textarea.focus()
 }
 
-async function input (rimeKey: string) {
+async function input(rimeKey: string) {
   const result = await process(rimeKey)
   return analyze(result, rimeKey)
 }
@@ -202,8 +238,8 @@ watch(text, (acNewText, acText) => {
   }
   androidChromium = false
   if (acText.length + 1 === acNewText.length &&
-      acText.substring(0, acStart) === acNewText.substring(0, acStart) &&
-      acText.substring(acEnd) === acNewText.substring(acEnd + 1)) {
+    acText.substring(0, acStart) === acNewText.substring(0, acStart) &&
+    acText.substring(acEnd) === acNewText.substring(acEnd + 1)) {
     const textarea = getTextarea()
     text.value = acText
     nextTick(() => {
@@ -215,7 +251,7 @@ watch(text, (acNewText, acText) => {
 })
 // end: code specific to Android Chromium
 
-function onKeydown (e: KeyboardEvent) {
+function onKeydown(e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
     return
   }
@@ -244,16 +280,20 @@ function onKeydown (e: KeyboardEvent) {
   const isShortcut = hasControl || hasMeta || hasAlt || (hasShift && !isPrintableKey)
 
   // In edit mode, rime handles every keydown;
-  // In non-edit mode, only when the textarea is focused and a printable key is down (w/o modifier) will activate rime.
+  // In non-edit mode, only when the textarea is focused and a printable key (and Backspace) is down (w/o modifier) will activate rime.
   if (!editing.value) {
-    // if (document.activeElement !== textarea || (!isPrintableKey && key !== 'F4')) {
-    if (key === 'Backspace' && showKeyboard.value) {
+    if (!showKeyboard.value && (document.activeElement !== textarea || (!isPrintableKey && key !== 'F4'))) {
+      // if (key === 'Backspace' && showKeyboard.value) {
       // Delete the last character in the input
-      text.value = text.value.slice(0, -1)
+      // text.value = text.value.slice(0, -1)
+      // if (autoCopy.value) {
+      //   copiedText.value = text.value
+      // }
       return
     }
-
-    if (!isPrintableKey && key !== 'F4') {
+    // Other keys needs to be handled
+    const otherImportantKeys = ['F4', 'Backspace', 'Enter']
+    if (!isPrintableKey && !otherImportantKeys.includes(key)) {
       return
     }
     // Don't send Control+x, Meta+x, Alt+x to librime, but allow them with Shift
@@ -303,7 +343,7 @@ function onKeydown (e: KeyboardEvent) {
   input(rimeKey)
 }
 
-function onKeyup (e: KeyboardEvent) {
+function onKeyup(e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
     return
   }
@@ -317,21 +357,21 @@ function onKeyup (e: KeyboardEvent) {
   }
 }
 
-async function onClick (key: number) {
+async function onClick(key: number) {
   const result = JSON.parse(await selectCandidateOnCurrentPage(key))
   return analyze(result, '')
 }
 
-async function onPageChange (backward: boolean) {
+async function onPageChange(backward: boolean) {
   const result = JSON.parse(await changePage(backward))
   return analyze(result, '')
 }
 
-function singleTouch (e: TouchEvent) {
+function singleTouch(e: TouchEvent) {
   return e.touches.length === 1 ? e.touches[0] : undefined
 }
 
-function handleDown (clientX: number, clientY: number) {
+function handleDown(clientX: number, clientY: number) {
   mouseX.value = clientX
   mouseY.value = clientY
   // As flip is turned on, update x to actual position to avoid layout shift on click
@@ -340,16 +380,16 @@ function handleDown (clientX: number, clientY: number) {
   dragging.value = true
 }
 
-function onMousedown (e: MouseEvent) {
+function onMousedown(e: MouseEvent) {
   handleDown(e.clientX, e.clientY)
 }
 
-function onTouchstart (e: TouchEvent) {
+function onTouchstart(e: TouchEvent) {
   const touch = singleTouch(e)
   touch && handleDown(touch.clientX, touch.clientY)
 }
 
-function handleMove (clientX: number, clientY: number) {
+function handleMove(clientX: number, clientY: number) {
   if (!dragging.value) {
     return
   }
@@ -360,16 +400,16 @@ function handleMove (clientX: number, clientY: number) {
   mouseY.value = clientY
 }
 
-function onMousemove (e: MouseEvent) {
+function onMousemove(e: MouseEvent) {
   handleMove(e.clientX, e.clientY)
 }
 
-function onTouchmove (e: TouchEvent) {
+function onTouchmove(e: TouchEvent) {
   const touch = singleTouch(e)
   touch && handleMove(touch.clientX, touch.clientY)
 }
 
-function onMouseupOrTouchend () {
+function onMouseupOrTouchend() {
   dragging.value = false
 }
 
@@ -393,23 +433,13 @@ onUnmounted(() => { // Cleanup for HMR
 
 defineExpose({
   debug,
-  onKeydown: onKeydown
+  onKeydown: onKeydown,
 })
 </script>
 
 <template>
-  <n-popover
-    :show="showMenu"
-    :show-arrow="false"
-    :x="x"
-    :y="y"
-    :flip="!dragging"
-    placement="bottom-start"
-    trigger="manual"
-    style="cursor: move"
-    @mousedown="onMousedown"
-    @touchstart="onTouchstart"
-  >
+  <n-popover :show="showMenu" :show-arrow="false" :x="x" :y="y" :flip="!dragging" placement="bottom-start"
+    trigger="manual" style="cursor: move" @mousedown="onMousedown" @touchstart="onTouchstart">
     <n-text type="success">
       {{ preEditHead }}
     </n-text>&nbsp;
@@ -417,36 +447,20 @@ defineExpose({
       {{ preEditBody }}
     </n-text>&nbsp;
     {{ preEditTail }}
-    <n-menu
-      v-show="menuOptions.length"
-      :options="menuOptions"
-      :mode="forceVertical || isMobile || xOverflow ? 'vertical' : 'horizontal'"
-      :value="highlighted"
-      @update:value="onClick"
-    />
-    <n-button
-      text
-      :disabled="prevDisabled"
-    >
-      <n-icon
-        :component="CaretLeft"
-        @click="onPageChange(true)"
-      />
+    <n-menu v-show="menuOptions.length" :options="menuOptions"
+      :mode="forceVertical || isMobile || xOverflow ? 'vertical' : 'horizontal'" :value="highlighted"
+      @update:value="onClick" />
+    <n-button quaternary :disabled="prevDisabled">
+      <n-icon :component="CaretLeft" @click="onPageChange(true)" size="20" />
     </n-button>
-    <n-button
-      text
-      :disabled="nextDisabled"
-    >
-      <n-icon
-        :component="CaretRight"
-        @click="onPageChange(false)"
-      />
+    <n-button quaternary :disabled="nextDisabled">
+      <n-icon :component="CaretRight" @click="onPageChange(false)" size="20" />
     </n-button>
   </n-popover>
 </template>
 
 <style>
 .n-menu-item-content-header {
-  overflow: visible!important;
+  overflow: visible !important;
 }
 </style>

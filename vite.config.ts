@@ -1,6 +1,7 @@
 import { execSync } from 'child_process'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import replace from '@rollup/plugin-replace'
 import { run } from 'vite-plugin-run'
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
@@ -44,7 +45,7 @@ const plugins = [
       short_name: appName,
       icons: [
         {
-          src: 'LibreService.svg',
+          src: 'icon.svg',
           sizes: 'any',
           type: 'image/svg+xml',
           purpose: 'any maskable',
@@ -52,7 +53,8 @@ const plugins = [
       ]
     }
   }),
-  vue()
+  vue(),
+  vueJsx()
 ]
 
 if (process.env.NODE_ENV !== 'production') {

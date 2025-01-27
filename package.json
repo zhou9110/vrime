@@ -1,16 +1,16 @@
 {
-  "name": "@libreservice/my-rime",
-  "version": "0.10.9",
+  "name": "@aibuild/vr-pinyin",
+  "version": "2.0.0",
   "files": [
     "dist"
   ],
   "type": "module",
   "appName": "VR Pinyin Keyboard",
-  "homepage": "https://github.com/LibreService/my_rime",
+  "homepage": "https://github.com/zhou9110/vr_pinyin",
   "author": {
-    "name": "Qijia Liu",
-    "email": "liumeo@pku.edu.cn",
-    "url": "https://github.com/eagleoflqj"
+    "name": "David Zhou",
+    "email": "david@aibuild.com",
+    "url": "https://github.com/zhou9110"
   },
   "license": "AGPL-3.0-or-later",
   "scripts": {
@@ -58,6 +58,7 @@
     "@vicons/fluent": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
     "client-zip": "^2.4.5",
     "emoji-regex": "^10.3.0",
     "esbuild": "^0.23.0",
