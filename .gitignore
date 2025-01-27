@@ -36,10 +36,10 @@ build
 *.js.map
 # public/worker.js
 .vercel
-dependency-map.json
-schema-files.json
-schema-name.json
-schema-target.json
-target-files.json
-target-version.json
+# dependency-map.json
+# schema-files.json
+# schema-name.json
+# schema-target.json
+# target-files.json
+# target-version.json
 # *.woff2
