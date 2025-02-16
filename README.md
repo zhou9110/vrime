@@ -1,4 +1,5 @@
 # 在线中文输入法 (VR用)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/677f500d-5f6e-482b-8ebc-4d50accbeefd/deploy-status)](https://app.netlify.com/sites/vr-pinyin/deploys)
 
 ### 该项目基于 My RIME 梧桐输入法 改造
 ![](https://img.shields.io/github/license/LibreService/my_rime)
