@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, defineProps} from 'vue'
 import { NA } from 'naive-ui'
+import { version as v } from '../../package.json'
 
 const props = defineProps<{
   homepage?: string
@@ -9,20 +11,22 @@ const props = defineProps<{
 }>()
 
 const commitURL = `${props.homepage}/commit/${props.commit}`
+
+const version = ref(v)
 </script>
 
 <template>
   <div>
     <p>
-      Commit <n-a
+      Version: {{ version }} · Commit <n-a
         :href="commitURL"
         target="_blank"
       >
         {{ commit?.slice(0, 7) }}
       </n-a> · Built at {{ buildDate }}
 
-      <span>{{ copyright }}</span> &copy;
     </p>
+    <span>{{ copyright }}</span> &copy;
     <p>
       This project is <n-a
         href="https://www.gnu.org/philosophy/free-sw"

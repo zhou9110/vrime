@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {
-  ref, toRefs, defineAsyncComponent, computed, watch, defineProps
+  ref, defineAsyncComponent, computed, watch, defineProps
 } from 'vue'
-import { MyFooter } from '@libreservice/my-widget'
+import MyFooter from './MyFooter.vue'
 import {
   getTextarea,
   isMobile,
@@ -80,7 +80,7 @@ defineExpose({
     </n-p>
     <n-layout-footer>
       <my-footer class="my-footer" :homepage="homepage" commit="__COMMIT__" build-date="__BUILD_DATE__"
-        copyright="2024-2025 David Zhou, My Rime (Qijia Liu, et al.)" />
+        :copyright="`2024-${new Date().getFullYear()} David Zhou, My Rime authors (Qijia Liu, et al.)`" />
     </n-layout-footer>
   </n-layout>
 </template>

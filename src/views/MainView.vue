@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watch, defineAsyncComponent } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NA, NP, NInput, NSpace, NFlex, NSwitch, useMessage, NButton, NDrawer, NDrawerContent, NIcon, NLayout, NLayoutFooter } from 'naive-ui'
+import { NInput, NSpace, NFlex, useMessage, NButton, NDrawer, NDrawerContent } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
-import { MyFooter } from '@libreservice/my-widget'
 import Instruction from "../components/Instruction.vue"
 import MyMenu from '../components/MyMenu.vue'
 import MyPanel from '../components/MyPanel.vue'
 import MyBar from '../components/MyBar.vue'
-import MyAppearance from '../components/MyAppearance.vue'
-import MyFont from '../components/MyFont.vue'
-import MyDeployer from '../components/MyDeployer.vue'
 import SimpleKeyboard from '../components/SimpleKeyboard.vue'
 import MySearchButton from '../components/MySearchButton.vue'
 import SideDrawer from '../components/SideDrawer.vue'
@@ -128,7 +124,13 @@ function triggerPanelKeyDown(button: string) {
 <!-- header-style="background: #1c1c26" body-style="background: #101014" -->
 <template>
   <n-drawer v-model:show="showDrawer" width="85vw" placement="right">
-    <n-drawer-content title="设置">
+    <n-drawer-content>
+      <template #header>
+        <n-space inline justify="space-between" style="flex: 1; width: 100%; align-items: center;">
+          <span>设置</span>
+          <n-button tag="a" href="/v1">返回旧版</n-button>
+        </n-space>
+      </template>
       <SideDrawer ref="drawer" :debugMode="simulatorDebugMode" :panel="panel" />
     </n-drawer-content>
   </n-drawer>
