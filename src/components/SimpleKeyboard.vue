@@ -87,9 +87,9 @@ export default defineComponent({
       },
       mergeDisplay: true,
       display: {
-        '{enter}': KeyboardReturnRoundSvg, // '<img src="@sicons/fluent/Money16Regular.svg" />',
-        '{settings}': SettingsRegularSvg, // '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-        '{bksp}': BackspaceRegularSvg, //  '<span class="material-icons-outlined">backspace</span>',
+        '{enter}': KeyboardReturnRoundSvg,
+        '{settings}': SettingsRegularSvg,
+        '{bksp}': BackspaceRegularSvg,
         "{hide}": KeyboardHideOutlinedSvg,
         "{lock}": "caps ⇪",
         "{shift}": "⇧",
@@ -219,6 +219,14 @@ export default defineComponent({
   border-radius: 8px;
 }
 
+.hg-theme-default .hg-button:hover {
+  background-color: #e7e7e7;
+}
+
+.hg-theme-default .hg-button:active {
+  background-color: rgb(160 160 160 / 50%);
+}
+
 .hg-theme-default .hg-button.hg-button-shift {
   flex: 2;
 }
@@ -258,6 +266,10 @@ export default defineComponent({
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   color: white;
+}
+
+.hg-theme-default.darkTheme .hg-button:hover {
+  background-color: rgba(250, 250, 250, 20%);
 }
 
 .simple-keyboard.darkTheme .hg-button:active {

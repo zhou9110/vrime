@@ -434,6 +434,7 @@ onUnmounted(() => { // Cleanup for HMR
 defineExpose({
   debug,
   onKeydown: onKeydown,
+  editing
 })
 </script>
 
@@ -448,8 +449,12 @@ defineExpose({
     </n-text>&nbsp;
     {{ preEditTail }}
     <n-menu v-show="menuOptions.length" :options="menuOptions"
+      class="text-candidates"
       :mode="forceVertical || isMobile || xOverflow ? 'vertical' : 'horizontal'" :value="highlighted"
-      @update:value="onClick" />
+      @update:value="onClick"
+      @touchstart.stop="e => console.log('touch stopped')"
+      @mousedown.stop="e => console.log('click stopped')"
+    />
     <n-button quaternary :disabled="prevDisabled">
       <n-icon :component="CaretLeft" @click="onPageChange(true)" size="20" />
     </n-button>
@@ -462,5 +467,10 @@ defineExpose({
 <style>
 .n-menu-item-content-header {
   overflow: visible !important;
+}
+
+.text-candidates .n-menu-item-content:hover {
+  background-color: var(--n-item-color-active-hover);
+  border-radius: var(--n-border-radius);
 }
 </style>

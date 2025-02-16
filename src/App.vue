@@ -13,12 +13,14 @@ import {
 import MyHeader from './components/MyHeader.vue'
 import MyLayout from './components/MyLayout.vue'
 import MyFooter from './components/MyFooter.vue'
+import MyPwa from './components/MyPwa.vue'
 import { currentTheme } from "./util"
 import { homepage, appName } from '../package.json'
 </script>
 
 <template>
   <n-config-provider :theme="currentTheme === 'dark' ? darkTheme : null" :locale="zhCN">
+    <MyPwa />
     <my-layout>
       <template #header>
         <my-header icon="./icon.svg" :homepage="homepage" />

@@ -51,7 +51,7 @@ function onFocus() {
 
 const inputInstRef = ref<InputInst>()
 const panel = ref<InstanceType<typeof MyPanel>>()
-
+  
 const simulatorDebugMode = ref<boolean>()
 
 const showKeyboard = ref(true)
@@ -103,6 +103,23 @@ function triggerPanelKeyDown(button: string) {
 
   if (button === "{lang}") changeLanguage();
 
+  if (button === "，" || button === "。") {
+    // Add character when not editing
+    if (!panel.value?.editing) {
+      const mapping = {
+        "。": { 'key': '.', code: 'Period', 'keyCode': 190 },
+        "，": { 'key': ',', code: 'Comma', 'keyCode': 188 },
+      }
+      panel.value?.onKeydown(new KeyboardEvent('keydown', mapping[button]));
+      return;
+    }
+  }
+  if (button[0] !== "{" && button.length > 1) {
+    // In case like ".com", add to text to the textarea directly
+    text.value += button;
+    moveCursorToEnd();
+    return;
+  }
   if (button.length === 1 || button[0] !== "{") {
     panel.value?.onKeydown(new KeyboardEvent('keydown', { 'key': `${button}`, code: `Key${button.toUpperCase()}`, 'keyCode': button.charCodeAt(0) }));
   }
