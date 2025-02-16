@@ -128,7 +128,7 @@ function triggerPanelKeyDown(button: string) {
       <template #header>
         <n-space inline justify="space-between" style="flex: 1; width: 100%; align-items: center;">
           <span>设置</span>
-          <n-button tag="a" href="/v1">返回旧版</n-button>
+          <n-button tag="a" href="/v1/">返回旧版</n-button>
         </n-space>
       </template>
       <SideDrawer ref="drawer" :debugMode="simulatorDebugMode" :panel="panel" />
