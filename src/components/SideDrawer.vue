@@ -79,8 +79,7 @@ defineExpose({
       This site is based on <n-a href="https://github.com/LibreService/my_rime">My Rime</n-a>
     </n-p>
     <n-layout-footer>
-      <my-footer class="my-footer" :homepage="homepage" commit="__COMMIT__" build-date="__BUILD_DATE__"
-        :copyright="`2024-${new Date().getFullYear()} David Zhou, My Rime authors (Qijia Liu, et al.)`" />
+      <my-footer class="my-footer" :homepage="homepage" commit="__COMMIT__" build-date="__BUILD_DATE__" />
     </n-layout-footer>
   </n-layout>
 </template>

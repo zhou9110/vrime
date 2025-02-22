@@ -26,7 +26,6 @@ const version = ref(v)
       </n-a> · Built at {{ buildDate }}
 
     </p>
-    <span>{{ copyright }}</span> &copy;
     <p>
       This project is <n-a
         href="https://www.gnu.org/philosophy/free-sw"
@@ -47,5 +46,9 @@ const version = ref(v)
         AGPLv3
       </n-a>+)
     </p>
+    &copy;<span>
+      2024-{{new Date().getFullYear()}} David Zhou (<a href="https://github.com/zhou9110">@zhou9110</a>), My Rime authors (Qijia Liu (<a href="https://github.com/eagleoflqj">@eagleoflqj</a>), et al.)
+    </span>
+    <p>Made with ❤️ and supported by <a href="https://aibuild.com">AIBUILD</a></p>
   </div>
 </template>
