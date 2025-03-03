@@ -78,6 +78,13 @@ defineExpose({
       该站点基于 <n-a href="https://github.com/LibreService/my_rime">My Rime</n-a> 开发<br />
       This site is based on <n-a href="https://github.com/LibreService/my_rime">My Rime</n-a>
     </n-p>
+    <!-- Placement for Adsense -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-3696844043079475"
+        data-ad-slot="8314320896"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
     <n-layout-footer>
       <my-footer class="my-footer" :homepage="homepage" commit="__COMMIT__" build-date="__BUILD_DATE__" />
     </n-layout-footer>
