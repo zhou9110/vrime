@@ -70,7 +70,7 @@ const platforms: {
       content: () => [
         h('div', {}, generateContent('My RIME', "梧桐输入法", "https://github.com/LibreService/my_rime")), 
         h('div', {}, generateContent('fcitx5-rime.js', "", "https://github.com/rimeinn/fcitx5-rime.js")), 
-        h('div', {}, generateContent('VR Pinyin', "👈 你在这", "https://github.com/zhou9110/vr_pinyin"))
+        h('div', {}, generateContent('VRIME', "👈 你在这", "https://github.com/zhou9110/vr_pinyin"))
       ]
     }
   ]
