@@ -255,14 +255,21 @@ function onKeydown(e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
     return
   }
-  const { code, key } = e
+  let { code, key } = e
   const textarea = getTextarea()
   // begin: code specific to Android Chromium
   if (key === 'Unidentified') {
-    androidChromium = true
-    acStart = textarea.selectionStart
-    acEnd = textarea.selectionEnd
-    return
+    // Update: avoid skipping backspace event when using hardware keyboard in android
+    if (code !== "Backspace") {
+      androidChromium = true
+      acStart = textarea.selectionStart
+      acEnd = textarea.selectionEnd
+      return
+    } else {
+      // Copy the code name to key attribute, because when using Hardware keyboard in Android,
+      // the value of the event is like: { key: "Unidentified", code: "Backspace" }
+      key = code
+    }
   }
   // end: code specific to Android Chromium
   if (key === 'Shift') {
