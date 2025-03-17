@@ -42,7 +42,7 @@ function toRepo() {
       <Keyboard20Regular />
     </n-icon>
     <n-text style="font-size: 18px; margin-left: 12px">
-      在线中文输入法 (for Meta Quest)
+      在线中文输入法 (Quest用)
     </n-text>
   </div>
   <n-space>
