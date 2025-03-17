@@ -1,13 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-import { NSelect, NButton, NIcon } from 'naive-ui'
+import { NSelect, NButton, NIcon, NTooltip } from 'naive-ui'
 
 import { OpenInNewOutlined } from "@vicons/material"
 
 import { text } from "../control"
-
-const value = ref(null)
 
 const options = [
   {
@@ -28,9 +26,27 @@ const options = [
   }
 ]
 
+const previousSavedValue = localStorage.getItem("searchOption")
+
+const value = ref(previousSavedValue ? JSON.parse(previousSavedValue) : options[0].value)
+const validateStatus = ref()
+const showPopover = ref(false)
+
+watch(value, (newValue) => {
+  localStorage.setItem("searchOption", JSON.stringify(newValue))
+})
+
 const search = async () => {
   const searchKeyWord = text.value
   const dropdownValue = value.value
+  if (!dropdownValue) {
+    validateStatus.value = "error"
+    showPopover.value = true
+    setTimeout(() => {
+      showPopover.value = false
+    }, 3000)
+    return;
+  }
   window.open(`${dropdownValue}${encodeURIComponent(searchKeyWord)}`, "__blank")
 }
 
@@ -44,8 +60,13 @@ const getOptionLabel = () => {
 <template>
   <div
     style="margin-left: 5px; min-width: 100px; display: flex;  flex-direction: column; align-items: stretch; gap: 8px;">
-    <n-select size="large" v-model:value="value" :options="options"
-      default-value="哔哩哔哩" :consistent-menu-width="false"></n-select>
+    <n-tooltip :show="showPopover" trigger="manual">
+      <template #trigger>
+        <n-select size="large" v-model:value="value" :status="validateStatus" :options="options"
+        default-value="哔哩哔哩" :consistent-menu-width="false" clearable></n-select>
+      </template>
+      <span>请选择一个选项</span>
+    </n-tooltip>
     <n-button size="large" type="primary" @click="search">搜索&nbsp;<n-icon size="18"><OpenInNewOutlined /></n-icon></n-button>
   </div>
 </template>
