@@ -30,7 +30,7 @@ const previousSavedValue = localStorage.getItem("searchOption")
 
 const value = ref(previousSavedValue ? JSON.parse(previousSavedValue) : options[0].value)
 const validateStatus = ref()
-const showPopover = ref(false)
+const showTooltip = ref(false)
 
 watch(value, (newValue) => {
   localStorage.setItem("searchOption", JSON.stringify(newValue))
@@ -41,9 +41,9 @@ const search = async () => {
   const dropdownValue = value.value
   if (!dropdownValue) {
     validateStatus.value = "error"
-    showPopover.value = true
+    showTooltip.value = true
     setTimeout(() => {
-      showPopover.value = false
+      showTooltip.value = false
     }, 3000)
     return;
   }
@@ -60,7 +60,7 @@ const getOptionLabel = () => {
 <template>
   <div
     style="margin-left: 5px; min-width: 100px; display: flex;  flex-direction: column; align-items: stretch; gap: 8px;">
-    <n-tooltip :show="showPopover" trigger="manual">
+    <n-tooltip :show="showTooltip" trigger="manual">
       <template #trigger>
         <n-select size="large" v-model:value="value" :status="validateStatus" :options="options"
         default-value="哔哩哔哩" :consistent-menu-width="false" clearable></n-select>
