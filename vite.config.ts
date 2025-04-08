@@ -8,7 +8,8 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
 const resources = [
   'rime.data', 'rime.js', 'rime.wasm',
-  // 'sherpa-onnx-wasm-main-asr.wasm', 'sherpa-onnx-wasm-main-asr.js' /* ,'sherpa-onnx-wasm-main-asr.data' */
+  'sherpa-onnx-wasm-main-asr.js'
+  // 'sherpa-onnx-wasm-main-asr.wasm','sherpa-onnx-wasm-main-asr.data'
 ]
 
 const workbox: VitePWAOptions["workbox"] = {

@@ -232,7 +232,15 @@ export default defineComponent({
 
       // import module for side effects to add attributes to the Module object
       try {
-        await import("/sherpa-onnx-wasm-main-asr.js?url");
+        // Dynamically import the emscripten JS script
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'sherpa-onnx-wasm-main-asr.js';
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
       } catch (e) {
         console.error('Error loading module:', e);
       }
