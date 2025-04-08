@@ -36,9 +36,11 @@ if (process.env.LIBRESERVICE_CDN) {
 const plugins = [
   replace({
     __LIBRESERVICE_CDN__: process.env.LIBRESERVICE_CDN || '',
+    __VOICE_RECOGNITION_CDN__: process.env.VOICE_RECOGNITION_CDN || '',
     __COMMIT__: execSync('git rev-parse HEAD').toString().trim(),
     __BUILD_DATE__: new Date().toLocaleString()
   }),
+  
   VitePWA({
     registerType: 'autoUpdate',
     workbox,
