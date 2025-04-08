@@ -4,7 +4,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/zhou9110/vr_pinyin">
+  <a href="https://github.com/zhou9110/vrime">
     <img src="doc/vrime-logo.png" alt="VRIME - 在线中文输入法" width="350">
   </a>
 
@@ -14,18 +14,18 @@
     为VR设备(Meta Quest)设计的<br/>
     在线中文输入法
     <br />
-    <a href="https://github.com/zhou9110/vr_pinyin"><strong>Explore the docs »</strong></a>
+    <a href="https://vrime.org"><strong>Visit the site »</strong></a>
+    <br />
+    Link: <a href="https://vrime.org">https://vrime.org/</a>
     <br />
     <br />
-    <a href="https://vrime.org/">View Site</a>
+    <a href="https://github.com/zhou9110/vrime">View Doc</a>
     &middot;
-    <a href="https://github.com/zhou9110/vr_pinyin/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/zhou9110/vrime/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/zhou9110/vr_pinyin/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/zhou9110/vrime/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
-
-站点链接: <https://vrime.org/>
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -52,6 +52,7 @@
 > Meta Quest一体机没有自带中文输入法，首次使用的中文用户没法方便地输入中文
 
 项目介绍视频（点击图片跳转至B站）：
+
 [![Bilibili](doc/thumbnail.jpg)](https://www.bilibili.com/video/BV1iMASeaE8d/)
 
 链接：[【Q2/3/3S】在线中文输入法网站 2.0正式发布！都更新了哪些内容？](https://www.bilibili.com/video/BV1iMASeaE8d/)
@@ -84,7 +85,7 @@
 * [ ] 文档：功能介绍
 * [ ] Github Action 自动创建 Release
 
-See the [open issues](https://github.com/zhou9110/vr_pinyin/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/zhou9110/vrime/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -120,8 +121,8 @@ Don't forget to give the project a star! Thanks again!
 
 ### Top contributors
 
-<a href="https://github.com/zhou9110/vr_pinyin/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=zhou9110/vr_pinyin" alt="contrib.rocks image" />
+<a href="https://github.com/zhou9110/vrime/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=zhou9110/vrime" alt="contrib.rocks image" />
 </a>
 
 <!-- LICENSE -->
@@ -138,7 +139,7 @@ Distributed under the AGPLv3+. See `LICENSE` for more information.
 
 David Zhou - [Bilibili: 贴纸菌](https://space.bilibili.com/627876)
 
-Project Link: [https://github.com/zhou9110/vr_pinyin](https://github.com/zhou9110/vr_pinyin)
+Project Link: [https://github.com/zhou9110/vrime](https://github.com/zhou9110/vrime)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -157,22 +158,21 @@ Project Link: [https://github.com/zhou9110/vr_pinyin](https://github.com/zhou911
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/zhou9110/vr_pinyin.svg?style=for-the-badge
-[contributors-url]: https://github.com/zhou9110/vr_pinyin/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/zhou9110/vr_pinyin.svg?style=for-the-badge
-[forks-url]: https://github.com/zhou9110/vr_pinyin/network/members
-[stars-shield]: https://img.shields.io/github/stars/zhou9110/vr_pinyin.svg?style=for-the-badge
-[stars-url]: https://github.com/zhou9110/vr_pinyin/stargazers
-[issues-shield]: https://img.shields.io/github/issues/zhou9110/vr_pinyin.svg?style=for-the-badge
-[issues-url]: https://github.com/zhou9110/vr_pinyin/issues
-[license-shield]: https://img.shields.io/github/license/zhou9110/vr_pinyin.svg?style=for-the-badge
-[license-url]: https://github.com/zhou9110/vr_pinyin/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/zhou9110/vrime.svg?style=for-the-badge
+[contributors-url]: https://github.com/zhou9110/vrime/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/zhou9110/vrime.svg?style=for-the-badge
+[forks-url]: https://github.com/zhou9110/vrime/network/members
+[stars-shield]: https://img.shields.io/github/stars/zhou9110/vrime.svg?style=for-the-badge
+[stars-url]: https://github.com/zhou9110/vrime/stargazers
+[issues-shield]: https://img.shields.io/github/issues/zhou9110/vrime.svg?style=for-the-badge
+[issues-url]: https://github.com/zhou9110/vrime/issues
+[license-shield]: https://img.shields.io/github/license/zhou9110/vrime.svg?style=for-the-badge
+[license-url]: https://github.com/zhou9110/vrime/blob/master/LICENSE.txt
 [product-screenshot]: public/screenshot.png
 [Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
 [Vue-url]: https://vuejs.org/
 [Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white
 [Vite-url]: https://vite.dev
-
 
 ----
 
