@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { NInput, NSpace, NFlex, useMessage, NButton, NDrawer, NDrawerContent } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
@@ -13,21 +13,22 @@ import SideDrawer from '../components/SideDrawer.vue'
 import {
   setQuery,
   getTextarea,
-  getQueryString,
-  isMobile,
   showDrawer,
   toggleDrawer
 } from '../util'
 import {
   init,
   text,
-  changeLanguage
+  changeLanguage,
+  isRecording,
 } from '../control'
 import { setMessage } from '../micro-plum'
+import VoiceRecognition from '../components/VoiceRecognition.vue'
 
 setQuery(useRoute().query)
 setMessage(useMessage())
 init()
+
 
 let savedStart = 0
 let savedEnd = 0
@@ -36,21 +37,28 @@ function onBlur() {
   const textarea = getTextarea()
   savedStart = textarea.selectionStart
   savedEnd = textarea.selectionEnd
-  console.log({savedStart, savedEnd})
+  console.log({ savedStart, savedEnd })
 }
 
 function onFocus() {
-//   const textarea = getTextarea()
-//   textarea.selectionStart = savedStart
-//   textarea.selectionEnd = savedEnd
+  //   const textarea = getTextarea()
+  //   textarea.selectionStart = savedStart
+  //   textarea.selectionEnd = savedEnd
 }
 
 const inputInstRef = ref<InputInst>()
 const panel = ref<InstanceType<typeof MyPanel>>()
-  
+const voiceRecognitionRef = ref<InstanceType<typeof VoiceRecognition>>()
+const voiceRecognitionRefFn = () => voiceRecognitionRef
+provide('voiceRecognitionRef', voiceRecognitionRefFn)
+
 const simulatorDebugMode = ref<boolean>()
 
 const showKeyboard = ref(true)
+
+function appendToTextBox(newText: string) {
+  text.value = text.value + newText
+}
 
 // Select all
 function selectAll() {
@@ -139,13 +147,14 @@ function triggerPanelKeyDown(button: string) {
     <my-menu />
     <div style="display: flex; align-items: center;">
       <n-input id="container" ref="inputInstRef" v-model:value="text" type="textarea" :rows="showKeyboard ? 6 : 10"
-        clearable @focus="onFocus" size="large"
-        :readonly="showKeyboard" />
+        clearable @focus="onFocus" size="large" :readonly="showKeyboard" />
       <MySearchButton />
     </div>
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard"
       @select-all="selectAll" />
-    <SimpleKeyboard v-if="showKeyboard" @onKeyPress="triggerPanelKeyDown" />
+    <SimpleKeyboard v-if="showKeyboard" @onKeyPress="triggerPanelKeyDown"
+      :getVoiceRecognitionRef="voiceRecognitionRefFn" />
     <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
+    <VoiceRecognition ref="voiceRecognitionRef" @set-input="appendToTextBox" />
   </n-flex>
 </template>

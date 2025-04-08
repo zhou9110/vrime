@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import {
   NConfigProvider,
   NNotificationProvider,
   NDialogProvider,
   NMessageProvider,
-  NH1,
   darkTheme,
   useOsTheme,
   zhCN
