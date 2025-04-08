@@ -6,7 +6,10 @@ import replace from '@rollup/plugin-replace'
 import { run } from 'vite-plugin-run'
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
-const resources = ['rime.data', 'rime.js', 'rime.wasm']
+const resources = [
+  'rime.data', 'rime.js', 'rime.wasm',
+  // 'sherpa-onnx-wasm-main-asr.wasm', 'sherpa-onnx-wasm-main-asr.js' /* ,'sherpa-onnx-wasm-main-asr.data' */
+]
 
 const workbox: VitePWAOptions["workbox"] = {
   maximumFileSizeToCacheInBytes: 3145728,
@@ -33,9 +36,11 @@ if (process.env.LIBRESERVICE_CDN) {
 const plugins = [
   replace({
     __LIBRESERVICE_CDN__: process.env.LIBRESERVICE_CDN || '',
+    __VOICE_RECOGNITION_CDN__: process.env.VOICE_RECOGNITION_CDN || '',
     __COMMIT__: execSync('git rev-parse HEAD').toString().trim(),
     __BUILD_DATE__: new Date().toLocaleString()
   }),
+  
   VitePWA({
     registerType: 'autoUpdate',
     workbox,
