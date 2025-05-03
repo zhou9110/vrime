@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
-import { NInput, NSpace, NFlex, useMessage, NButton, NDrawer, NDrawerContent } from 'naive-ui'
+import { NInput, NFlex, useMessage, NModal, NCard } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
 import Instruction from "../components/Instruction.vue"
 import MyMenu from '../components/MyMenu.vue'
@@ -9,7 +9,7 @@ import MyPanel from '../components/MyPanel.vue'
 import MyBar from '../components/MyBar.vue'
 import SimpleKeyboard from '../components/SimpleKeyboard.vue'
 import MySearchButton from '../components/MySearchButton.vue'
-import SideDrawer from '../components/SideDrawer.vue'
+import Settings from '../components/SideDrawer.vue'
 import {
   setQuery,
   getTextarea,
@@ -24,6 +24,7 @@ import {
 } from '../control'
 import { setMessage } from '../micro-plum'
 import VoiceRecognition from '../components/VoiceRecognition.vue'
+import T9Keyboard from '../components/T9Keyboard.vue'
 
 setQuery(useRoute().query)
 setMessage(useMessage())
@@ -131,17 +132,11 @@ function triggerPanelKeyDown(button: string) {
 </script>
 <!-- header-style="background: #1c1c26" body-style="background: #101014" -->
 <template>
-  <n-drawer v-model:show="showDrawer" width="85vw" placement="right">
-    <n-drawer-content>
-      <template #header>
-        <n-space inline justify="space-between" style="flex: 1; width: 100%; align-items: center;">
-          <span>设置</span>
-          <n-button tag="a" href="/v1/">返回旧版</n-button>
-        </n-space>
-      </template>
-      <SideDrawer ref="drawer" :debugMode="simulatorDebugMode" :panel="panel" />
-    </n-drawer-content>
-  </n-drawer>
+  <n-modal v-model:show="showDrawer" placement="right">
+    <n-card style="width: 80vw; margin-top: 10px; margin-bottom: 15px;">
+      <Settings ref="drawer" :debugMode="simulatorDebugMode" :panel="panel" />
+    </n-card>
+  </n-modal>
   <n-flex vertical class="my-column">
     <instruction :showKeyboard="showKeyboard" />
     <my-menu />
@@ -150,10 +145,11 @@ function triggerPanelKeyDown(button: string) {
         clearable @focus="onFocus" size="large" :readonly="showKeyboard" />
       <MySearchButton />
     </div>
-    <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard"
-      @select-all="selectAll" />
+    <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard" @select-all="selectAll"
+      :getVoiceRecognitionRef="voiceRecognitionRefFn" />
     <SimpleKeyboard v-if="showKeyboard" @onKeyPress="triggerPanelKeyDown"
       :getVoiceRecognitionRef="voiceRecognitionRefFn" />
+    <!-- <T9Keyboard /> -->
     <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
     <VoiceRecognition ref="voiceRecognitionRef" @set-input="appendToTextBox" />
   </n-flex>

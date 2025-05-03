@@ -6,9 +6,16 @@
 }
 
 .my-footer {
-  width: calc(100vw - 24px);
-  max-width: 900px;
   margin: auto;
+  margin-top: 1em;
+  line-height: 1;
+  padding: 1em;
+  background-color: rgba(100, 100, 100, 0.3)
+}
+
+.my-footer p {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 
 .n-a {

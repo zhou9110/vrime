@@ -2,9 +2,10 @@ import { computed, ref, Ref, watchEffect } from 'vue'
 import {
   setOption,
   setIME,
+  setPageSize,
   resetUserDirectory,
   FS,
-  deploy
+  deploy,
 } from './workerAPI'
 import {
   getQueryString,
@@ -37,6 +38,20 @@ export function savedBooleanRef(key: string, initial: boolean) {
     localStorage.setItem(key, box.value.toString())
   })
   return box
+}
+
+export function savedRef<T>(key: string, initial: T) {
+  const saved = localStorage.getItem(key)
+  let initValue = initial
+  if (saved) {
+    const parsed = JSON.parse(saved)
+    initValue = parsed
+  }
+  const thisRef = ref<T>(initValue)
+  watchEffect(() => {
+    localStorage.setItem(key, JSON.stringify(thisRef.value))
+  })
+  return thisRef
 }
 
 const AUTO_COPY = 'autoCopy'
@@ -388,6 +403,13 @@ function syncOptions(updatedOptions: string[]) {
   }
 }
 
+const PAGE_SIZE = 'pageSize'
+const pageSize = savedRef<number>(PAGE_SIZE, 5)
+
+watchEffect(() => {
+  setPageSize(pageSize.value)
+})
+
 export {
   init,
   text,
@@ -412,6 +434,7 @@ export {
   hideComment,
   isRecording,
   recognisedText,
+  pageSize,
   setLoading,
   changeLanguage,
   changeVariant,

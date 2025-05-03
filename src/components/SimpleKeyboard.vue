@@ -254,6 +254,7 @@ export default defineComponent({
   height: 100%;
   color: black;
   background-color: rgba(255, 255, 255, 90%);
+  font-size: 1.5em;
   /* background-color: rgba(0,0,0,5%); */
 }
 

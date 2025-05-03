@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, defineProps} from 'vue'
-import { NA } from 'naive-ui'
-import { version as v } from '../../package.json'
+import { NA } from 'naive-ui';
+import { defineProps, ref } from 'vue';
+import { version as v } from '../../package.json';
+import { homepage } from '../../package.json'
 
 const props = defineProps<{
-  homepage?: string
   commit?: string
   buildDate?: string
   copyright?: string
 }>()
 
-const commitURL = `${props.homepage}/commit/${props.commit}`
+const commitURL = `${homepage}/commit/${props.commit}`
 
 const version = ref(v)
 </script>
@@ -24,7 +24,6 @@ const version = ref(v)
       >
         {{ commit?.slice(0, 7) }}
       </n-a> · Built at {{ buildDate }}
-
     </p>
     <p>
       This project is <n-a
@@ -46,9 +45,10 @@ const version = ref(v)
         AGPLv3
       </n-a>+)
     </p>
+    
     &copy;<span>
-      2024-{{new Date().getFullYear()}} David Zhou (<a href="https://github.com/zhou9110">@zhou9110</a>), My Rime authors (Qijia Liu (<a href="https://github.com/eagleoflqj">@eagleoflqj</a>), et al.)
+      2024-{{new Date().getFullYear()}} David Zhou (<n-a href="https://github.com/zhou9110">@zhou9110</n-a>), My Rime authors (Qijia Liu (<n-a href="https://github.com/eagleoflqj">@eagleoflqj</n-a>), et al.)
     </span>
-    <p>Made with ❤️ and supported by <a href="https://aibuild.com">AIBUILD</a></p>
+    <p>Made with ❤️ and supported by <n-a href="https://aibuild.com">AIBUILD</n-a></p>
   </div>
 </template>

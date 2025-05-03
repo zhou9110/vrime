@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineEmits, computed, shallowRef, inject } from 'vue'
 import { onLongPress } from '@vueuse/core'
-import { NIcon, NP, NPopover } from 'naive-ui';
+import { NIcon, NP, NPopover, NButton } from 'naive-ui';
 import { MicNoneRound, MicOffOutlined } from "@vicons/material"
 
 import { isRecording as globalIsRecording, recognisedText } from '../control';
@@ -10,14 +10,13 @@ import VoiceLoader from './VoiceLoader.vue';
 import OvalLoader from './OvalLoader.vue';
 
 const buttonRef = ref()
-const props = defineProps<{ getVoiceRecognitionRef?: Function, class?: string }>()
 const isRecording = ref(globalIsRecording);
 const isLongPressing = shallowRef(false)
 const emit = defineEmits<{ 'toggleRecording': [value: boolean] }>();
 
-const injectedVoiceRecognitionRef = inject('voiceRecognitionRef') as InstanceType<any>
+const injectedVoiceRecognitionRef = inject('voiceRecognitionRef') as InstanceType<any>;
+const voiceRecognitionRef = injectedVoiceRecognitionRef ? injectedVoiceRecognitionRef() : undefined;
 
-const voiceRecognitionRef = props?.getVoiceRecognitionRef ? props.getVoiceRecognitionRef() : injectedVoiceRecognitionRef ? injectedVoiceRecognitionRef() : undefined;
 // const isModelLoaded = computed(() => !!voiceRecognitionRef.value.recognizer);
 const isModelLoaded = computed(() => true);
 const loaderColor = computed(() => currentTheme.value === 'dark' ? '#fff' : '#000');
@@ -60,26 +59,19 @@ onLongPress(
     modifiers: { 'prevent': true },
   }
 )
-
-defineExpose({
-  toggleRecording,
-  isRecording,
-  buttonRef,
-})
 </script>
 
 <template>
-  <n-popover trigger="manual" :show="isRecording" placement="top-start">
+  <n-popover trigger="manual" :show="isRecording" placement="bottom">
     <template #trigger>
       <slot>
-        <div ref="buttonRef" class="hg-functionBtn"
-          :class="{ 'hg-button-mic': !isRecording, 'hg-button-mic-off': isRecording, [props?.class ?? '']: props?.class }"
-          style="padding: 0;" :data-skbtn="`{${isRecording ? 'mic-off' : 'mic'}}`" @click="toggleRecording">
+        <n-button ref="buttonRef" secondary :class="{ 'mic': !isRecording, 'mic-off': isRecording }"
+          style="padding: 0; height: 50px; min-width: 100px; font-size: 18px;" v-bind="$attrs" @click="toggleRecording">
           <n-icon size="24">
             <MicNoneRound v-if="!isRecording" />
             <MicOffOutlined v-else style="color: white;" />
           </n-icon>
-        </div>
+        </n-button>
       </slot>
     </template>
     <div style="display: flex;">
@@ -95,28 +87,17 @@ defineExpose({
   </n-popover>
 </template>
 
-<style>
-.hg-functionBtn.hg-button-mic,
-.hg-functionBtn.hg-button-mic-off {
-  flex: 1;
-  display: inherit;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  border-radius: inherit;
-}
-
-.hg-functionBtn.hg-button-mic-off:hover {
+<style scoped>
+.mic-off:hover {
   background: rgba(255, 114, 114);
 }
 
-.hg-functionBtn.hg-button-mic-off:active {
+.mic-off:active {
   background: rgb(165, 45, 45);
   /* background: #8d9ca5cc; */
 }
 
-.hg-functionBtn.hg-button-mic-off {
+.mic-off {
   color: white;
   background: red;
 }
