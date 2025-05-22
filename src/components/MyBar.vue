@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, Teleport, ref, onMounted } from "vue";
 import { NText, NSpace, NButtonGroup, NButton, NIcon, NCheckbox, NFlex } from "naive-ui";
 import {
   Cut20Regular,
   Copy20Regular,
-  ClipboardLink20Regular,
+  Clipboard20Regular,
   ArrowUndo20Filled,
+  Delete20Regular,
 } from "@vicons/fluent";
 import { UndoOutlined, RedoOutlined } from "@vicons/material";
 import { getTextarea } from "../util";
@@ -49,6 +50,25 @@ async function copyLink() {
   const textarea = getTextarea();
   textarea.focus();
 }
+
+async function paste() {
+  const textarea = getTextarea();
+  textarea.focus();
+  const pastedText = await navigator.clipboard.readText();
+  text.value += pastedText;
+  if (autoCopy.value) {
+    navigator.clipboard.writeText(text.value)
+    copiedText.value = text.value
+  }
+}
+
+const elementIsReady = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    elementIsReady.value = document.getElementById("copied") !== null
+    console.log(elementIsReady.value) 
+  }, 1000)
+})
 </script>
 
 <template>
@@ -66,43 +86,48 @@ async function copyLink() {
         </n-button>
         <n-button secondary @click="copy">
           <template #icon>
-            <!-- <n-icon>
-              <Cut20Regular />
-            </n-icon> -->
             <n-icon :component="Copy20Regular" />
           </template>
           复制
         </n-button>
-        <!-- <n-button secondary @click="copy">
+        <n-button secondary title="粘贴" @click="paste">
+          <template #icon>
+            <n-icon :component="Clipboard20Regular" />
+          </template>
+          粘贴
+        </n-button>
+      </n-button-group>
+      <!-- Least astonishment: user may explicitly cut, so shouldn't overwrite the clipboard. -->
+      <n-flex>
+        <n-checkbox v-model:checked="autoCopy">自动复制文字</n-checkbox>
+        <Teleport defer to="#copied" v-if="elementIsReady" :disabled="!autoCopy">
+          <n-text class="line-clamped" type="warning" v-show="copiedText">已复制：{{ copiedText }}</n-text>
+        </Teleport>
+      </n-flex>
+    </n-space>
+    <n-space class="right-btns" style="align-items: center; gap: 5px">
+      <RecordButton v-if="!props.showKeyboard" :get-voice-recognition-ref="props.getVoiceRecognitionRef" />
+      <!-- <n-button secondary @click="undo">
           <template #icon>
             <n-icon :component="UndoOutlined" />
           </template>
         </n-button>
-        <n-button secondary @click="copy">
+        <n-button secondary @click="redo">
           <template #icon>
             <n-icon :component="RedoOutlined" />
           </template>
         </n-button> -->
-        <!-- <n-button :disabled="loading || deployed" secondary title="Copy link for current IME" @click="copyLink">
-          <n-icon :component="ClipboardLink20Regular" />
-        </n-button> -->
-      </n-button-group>
-      <!-- Least astonishment: user may explicitly cut, so shouldn't overwrite the clipboard. -->
-      <n-flex>
-        <n-checkbox v-model:checked="autoCopy"> 自动复制文字 </n-checkbox>
-        <n-text class="line-clamped" type="warning" v-show="copiedText">已复制：{{ copiedText }}</n-text>
-      </n-flex>
-    </n-space>
-    <n-space style="align-items: center">
-      <RecordButton v-if="!props.showKeyboard" :get-voice-recognition-ref="props.getVoiceRecognitionRef" />
-      <n-button secondary style="height: 50px; min-width: 100px; font-size: 18px" @click="clear" font-size="50"
+      <n-button secondary style="height: 50px; min-width: 80px; font-size: 16px" @click="clear"
         size="large">
+        <template #icon>
+          <n-icon :component="Delete20Regular" />
+        </template>
         清空
       </n-button>
-      <n-button secondary style="height: 50px; min-width: 100px; font-size: 18px" @click="selectAll" size="large">
+      <n-button secondary style="height: 50px; min-width: 100px; font-size: 16px" @click="selectAll" size="medium">
         全选
       </n-button>
-      <n-checkbox style="font-size: 18px" :checked="props.showKeyboard" @update:checked="$emit('toggleKeyboard')">
+      <n-checkbox style="font-size: 16px" :checked="props.showKeyboard" @update:checked="$emit('toggleKeyboard')">
         启用虚拟键盘
       </n-checkbox>
     </n-space>
@@ -114,7 +139,11 @@ async function copyLink() {
   font-size: 18px;
   height: 50px;
   padding: 10px;
-  min-width: 60px;
+  min-width: 50px;
+}
+
+.right-btns .n-button {
+
 }
 
 .line-clamped {
