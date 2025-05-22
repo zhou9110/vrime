@@ -9,7 +9,7 @@ import MyPanel from '../components/MyPanel.vue'
 import MyBar from '../components/MyBar.vue'
 import SimpleKeyboard from '../components/SimpleKeyboard.vue'
 import MySearchButton from '../components/MySearchButton.vue'
-import Settings from '../components/SideDrawer.vue'
+import Settings from '../components/SettingsModal.vue'
 import {
   setQuery,
   getTextarea,
