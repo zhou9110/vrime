@@ -119,5 +119,8 @@ function onSelectIME(value: string) {
         </n-tooltip>
       </n-button-group>
     </n-space>
+    <n-space>
+      <span id="copied"></span>
+    </n-space>
   </n-flex>
 </template>
