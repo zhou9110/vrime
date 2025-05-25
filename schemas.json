@@ -179,5 +179,12 @@
     "target": "quick",
     "dependencies": ["luna_quanpin"],
     "license": "LGPL-3.0-only"
+  },
+  {
+    "id": "xiaobai_simp",
+    "name": "小白九键",
+    "group": "九键",
+    "target": "zhou9110/rime-xiaobai_simp",
+    "dependencies": ["stroke"]
   }
 ]
