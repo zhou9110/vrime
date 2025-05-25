@@ -21,6 +21,10 @@ const options = [
     value: 'https://www.baidu.com/s?wd='
   },
   {
+    label: '必应',
+    value: 'https://www4.bing.com/search?q='
+  },
+  {
     label: '小红书',
     value: 'https://www.xiaohongshu.com/search_result?keyword='
   }

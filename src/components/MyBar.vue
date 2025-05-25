@@ -100,7 +100,7 @@ onMounted(() => {
       <!-- Least astonishment: user may explicitly cut, so shouldn't overwrite the clipboard. -->
       <n-flex>
         <n-checkbox v-model:checked="autoCopy">自动复制文字</n-checkbox>
-        <Teleport defer to="#copied" v-if="elementIsReady" :disabled="!autoCopy">
+        <Teleport defer to="#copied" v-if="elementIsReady">
           <n-text class="line-clamped" type="warning" v-show="copiedText">已复制：{{ copiedText }}</n-text>
         </Teleport>
       </n-flex>
