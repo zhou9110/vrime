@@ -2,7 +2,7 @@
 import { NButton, NIcon, useOsTheme } from "naive-ui";
 import Keyboard from "simple-keyboard";
 import "simple-keyboard/build/css/index.css";
-import { computed, defineComponent, nextTick, ref } from "vue";
+import { computed, defineComponent, nextTick, ref, defineEmits } from "vue";
 import { currentTheme } from '../util';
 
 const KeyboardHideOutlinedSvg = `<svg style="width:24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-1.99.9-1.99 2L2 15c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12H4V5h16v10zm-9-9h2v2h-2zm0 3h2v2h-2zM8 6h2v2H8zm0 3h2v2H8zM5 9h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2zm-5 17l4-4H8z" fill="currentColor"></path></svg>`
@@ -11,8 +11,10 @@ const SettingsRegularSvg = '<svg style="width:20px" xmlns="http://www.w3.org/200
 const BackspaceRegularSvg = '<svg style="width:24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41L17.59 17L19 15.59L15.41 12L19 8.41L17.59 7L14 10.59L10.41 7L9 8.41L12.59 12L9 15.59z" fill="currentColor"></path></svg>'
 
 import { isEnglish, isRecording } from "../control";
-import RecordButton from "./RecordButton2.vue";
+import RecordButton from "./RecordButton.vue";
 import NumKey from "./NumKey.vue";
+
+const emit = defineEmits(['onKeyPress'])
 
 const micButtonTarget = ref<HTMLElement | null>(null)
 
@@ -38,133 +40,34 @@ function getDisplay() {
   };
 }
 
-// defineComponent({
-// setup() {
-//   return {
-//     isRecording,
-//     isEnglish,
-//     keyboard: ref<Keyboard | null>(null),
-//     isKeyboardReady: ref(false),
-//     micButtonTarget,
-//     BackspaceRegularSvg,
-//   }
-// },
-// methods: {
-//   remountRecorderButton() {
-//     const element = document.querySelector("[data-skbtn='{mic}']") as HTMLElement
-//     if (element) {
-//       this.micButtonTarget = element
-//     }
-//   },
-//   onChange(input: string) {
-//     this.$emit("onChange", input);
-//   },
-//   onKeyPress(button: string) {
-//     this.$emit("onKeyPress", button);
+function onKeyPress(button: string) {
+  emit('onKeyPress', button)
+}
 
-//     /**
-//      * If you want to handle the shift and caps lock buttons
-//      */
-//     if (button === "{shift}" || button === "{lock}") this.handleShift();
-
-//     if (button === "{lang}") this.switchLanguage();
-//   },
-//   handleShift() {
-//     if (!this.keyboard) return
-//     let currentLayout = this.keyboard.options.layoutName;
-//     let shiftToggle = currentLayout === "default" ? "shift" : "default";
-
-//     this.keyboard.setOptions({
-//       layoutName: shiftToggle
-//     });
-//     this.remountRecorderButton()
-//   },
-//   switchLanguage() {
-//     if (!this.keyboard) return
-//     const currentLayout = this.keyboard.options.layoutName;
-//     const langToggle = currentLayout === "default" ? "eng" : "default";
-
-//     this.keyboard.setOptions({
-//       layoutName: langToggle,
-//       display: getDisplay()
-//     });
-//     this.remountRecorderButton()
-//   }
-// },
-// watch: {
-//   input(input) {
-//     this.keyboard?.setInput(input);
-//   },
-//   isDark(isDark) {
-//     console.log("isDark", isDark)
-//     this.keyboard?.setOptions({
-//       theme: isDark
-//         ? "hg-theme-default darkTheme"
-//         : "hg-theme-default"
-//     })
-//     this.remountRecorderButton()
-//   },
-//   // isRecording(newIsRecording) {
-//   //   if (!this.keyboard) return
-//   //   this.keyboard.setOptions({
-//   //     display: getDisplay(),
-//   //     layoutName: newIsRecording ? "micOn" : "default"
-//   //   })
-//   // },
-// },
-// computed: {
-//   isDark() {
-//     return currentTheme.value === "dark"
-//   },
-//   getDarkThemeClassName() {
-//     return osThemeRef.value === "dark" ? "darkTheme" : undefined
-//   },
-//   //   getDisplay() {
-//   //     return {
-//   //       // '{enter}': '<span class="material-icons-outlined">keyboard_return</span>',
-//   //       // '{settings}': '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-//   //       // '{bksp}': '<span class="material-icons-outlined">backspace</span>',
-//   //       // "{lock}": "caps ⇪",
-//   //       // "{shift}": "⇧",
-//   //       // "{lang}": isEnglish.value ? langBtnEn : langBtnCn
-
-//   //       // '{enter}': render(h(NIcon, { ':component': KeyboardReturnRound })),
-//   //       // '{enter}': returnIcon,
-//   //       '{enter}': '<span style="height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M19 8v3H5.83l2.88-2.88A.996.996 0 1 0 7.3 6.71L2.71 11.3a.996.996 0 0 0 0 1.41L7.3 17.3a.996.996 0 1 0 1.41-1.41L5.83 13H20c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1s-1 .45-1 1z" fill="currentColor"></path></svg></span>',
-//   //       '{settings}': '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-//   //       '{bksp}': '<span class="material-icons-outlined">backspace</span>',
-//   //       "{lock}": "caps ⇪",
-//   //       "{shift}": "⇧",
-//   //       "{lang}": currentLanguage.value === "chinese" ? langBtnCn : langBtnEn,
-//   //       "{hide}": "hide2"
-//   //     };
-//   //   }
-// },
-// });
 </script>
 
 <template>
   <div class="numpad">
     <n-button class="numpad-key" size="large">，</n-button>
-    <NumKey class="numpad-key" number="1">分词</NumKey>
-    <NumKey class="numpad-key" number="2">abc</NumKey>
-    <NumKey class="numpad-key" number="3">def</NumKey>
-    <n-button class="numpad-key" size="large"><span v-html="BackspaceRegularSvg"></span></n-button>
+    <NumKey class="numpad-key" number="1" @onKeyPress="onKeyPress">分词</NumKey>
+    <NumKey class="numpad-key" number="2" @onKeyPress="onKeyPress">abc</NumKey>
+    <NumKey class="numpad-key" number="3" @onKeyPress="onKeyPress">def</NumKey>
+    <n-button class="numpad-key" size="large" @click="onKeyPress('{bksp}')"><span v-html="BackspaceRegularSvg"></span></n-button>
     <n-button class="numpad-key" size="large">。</n-button>
-    <NumKey class="numpad-key" number="4">ghi</NumKey>
-    <NumKey class="numpad-key" number="5">jkl</NumKey>
-    <NumKey class="numpad-key" number="6">mno</NumKey>
+    <NumKey class="numpad-key" number="4" @onKeyPress="onKeyPress">ghi</NumKey>
+    <NumKey class="numpad-key" number="5" @onKeyPress="onKeyPress">jkl</NumKey>
+    <NumKey class="numpad-key" number="6" @onKeyPress="onKeyPress">mno</NumKey>
     <n-button class="numpad-key" size="large">重输</n-button>
     <n-button class="numpad-key" size="large">？</n-button>
-    <NumKey class="numpad-key" number="7">pqrs</NumKey>
-    <NumKey class="numpad-key" number="8">tuv</NumKey>
-    <NumKey class="numpad-key" number="9">wxyz</NumKey>
+    <NumKey class="numpad-key" number="7" @onKeyPress="onKeyPress">pqrs</NumKey>
+    <NumKey class="numpad-key" number="8" @onKeyPress="onKeyPress">tuv</NumKey>
+    <NumKey class="numpad-key" number="9" @onKeyPress="onKeyPress">wxyz</NumKey>
     <n-button class="numpad-key" size="large">OK</n-button>
     <n-button class="numpad-key" size="large">符号</n-button>
     <RecordButton style="height: 100%;" :secondary="false"/>
-    <NumKey class="numpad-key" number="0">空格</NumKey>
+    <NumKey class="numpad-key" number="0" @onKeyPress="onKeyPress">空格</NumKey>
     <n-button class="numpad-key" size="large">123</n-button>
-    <n-button class="numpad-key" size="large"><span v-html="KeyboardReturnRoundSvg"></span></n-button>
+    <n-button class="numpad-key" size="large" @click="onKeyPress('{enter}')"><span v-html="KeyboardReturnRoundSvg"></span></n-button>
   </div>
 </template>
 

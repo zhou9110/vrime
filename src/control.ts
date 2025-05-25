@@ -62,6 +62,9 @@ const copiedText = ref('')
 const FORCE_VERTICAL = 'forceVertical'
 const forceVertical = savedBooleanRef(FORCE_VERTICAL, false)
 
+const AUTO_SWITCH_KEYBOARD_LAYOUT = 'autoSwitchKeyboardLayout'
+const autoSwitchKeyboardLayout = savedBooleanRef(AUTO_SWITCH_KEYBOARD_LAYOUT, true)
+
 const schemaId = ref<string>(schemas[0].id)
 const ime = ref<string>('') // visual vs internal
 
@@ -417,6 +420,7 @@ export {
   autoCopy,
   copiedText,
   forceVertical,
+  autoSwitchKeyboardLayout,
   loading,
   schemaId,
   ime,

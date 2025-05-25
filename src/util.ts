@@ -10,7 +10,7 @@ function setQuery (_query: LocationQuery) {
 }
 
 const breakpoint = useBreakpoint()
-const isMobile = computed(() => breakpoint.value === 'xs')
+const isMobile = computed(() => (breakpoint.value === 'xs'))
 
 const osThemeRef = useOsTheme()
 const currentTheme = ref(osThemeRef.value)

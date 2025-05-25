@@ -2,11 +2,16 @@
 import { defineProps } from 'vue';
 import { NButton } from 'naive-ui'
 
-const props = defineProps<{ number?: number | string }>()
+const props = defineProps<{ number?: number | string, keyName?: string }>()
+const emit = defineEmits(['onKeyPress'])
+
+function onKeyPress() {
+  emit('onKeyPress', props.number ?? props.keyName)
+}
 </script>
 
 <template>
-  <n-button size="large" class="number-key" secondary>
+  <n-button size="large" class="number-key" secondary v-on:click="onKeyPress">
     <slot></slot>
     <span class="number-indicator">{{ props.number }}</span>
   </n-button>

@@ -14,12 +14,14 @@ import {
   setQuery,
   getTextarea,
   showDrawer,
-  toggleDrawer
+  toggleDrawer,
+  isMobile,
 } from '../util'
 import {
   init,
   text,
   changeLanguage,
+  autoSwitchKeyboardLayout,
   isRecording,
 } from '../control'
 import { setMessage } from '../micro-plum'
@@ -147,9 +149,9 @@ function triggerPanelKeyDown(button: string) {
     </div>
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard" @select-all="selectAll"
       :getVoiceRecognitionRef="voiceRecognitionRefFn" />
-    <SimpleKeyboard v-if="showKeyboard" @onKeyPress="triggerPanelKeyDown"
+    <SimpleKeyboard v-if="showKeyboard && (!autoSwitchKeyboardLayout || !isMobile)" @onKeyPress="triggerPanelKeyDown"
       :getVoiceRecognitionRef="voiceRecognitionRefFn" />
-    <!-- <T9Keyboard /> -->
+    <T9Keyboard v-else-if="showKeyboard && (autoSwitchKeyboardLayout && isMobile)" @onKeyPress="triggerPanelKeyDown" />
     <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
     <VoiceRecognition ref="voiceRecognitionRef" @set-input="appendToTextBox" />
   </n-flex>
