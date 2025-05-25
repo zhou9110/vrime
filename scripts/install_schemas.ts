@@ -106,7 +106,7 @@ for (const schema of schemas) {
   if (!(target in targetManifest)) {
     targetManifest[target] = []
     targetFiles[target] = []
-    targetLicense[target] = schema.license
+    targetLicense[target] = schema.license ?? "MIT"
   }
   ids.push(schema.id)
   // @ts-ignore

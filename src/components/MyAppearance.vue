@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { NSpace, NCheckbox, NSelect } from 'naive-ui'
-import { forceVertical, pageSize } from '../control'
-
+import { NCheckbox, NFlex, NSelect, NSpace } from 'naive-ui';
+import { autoSwitchKeyboardLayout, forceVertical, pageSize } from '../control';
 
 const options = [
   { label: '默认', value: 0 },
@@ -20,4 +19,7 @@ const options = [
       <n-select v-model:value="pageSize" style="width: 96px" :options="options" />
     </n-space>
   </n-space>
+  <n-flex vertical style="margin-left: 44px">
+    <n-checkbox v-model:checked="autoSwitchKeyboardLayout">自动切换九键和全键盘</n-checkbox>
+  </n-flex>
 </template>
