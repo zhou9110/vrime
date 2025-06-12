@@ -68,6 +68,7 @@ export default defineComponent({
       isEnglish,
       keyboard: ref<Keyboard | null>(null),
       isKeyboardReady: ref(false),
+      shiftPressed: ref(false),
       micButtonTarget,
     }
   },
@@ -140,14 +141,22 @@ export default defineComponent({
       /**
        * If you want to handle the shift and caps lock buttons
        */
-      if (button === "{shift}" || button === "{lock}") this.handleShift();
+      if (this.shiftPressed && (button !== "{shift}" && button !== "{lock}")) { 
+        this.handleShift(button);
+        this.shiftPressed = false;
+        return;
+      }
+      if (button === "{shift}" || button === "{lock}") this.handleShift(button);
 
       if (button === "{lang}") this.switchLanguage();
+
     },
-    handleShift() {
+    handleShift(button: string) {
       if (!this.keyboard) return
       let currentLayout = this.keyboard.options.layoutName;
       let shiftToggle = currentLayout === "default" ? "shift" : "default";
+
+      if (button === "{shift}") this.shiftPressed = true;
 
       this.keyboard.setOptions({
         layoutName: shiftToggle
