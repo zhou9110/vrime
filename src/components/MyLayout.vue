@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter } from 'naive-ui'
+import { useMobileHeightBreakpoint } from '../util'
+
+const mobileHeightMatches = useMobileHeightBreakpoint()
 </script>
 
 <template>
@@ -8,10 +11,12 @@ import { NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter } from 'naive-ui'
   >
     <slot name="header" />
   </n-layout-header>
-  <n-layout
+    <!-- style="top:48px" -->
+    <!-- :style="{ top: mobileHeightMatches ? '0px' : '48px' }" -->
+    <n-layout
     position="absolute"
     :native-scrollbar="false"
-    style="top: 48px"
+    style="top:48px"
     content-style="height: 100%; display: flex; flex-direction: column"
   >
     <n-layout-content style="flex: 1 0 auto">

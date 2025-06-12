@@ -2,7 +2,7 @@
 import {
   ref, defineAsyncComponent, computed, watch, defineProps
 } from 'vue'
-import { NA, NP, NSpace, NSwitch, NTabs, NTabPane } from 'naive-ui'
+import { NA, NP, NSpace, NSwitch, NTabs, NTabPane, NDivider } from 'naive-ui'
 import MyFooter from './MyFooter.vue'
 import {
   getTextarea,
@@ -54,6 +54,7 @@ defineExpose({
   <n-tabs size="large">
     <n-tab-pane name="settings" tab="设置">
       <my-appearance />
+      <n-divider />
       <my-deployer />
       <micro-plum />
       <n-space style="align-items: center">

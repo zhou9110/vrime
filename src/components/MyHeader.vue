@@ -4,7 +4,7 @@ import { NIcon, NButton, NText, NMenu, NSwitch, NSpace, NTooltip } from 'naive-u
 import { Github } from '@vicons/fa'
 import { HeadsetVr24Filled, Keyboard20Regular, Settings32Regular } from '@vicons/fluent'
 import { LightModeFilled, DarkModeFilled } from '@vicons/material'
-import { currentTheme, toggleDrawer } from '../util'
+import { currentTheme, toggleDrawer, isMobile, useMobileHeightBreakpoint } from '../util'
 
 const prop = defineProps<{
   icon: string,
@@ -22,6 +22,8 @@ function toRepo() {
   window.open(prop.homepage, '_blank')
 }
 
+const mobileHeightMatches = useMobileHeightBreakpoint()
+
 // <n-icon
 //   :size="28"
 //   style="padding-right: 16px; cursor: pointer"
@@ -32,7 +34,7 @@ function toRepo() {
 </script>
 
 <template>
-  <div style="padding-left: 24px; display: flex; align-items: center; cursor: pointer" @click="toRepo">
+  <div class="vrime-header" style="padding-left: 24px; display: flex; align-items: center; cursor: pointer" @click="toRepo">
     <!-- <img :src="icon" style="width: 48px; height: 48px"> -->
     <n-icon size="40">
       <HeadsetVr24Filled />
@@ -41,7 +43,7 @@ function toRepo() {
     <n-icon size="35">
       <Keyboard20Regular />
     </n-icon>
-    <n-text style="font-size: 18px; margin-left: 12px">
+    <n-text style="font-size: 18px; margin-left: 12px" v-if="!isMobile">
       在线中文输入法 (Quest用)
     </n-text>
   </div>
@@ -59,7 +61,7 @@ function toRepo() {
       </template>
       <div>浅色/深色模式</div>
     </n-tooltip>
-    <n-button text style="font-size: 24px" @click="toggleDrawer">
+    <n-button id="settings-btn" text style="font-size: 24px" @click="toggleDrawer">
       <n-icon :size="28" :component="Settings32Regular" />
     </n-button>
     <n-icon :size="28" style="padding-right: 16px; cursor: pointer" @click="toRepo">
@@ -67,3 +69,11 @@ function toRepo() {
     </n-icon>
   </n-space>
 </template>
+
+<style>
+@media (max-height: 768px) {
+  .vrime-header {
+    display: none;
+  }
+}
+</style>

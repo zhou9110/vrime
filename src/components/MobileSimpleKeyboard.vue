@@ -6,7 +6,7 @@
 </template>
 
 <script lang="tsx">
-import { ref, h, render, computed, defineComponent, nextTick } from "vue"
+import { ref, computed, defineComponent, nextTick } from "vue"
 import Keyboard from "simple-keyboard";
 import "simple-keyboard/build/css/index.css";
 import { useOsTheme } from "naive-ui"
@@ -79,31 +79,31 @@ export default defineComponent({
       theme: this.isDark ? "hg-theme-default darkTheme" : "hg-theme-default",
       layout: {
         default: [
-          "{esc} \u0060 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
-          "{tab} q w e r t y u i o p [ ] \\",
-          "{lock} a s d f g h j k l ; ' {enter}",
-          "{shift} z x c v b n m , . / {shift}",
-          "{mic} ， {space} 。 {settings} {hide}",
+          "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
+          "q w e r t y u i o p",
+          " a s d f g h j k l {enter}",
+          "{shift} z x c v b n m {bksp}",
+          "{mic} @ , {space} . {settings} {hide}",
         ],
         micOn: [
-          "{esc} \u0060 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
-          "{tab} q w e r t y u i o p [ ] \\",
-          "{lock} a s d f g h j k l ; ' {enter}",
-          "{shift} z x c v b n m , . / {shift}",
-          "{mic} ， {space} 。 {settings} {hide}",
+          "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
+          "q w e r t y u i o p",
+          " a s d f g h j k l {enter}",
+          "{shift} z x c v b n m {bksp}",
+          "{mic} ，@ {space} 。 {settings} {hide}",
         ],
         eng: [
-          "{esc} \u0060 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
-          "{tab} q w e r t y u i o p [ ] \\",
-          "{lock} a s d f g h j k l ; ' {enter}",
-          "{shift} z x c v b n m , . / {shift}",
-          "{mic} .com {space} @ {settings} {hide}",
+          "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
+          "q w e r t y u i o p",
+          " a s d f g h j k l {enter}",
+          "@ z x c v b n m {bksp}",
+          "{mic} ， {space} 。 {settings} {hide}",
         ],
         shift: [
-          "{esc} ~ ! @ # $ % ^ & * ( ) _ + {bksp}",
-          "{tab} Q W E R T Y U I O P { } |",
-          '{lock} A S D F G H J K L : " {enter}',
-          "{shift} Z X C V B N M < > ? {shift}",
+          "{esc} ~ ! @ # $ % ^ & * ( ) _ +",
+          "Q W E R T Y U I O P",
+          ' A S D F G H J K L {enter}',
+          "{shift} Z X C V B N M {bksp}",
           "{mic} , {space} . {settings} {hide}",
         ],
       },
@@ -112,8 +112,7 @@ export default defineComponent({
         '{enter}': KeyboardReturnRoundSvg,
         '{settings}': SettingsRegularSvg,
         '{bksp}': BackspaceRegularSvg,
-        "{hide}": KeyboardHideOutlinedSvg,
-        "{lock}": "caps ⇪",
+        "{hide}": "back",
         "{shift}": "⇧",
         "{lang}": currentLanguage.value === "chinese" ? langBtnCn : langBtnEn,
         "{esc}": "esc",
@@ -141,7 +140,7 @@ export default defineComponent({
       /**
        * If you want to handle the shift and caps lock buttons
        */
-      if (this.shiftPressed && (button !== "{shift}" && button !== "{lock}")) { 
+      if (this.shiftPressed && (button !== "{shift}" && button !== "{lock}")) {
         this.handleShift(button);
         this.shiftPressed = false;
         return;
@@ -188,13 +187,6 @@ export default defineComponent({
       })
       this.remountRecorderButton()
     },
-    // isRecording(newIsRecording) {
-    //   if (!this.keyboard) return
-    //   this.keyboard.setOptions({
-    //     display: getDisplay(),
-    //     layoutName: newIsRecording ? "micOn" : "default"
-    //   })
-    // },
   },
   computed: {
     isDark() {
@@ -203,26 +195,6 @@ export default defineComponent({
     getDarkThemeClassName() {
       return osThemeRef.value === "dark" ? "darkTheme" : undefined
     },
-    //   getDisplay() {
-    //     return {
-    //       // '{enter}': '<span class="material-icons-outlined">keyboard_return</span>',
-    //       // '{settings}': '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-    //       // '{bksp}': '<span class="material-icons-outlined">backspace</span>',
-    //       // "{lock}": "caps ⇪",
-    //       // "{shift}": "⇧",
-    //       // "{lang}": isEnglish.value ? langBtnEn : langBtnCn
-
-    //       // '{enter}': render(h(NIcon, { ':component': KeyboardReturnRound })),
-    //       // '{enter}': returnIcon,
-    //       '{enter}': '<span style="height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M19 8v3H5.83l2.88-2.88A.996.996 0 1 0 7.3 6.71L2.71 11.3a.996.996 0 0 0 0 1.41L7.3 17.3a.996.996 0 1 0 1.41-1.41L5.83 13H20c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1s-1 .45-1 1z" fill="currentColor"></path></svg></span>',
-    //       '{settings}': '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-    //       '{bksp}': '<span class="material-icons-outlined">backspace</span>',
-    //       "{lock}": "caps ⇪",
-    //       "{shift}": "⇧",
-    //       "{lang}": currentLanguage.value === "chinese" ? langBtnCn : langBtnEn,
-    //       "{hide}": "hide2"
-    //     };
-    //   }
   },
 });
 </script>
