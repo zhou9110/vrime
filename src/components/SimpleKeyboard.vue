@@ -156,7 +156,7 @@ export default defineComponent({
       let currentLayout = this.keyboard.options.layoutName;
       let shiftToggle = currentLayout === "default" ? "shift" : "default";
 
-      if (button === "{shift}") this.shiftPressed = true;
+      if (button === "{shift}" && currentLayout === "default") this.shiftPressed = true;
 
       this.keyboard.setOptions({
         layoutName: shiftToggle
