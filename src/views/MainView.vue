@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { NInput, NFlex, useMessage, NModal, NCard } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
@@ -129,6 +129,15 @@ function triggerPanelKeyDown(button: string) {
     panel.value?.onKeydown(new KeyboardEvent('keydown', { 'key': `${button}`, code: `Key${button.toUpperCase()}`, 'keyCode': button.charCodeAt(0) }));
   }
 }
+
+function getRows() {
+  if (!showKeyboard.value) {
+    return 10;
+  }
+  return 6;
+}
+
+const rows = computed(() => getRows());
 </script>
 <!-- header-style="background: #1c1c26" body-style="background: #101014" -->
 <template>
@@ -140,9 +149,21 @@ function triggerPanelKeyDown(button: string) {
   <n-flex vertical class="my-column">
     <instruction :showKeyboard="showKeyboard" />
     <my-menu />
-    <div style="display: flex; align-items: center;">
-      <n-input id="container" ref="inputInstRef" v-model:value="text" type="textarea" :rows="showKeyboard ? 6 : 10"
-        clearable @focus="onFocus" size="large" :readonly="showKeyboard" />
+    <div style="display: flex; align-items: center">
+      <n-input
+        id="container"
+        ref="inputInstRef"
+        :input-props="{
+          inputmode: showKeyboard ? 'none' : 'text'
+        }"
+        v-model:value="text"
+        type="textarea"
+        :rows="rows"
+        clearable
+        @focus="onFocus"
+        size="large"
+      />
+
       <MySearchButton />
     </div>
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => showKeyboard = !showKeyboard" @select-all="selectAll"
