@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { LocationQuery } from 'vue-router'
 import { useBreakpoint } from 'vooks'
 import { useOsTheme } from 'naive-ui'
@@ -36,6 +36,29 @@ function toggleDrawer() {
   showDrawer.value = !showDrawer.value
 }
 
+function useMobileHeightBreakpoint(callback?: (matches: boolean, query: MediaQueryList) => void) {
+  const mobileHeightQuery = matchMedia('(max-height: 768px)')
+  const matches = ref(mobileHeightQuery.matches)
+
+  const onChange = () => {
+    matches.value = mobileHeightQuery.matches
+    if (callback) {
+      callback(matches.value, mobileHeightQuery)
+    }
+  }
+
+  onMounted(() => {
+    // 监听媒体查询变化
+    mobileHeightQuery.addEventListener('change', onChange)
+  })
+  
+  onUnmounted(() => {
+    mobileHeightQuery.removeEventListener('change', onChange)
+  })
+
+  return matches
+}
+
 export {
   isMobile,
   currentTheme,
@@ -44,5 +67,6 @@ export {
   getTextarea,
   getQueryString,
   getQueryOrStoredString,
-  toggleDrawer
+  toggleDrawer,
+  useMobileHeightBreakpoint,
 }

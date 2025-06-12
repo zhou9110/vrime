@@ -5,7 +5,7 @@ import { NIcon, NP, NPopover, NButton } from 'naive-ui';
 import { MicNoneRound, MicOffOutlined } from "@vicons/material"
 
 import { isRecording as globalIsRecording, recognisedText } from '../control';
-import { currentTheme } from '../util'
+import { currentTheme, isMobile } from '../util'
 import VoiceLoader from './VoiceLoader.vue';
 import OvalLoader from './OvalLoader.vue';
 
@@ -65,9 +65,10 @@ onLongPress(
   <n-popover trigger="manual" :show="isRecording" placement="bottom">
     <template #trigger>
       <slot>
-        <n-button ref="buttonRef" secondary :class="{ 'mic': !isRecording, 'mic-off': isRecording }"
-          style="padding: 0; height: 50px; min-width: 100px; font-size: 18px;" v-bind="$attrs" @click="toggleRecording">
-          <n-icon size="24">
+        <n-button ref="buttonRef" secondary
+          :class="{ 'mic': !isRecording, 'mic-off': isRecording, 'desktop': !isMobile, 'mobile': isMobile }"
+          style="padding: 0;" v-bind="$attrs" @click="toggleRecording">
+          <n-icon :size="isMobile ? 20 : 24">
             <MicNoneRound v-if="!isRecording" />
             <MicOffOutlined v-else style="color: white;" />
           </n-icon>
@@ -100,5 +101,15 @@ onLongPress(
 .mic-off {
   color: white;
   background: red;
+}
+
+.desktop {
+  height: 50px;
+  min-width: 100px;
+  font-size: 18px;
+}
+
+.mobile {
+  min-width: 50px;
 }
 </style>

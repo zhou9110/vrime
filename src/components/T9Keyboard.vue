@@ -1,7 +1,5 @@
 <script setup lang="tsx">
-import { NButton, NIcon, useOsTheme } from "naive-ui";
-import Keyboard from "simple-keyboard";
-import "simple-keyboard/build/css/index.css";
+import { NButton, NIcon, useOsTheme, NFlex } from "naive-ui";
 import { computed, defineComponent, nextTick, ref, defineEmits } from "vue";
 import { currentTheme } from '../util';
 
@@ -11,80 +9,135 @@ const SettingsRegularSvg = '<svg style="width:20px" xmlns="http://www.w3.org/200
 const BackspaceRegularSvg = '<svg style="width:24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41L17.59 17L19 15.59L15.41 12L19 8.41L17.59 7L14 10.59L10.41 7L9 8.41L12.59 12L9 15.59z" fill="currentColor"></path></svg>'
 
 import { isEnglish, isRecording } from "../control";
+import SimpleKeyboard from "./MobileSimpleKeyboard.vue";
 import RecordButton from "./RecordButton.vue";
 import NumKey from "./NumKey.vue";
+import SideKey from "./T9SideKey.vue";
 
 const emit = defineEmits(['onKeyPress'])
 
 const micButtonTarget = ref<HTMLElement | null>(null)
+const currentLayout = ref<'num' | 'abc' | 't9'>('t9')
 
 const currentLanguage = computed(() => isEnglish.value ? "engish" : "chinese")
 
 const langBtnCn = "<span><b>中</b>/<span style='color: lightgray'>英</span></span>"
 const langBtnEn = "<span><span style='color: lightgray'>中</span>/<b>英</b></span>"
 
-function getDisplay() {
-  const prevIsEnglish = isEnglish.value
-  return {
-    // '{enter}': render(h(NIcon, { ':component': KeyboardReturnRound })),
-    // '{enter}': returnIcon,
-    '{enter}': KeyboardReturnRoundSvg, // '<img src="@sicons/fluent/Money16Regular.svg" />',
-    '{settings}': SettingsRegularSvg, // '<span style="width: 20px;" class="material-icons-outlined">settings</span>',
-    '{bksp}': BackspaceRegularSvg, //  '<span class="material-icons-outlined">backspace</span>',
-    "{lock}": "caps ⇪",
-    "{shift}": "⇧",
-    "{lang}": prevIsEnglish ? langBtnCn : langBtnEn,
-    // "{hide}": `<img src="data:image/svg+xml,${encodeURIComponent(KeyboardHideOutlinedSvg)}" />`
-    "{hide}": KeyboardHideOutlinedSvg,
-    "{mic}": '', // MicNoneRoundSvg,
-  };
+
+
+function onKeyPress(button: string | KeyboardEvent) {
+  emit('onKeyPress', button)
 }
 
-function onKeyPress(button: string) {
-  emit('onKeyPress', button)
+function swapLayout(toLayout: 'num' | 'abc') {
+  console.log('swapLayout', toLayout)
+  currentLayout.value = toLayout
 }
 
 </script>
 
 <template>
-  <div class="numpad">
-    <n-button class="numpad-key" size="large">，</n-button>
-    <NumKey class="numpad-key" number="1" @onKeyPress="onKeyPress">分词</NumKey>
-    <NumKey class="numpad-key" number="2" @onKeyPress="onKeyPress">abc</NumKey>
-    <NumKey class="numpad-key" number="3" @onKeyPress="onKeyPress">def</NumKey>
-    <n-button class="numpad-key" size="large" @click="onKeyPress('{bksp}')"><span v-html="BackspaceRegularSvg"></span></n-button>
-    <n-button class="numpad-key" size="large">。</n-button>
-    <NumKey class="numpad-key" number="4" @onKeyPress="onKeyPress">ghi</NumKey>
-    <NumKey class="numpad-key" number="5" @onKeyPress="onKeyPress">jkl</NumKey>
-    <NumKey class="numpad-key" number="6" @onKeyPress="onKeyPress">mno</NumKey>
-    <n-button class="numpad-key" size="large">重输</n-button>
-    <n-button class="numpad-key" size="large">？</n-button>
-    <NumKey class="numpad-key" number="7" @onKeyPress="onKeyPress">pqrs</NumKey>
-    <NumKey class="numpad-key" number="8" @onKeyPress="onKeyPress">tuv</NumKey>
-    <NumKey class="numpad-key" number="9" @onKeyPress="onKeyPress">wxyz</NumKey>
-    <n-button class="numpad-key" size="large">OK</n-button>
-    <n-button class="numpad-key" size="large">符号</n-button>
-    <RecordButton style="height: 100%;" :secondary="false"/>
-    <NumKey class="numpad-key" number="0" @onKeyPress="onKeyPress">空格</NumKey>
-    <n-button class="numpad-key" size="large">123</n-button>
-    <n-button class="numpad-key" size="large" @click="onKeyPress('{enter}')"><span v-html="KeyboardReturnRoundSvg"></span></n-button>
+  <template v-if="currentLayout === 'abc'">
+    <SimpleKeyboard />
+  </template>
+  <div class="numpad" v-else>
+    <n-flex vertical class="side" gap="5px">
+      <SideKey class="side-key" @onKeyPress="onKeyPress">，</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">。</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">?</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">@</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">!</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">$</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">%</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">&</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">(</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">)</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">-</SideKey>
+      <SideKey class="side-key" @onKeyPress="onKeyPress">+</SideKey>
+    </n-flex>
+
+    <template v-if="currentLayout === 't9'">
+      <NumKey class="numpad-key" keyName="7" number="7" @onKeyPress="onKeyPress">分词</NumKey>
+      <NumKey class="numpad-key" keyName="8" number="8" @onKeyPress="onKeyPress">abc</NumKey>
+      <NumKey class="numpad-key" keyName="9" number="9" @onKeyPress="onKeyPress">def</NumKey>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{bksp}')"><span
+          v-html="BackspaceRegularSvg"></span></n-button>
+      <NumKey class="numpad-key" keyName="4" number="4" @onKeyPress="onKeyPress">ghi</NumKey>
+      <NumKey class="numpad-key" keyName="5" number="5" @onKeyPress="onKeyPress">jkl</NumKey>
+      <NumKey class="numpad-key" keyName="6" number="6" @onKeyPress="onKeyPress">mno</NumKey>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{esc}')">重输</n-button>
+      <NumKey class="numpad-key" keyName="1" number="1" @onKeyPress="onKeyPress">pqrs</NumKey>
+      <NumKey class="numpad-key" keyName="2" number="2" @onKeyPress="onKeyPress">tuv</NumKey>
+      <NumKey class="numpad-key" keyName="3" number="3" @onKeyPress="onKeyPress">wxyz</NumKey>
+      <n-button class="numpad-key" size="large" @click="swapLayout('abc')">ABC</n-button>
+      <n-button class="numpad-key" size="large" disabled>符号</n-button>
+      <RecordButton class="numpad-key" style="height: 100%;" :secondary="false" />
+      <NumKey class="numpad-key" keyName="0" number="0" @onKeyPress="onKeyPress">空格</NumKey>
+      <n-button class="numpad-key" size="large" @click="swapLayout('num')">123</n-button>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{enter}')"><span
+          v-html="KeyboardReturnRoundSvg"></span></n-button>
+    </template>
+    <template v-else-if="currentLayout === 'num'">
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">1</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">2</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">3</NumKey>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{bksp}')"
+        @longclick="setInterval(() => onKeyPress('{bksp}'), 100)"><span v-html="BackspaceRegularSvg"></span></n-button>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">4</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">5</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">6</NumKey>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{esc}')"></n-button>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">7</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">8</NumKey>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">9</NumKey>
+      <n-button class="numpad-key" size="large"></n-button>
+      <n-button class="numpad-key" size="large"></n-button>
+      <n-button class="numpad-key"></n-button>
+      <NumKey class="numpad-key" @onKeyPress="onKeyPress">0</NumKey>
+      <n-button class="numpad-key" size="large" @click="swapLayout('t9')">返回</n-button>
+      <n-button class="numpad-key" size="large" @click="onKeyPress('{enter}')"><span
+          v-html="KeyboardReturnRoundSvg"></span></n-button>
+    </template>
   </div>
 </template>
 
 <style scoped>
+.side {
+  border-radius: 3px;
+  grid-area: side;
+  overflow: auto;
+  background-color: rgba(166, 161, 161, 0.242);
+  padding: 3px;
+}
+
+.side>.side-key:not(:last-child)::after {
+  position: absolute;
+  bottom: -3px;
+  width: 95%;
+  content: '';
+  /* border-bottom: 1px solid rgba(100, 100, 100, 0.5); */
+  border-bottom: var(--n-border);
+}
+
+.side-key {
+  height: 25%;
+}
+
 .numpad {
   max-width: 800px;
-  min-height: 300px;
+  min-height: 200px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  grid-template-areas: 
-    "a n n n b"
-    "a n n n b"
-    "a n n n b"
-    "b b n b b";
+  grid-template-areas:
+    "side . . . ."
+    "side . . . ."
+    "side . . . ."
+    ". . . . .";
   gap: 5px;
   align-self: center;
+  width: 100%;
 }
 
 .numpad-key {
@@ -95,5 +148,12 @@ function onKeyPress(button: string) {
 .operation-bar {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-height: 768px) {
+  .numpad {
+    min-height: 100px;
+    max-height: 50vh;
+  }
 }
 </style>
