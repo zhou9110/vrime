@@ -10,6 +10,7 @@ import MyBar from "../components/MyBar.vue";
 import SimpleKeyboard from "../components/SimpleKeyboard.vue";
 import MySearchButton from "../components/MySearchButton.vue";
 import Settings from "../components/SettingsModal.vue";
+
 import {
   setQuery,
   getTextarea,
@@ -211,10 +212,19 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
     <instruction :showKeyboard="showKeyboard" />
     <my-menu @select-ime="chooseKeyboardFromIME" />
     <div style="display: flex; align-items: center">
-      <n-input id="container" ref="inputInstRef" :input-props="{
-        inputmode: showKeyboard ? 'none' : 'text'
-      }" v-model:value="text" type="textarea" :rows="rows" clearable @focus="onFocus" size="large" />
-
+      <n-input
+        id="container"
+        ref="inputInstRef"
+        :input-props="{
+          inputmode: showKeyboard ? 'none' : 'text'
+        }"
+        v-model:value="text"
+        type="textarea"
+        :rows="rows"
+        clearable
+        @focus="onFocus"
+        size="large"
+      />
       <MySearchButton />
     </div>
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => (showKeyboard = !showKeyboard)" @select-all="selectAll"
