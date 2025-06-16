@@ -487,8 +487,8 @@ defineExpose({
     max-width: 90vw;
   }
 
-  .text-candidates .n-menu.n-menu--horizontal {
-    overflow-x: auto;
+  .text-candidates.n-menu.n-menu--horizontal {
+    overflow: auto;
   }
 }
 </style>
