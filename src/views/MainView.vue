@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, provide, computed, onMounted, onUnmounted } from "vue";
+import { ref, provide, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { NInput, NFlex, useMessage, NModal, NCard } from "naive-ui";
 import type { InputInst } from "naive-ui";
@@ -23,11 +23,16 @@ import {
   text,
   changeLanguage,
   autoSwitchKeyboardLayout,
-  isRecording,
+  currentKeyboardLayout,
+  selectIME,
+  schemaId,
+  prevSchemaId,
+  ime
 } from "../control";
 import { setMessage } from "../micro-plum";
 import VoiceRecognition from "../components/VoiceRecognition.vue";
 import T9Keyboard from "../components/T9Keyboard.vue";
+import MobileSimpleKeyboard from "../components/MobileSimpleKeyboard.vue";
 
 setQuery(useRoute().query);
 setMessage(useMessage());
@@ -156,6 +161,14 @@ function triggerPanelKeyDown(button: string | KeyboardEvent) {
 
 const mobileHeightMatches = useMobileHeightBreakpoint();
 
+function chooseKeyboardFromIME(imeName: string) {
+  if (imeName === "xiaobai_simp") {
+    currentKeyboardLayout.value = ["t9", null];
+  } else {
+    currentKeyboardLayout.value = ["qwerty", null];
+  }
+}
+
 function getRows() {
   if (mobileHeightMatches.value) {
     return 2;
@@ -167,6 +180,25 @@ function getRows() {
 }
 
 const rows = computed(() => getRows());
+
+const prevSchemaId = ref(schemaId.value)
+
+watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
+  if (isMobileVal && newAutoSwitch) {
+    prevSchemaId.value = ime.value || schemaId.value;
+    console.log("prevSchemaId set to:", prevSchemaId.value);
+    chooseKeyboardFromIME("xiaobai_simp")
+    selectIME("xiaobai_simp");
+  } else {
+    if (prevSchemaId.value) {
+      selectIME(prevSchemaId.value);
+      chooseKeyboardFromIME(prevSchemaId.value)
+      return;
+    } else {
+      currentKeyboardLayout.value = ["qwerty", null];
+    }
+  }
+})
 </script>
 <!-- header-style="background: #1c1c26" body-style="background: #101014" -->
 <template>
@@ -177,39 +209,23 @@ const rows = computed(() => getRows());
   </n-modal>
   <n-flex vertical class="my-column">
     <instruction :showKeyboard="showKeyboard" />
-    <my-menu />
+    <my-menu @select-ime="chooseKeyboardFromIME" />
     <div style="display: flex; align-items: center">
-      <n-input
-        id="container"
-        ref="inputInstRef"
-        :input-props="{
-          inputmode: showKeyboard ? 'none' : 'text'
-        }"
-        v-model:value="text"
-        type="textarea"
-        :rows="rows"
-        clearable
-        @focus="onFocus"
-        size="large"
-      />
+      <n-input id="container" ref="inputInstRef" :input-props="{
+        inputmode: showKeyboard ? 'none' : 'text'
+      }" v-model:value="text" type="textarea" :rows="rows" clearable @focus="onFocus" size="large" />
 
       <MySearchButton />
     </div>
-    <my-bar
-      :showKeyboard="showKeyboard"
-      @toggle-keyboard="() => (showKeyboard = !showKeyboard)"
-      @select-all="selectAll"
-      :getVoiceRecognitionRef="voiceRecognitionRefFn"
-    />
-    <SimpleKeyboard
-      v-if="showKeyboard && (!autoSwitchKeyboardLayout || !isMobile)"
-      @onKeyPress="triggerPanelKeyDown"
-      :getVoiceRecognitionRef="voiceRecognitionRefFn"
-    />
-    <T9Keyboard
-      v-else-if="showKeyboard && autoSwitchKeyboardLayout && isMobile"
-      @onKeyPress="triggerPanelKeyDown"
-    />
+    <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => (showKeyboard = !showKeyboard)" @select-all="selectAll"
+      :getVoiceRecognitionRef="voiceRecognitionRefFn" />
+    <template v-if="showKeyboard">
+      <T9Keyboard v-if="currentKeyboardLayout[0] === 't9'" @onKeyPress="triggerPanelKeyDown" />
+      <MobileSimpleKeyboard
+        v-else-if="isMobile || (currentKeyboardLayout[0] === 'qwerty' && currentKeyboardLayout[1] === 'mobile')"
+        @onKeyPress="triggerPanelKeyDown" :getVoiceRecognitionRef="voiceRecognitionRefFn" />
+      <SimpleKeyboard v-else @onKeyPress="triggerPanelKeyDown" :getVoiceRecognitionRef="voiceRecognitionRefFn" />
+    </template>
     <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
     <VoiceRecognition ref="voiceRecognitionRef" @set-input="appendToTextBox" />
   </n-flex>

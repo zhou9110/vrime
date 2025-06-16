@@ -457,7 +457,7 @@ defineExpose({
     {{ preEditTail }}
     <n-menu v-show="menuOptions.length" :options="menuOptions"
       class="text-candidates"
-      :mode="forceVertical || isMobile || xOverflow ? 'vertical' : 'horizontal'" :value="highlighted"
+      :mode="forceVertical || (xOverflow && !isMobile) ? 'vertical' : 'horizontal'" :value="highlighted"
       @update:value="onClick"
       @touchstart.stop="e => console.log('touch stopped')"
       @mousedown.stop="e => console.log('click stopped')"
@@ -479,5 +479,16 @@ defineExpose({
 .text-candidates .n-menu-item-content:hover {
   background-color: var(--n-item-color-active-hover);
   border-radius: var(--n-border-radius);
+}
+
+@media (max-width: 768px) {
+  .n-popover:has(.text-candidates) {
+    overflow-x: auto;
+    max-width: 90vw;
+  }
+
+  .text-candidates .n-menu.n-menu--horizontal {
+    overflow-x: auto;
+  }
 }
 </style>

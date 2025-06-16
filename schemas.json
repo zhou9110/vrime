@@ -185,6 +185,6 @@
     "name": "小白九键",
     "group": "九键",
     "target": "zhou9110/rime-xiaobai_simp",
-    "dependencies": ["stroke"]
+    "dependencies": ["luna_quanpin"]
   }
 ]

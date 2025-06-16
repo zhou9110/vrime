@@ -396,8 +396,6 @@
 
   var luna_pinyin$3 = "朙月拼音";
   var luna_pinyin_fluency$3 = "朙月拼音·语句流";
-  var jyut6ping3$3 = "粤语拼音";
-  var jyut6ping3_ipa$3 = "粤语拼音·IPA";
   var double_pinyin$3 = "自然码双拼";
   var double_pinyin_abc$3 = "智能ABC双拼";
   var double_pinyin_flypy$3 = "小鹤双拼";
@@ -408,27 +406,19 @@
   var wubi_trad$3 = "86五笔·繁体";
   var pinyin_simp$3 = "袖珍简拼";
   var terra_pinyin$3 = "地球拼音";
-  var ipa_xsampa$2 = "X-SAMPA";
-  var ipa_yunlong$2 = "云龙国际音标";
   var bopomofo$4 = "注音";
   var bopomofo_express$3 = "注音·快打";
-  var zyenpheng$3 = "中古全拼";
-  var sampheng$3 = "中古三拼";
   var cangjie5$3 = "仓颉五代";
   var cangjie5_express$3 = "仓颉五代·快打";
   var stroke$4 = "五笔画";
   var array30$3 = "行列30";
-  var wugniu_lopha$3 = "上海吴语·老派";
-  var wugniu$4 = "上海吴语·新派";
-  var soutzoe$4 = "苏州吴语";
   var stenotype$4 = "打字速记法";
   var scj6$3 = "快速仓颉";
   var quick5$3 = "速成";
+  var xiaobai_simp$3 = "小白九键";
   var schemaName = {
   	luna_pinyin: luna_pinyin$3,
   	luna_pinyin_fluency: luna_pinyin_fluency$3,
-  	jyut6ping3: jyut6ping3$3,
-  	jyut6ping3_ipa: jyut6ping3_ipa$3,
   	double_pinyin: double_pinyin$3,
   	double_pinyin_abc: double_pinyin_abc$3,
   	double_pinyin_flypy: double_pinyin_flypy$3,
@@ -439,22 +429,16 @@
   	wubi_trad: wubi_trad$3,
   	pinyin_simp: pinyin_simp$3,
   	terra_pinyin: terra_pinyin$3,
-  	ipa_xsampa: ipa_xsampa$2,
-  	ipa_yunlong: ipa_yunlong$2,
   	bopomofo: bopomofo$4,
   	bopomofo_express: bopomofo_express$3,
-  	zyenpheng: zyenpheng$3,
-  	sampheng: sampheng$3,
   	cangjie5: cangjie5$3,
   	cangjie5_express: cangjie5_express$3,
   	stroke: stroke$4,
   	array30: array30$3,
-  	wugniu_lopha: wugniu_lopha$3,
-  	wugniu: wugniu$4,
-  	soutzoe: soutzoe$4,
   	stenotype: stenotype$4,
   	scj6: scj6$3,
-  	quick5: quick5$3
+  	quick5: quick5$3,
+  	xiaobai_simp: xiaobai_simp$3
   };
 
   var luna_pinyin$2 = {
@@ -465,12 +449,6 @@
   var luna_quanpin$1 = {
   	dict: "luna_pinyin",
   	prism: "luna_quanpin"
-  };
-  var jyut6ping3$2 = {
-  };
-  var jyut6ping3_ipa$2 = {
-  	dict: "jyut6ping3",
-  	prism: "jyut6ping3_ipa"
   };
   var double_pinyin$2 = {
   	dict: "luna_pinyin",
@@ -506,10 +484,6 @@
   };
   var terra_pinyin$2 = {
   };
-  var ipa_xsampa$1 = {
-  };
-  var ipa_yunlong$1 = {
-  };
   var bopomofo$3 = {
   	dict: "terra_pinyin",
   	prism: "bopomofo"
@@ -517,12 +491,6 @@
   var bopomofo_express$2 = {
   	dict: "terra_pinyin",
   	prism: "bopomofo_express"
-  };
-  var zyenpheng$2 = {
-  };
-  var sampheng$2 = {
-  	dict: "zyenpheng",
-  	prism: "sampheng"
   };
   var cangjie5$2 = {
   };
@@ -534,14 +502,6 @@
   };
   var array30$2 = {
   };
-  var wugniu_lopha$2 = {
-  };
-  var wugniu$3 = {
-  	dict: "wugniu_lopha",
-  	prism: "wugniu"
-  };
-  var soutzoe$3 = {
-  };
   var stenotype$3 = {
   	dict: "luna_pinyin",
   	prism: "stenotype"
@@ -550,12 +510,14 @@
   };
   var quick5$2 = {
   };
+  var xiaobai_simp$2 = {
+  	dict: "xiaobai",
+  	prism: "xiaobai_simp"
+  };
   var schemaFiles = {
   	luna_pinyin: luna_pinyin$2,
   	luna_pinyin_fluency: luna_pinyin_fluency$2,
   	luna_quanpin: luna_quanpin$1,
-  	jyut6ping3: jyut6ping3$2,
-  	jyut6ping3_ipa: jyut6ping3_ipa$2,
   	double_pinyin: double_pinyin$2,
   	double_pinyin_abc: double_pinyin_abc$2,
   	double_pinyin_flypy: double_pinyin_flypy$2,
@@ -566,29 +528,21 @@
   	wubi_trad: wubi_trad$2,
   	pinyin_simp: pinyin_simp$2,
   	terra_pinyin: terra_pinyin$2,
-  	ipa_xsampa: ipa_xsampa$1,
-  	ipa_yunlong: ipa_yunlong$1,
   	bopomofo: bopomofo$3,
   	bopomofo_express: bopomofo_express$2,
-  	zyenpheng: zyenpheng$2,
-  	sampheng: sampheng$2,
   	cangjie5: cangjie5$2,
   	cangjie5_express: cangjie5_express$2,
   	stroke: stroke$3,
   	array30: array30$2,
-  	wugniu_lopha: wugniu_lopha$2,
-  	wugniu: wugniu$3,
-  	soutzoe: soutzoe$3,
   	stenotype: stenotype$3,
   	scj6: scj6$2,
-  	quick5: quick5$2
+  	quick5: quick5$2,
+  	xiaobai_simp: xiaobai_simp$2
   };
 
   var luna_pinyin$1 = "luna-pinyin";
   var luna_pinyin_fluency$1 = "luna-pinyin";
   var luna_quanpin = "luna-pinyin";
-  var jyut6ping3$1 = "cantonese";
-  var jyut6ping3_ipa$1 = "cantonese";
   var double_pinyin$1 = "double-pinyin";
   var double_pinyin_abc$1 = "double-pinyin";
   var double_pinyin_flypy$1 = "double-pinyin";
@@ -599,28 +553,20 @@
   var wubi_trad$1 = "wubi";
   var pinyin_simp$1 = "pinyin-simp";
   var terra_pinyin$1 = "terra-pinyin";
-  var ipa_xsampa = "ipa";
-  var ipa_yunlong = "ipa";
   var bopomofo$2 = "bopomofo";
   var bopomofo_express$1 = "bopomofo";
-  var zyenpheng$1 = "middle-chinese";
-  var sampheng$1 = "middle-chinese";
   var cangjie5$1 = "cangjie";
   var cangjie5_express$1 = "cangjie";
   var stroke$2 = "stroke";
   var array30$1 = "array";
-  var wugniu_lopha$1 = "wugniu";
-  var wugniu$2 = "wugniu";
-  var soutzoe$2 = "soutzoe";
   var stenotype$2 = "stenotype";
   var scj6$1 = "scj";
   var quick5$1 = "quick";
+  var xiaobai_simp$1 = "zhou9110/rime-xiaobai_simp";
   var schemaTarget = {
   	luna_pinyin: luna_pinyin$1,
   	luna_pinyin_fluency: luna_pinyin_fluency$1,
   	luna_quanpin: luna_quanpin,
-  	jyut6ping3: jyut6ping3$1,
-  	jyut6ping3_ipa: jyut6ping3_ipa$1,
   	double_pinyin: double_pinyin$1,
   	double_pinyin_abc: double_pinyin_abc$1,
   	double_pinyin_flypy: double_pinyin_flypy$1,
@@ -631,22 +577,16 @@
   	wubi_trad: wubi_trad$1,
   	pinyin_simp: pinyin_simp$1,
   	terra_pinyin: terra_pinyin$1,
-  	ipa_xsampa: ipa_xsampa,
-  	ipa_yunlong: ipa_yunlong,
   	bopomofo: bopomofo$2,
   	bopomofo_express: bopomofo_express$1,
-  	zyenpheng: zyenpheng$1,
-  	sampheng: sampheng$1,
   	cangjie5: cangjie5$1,
   	cangjie5_express: cangjie5_express$1,
   	stroke: stroke$2,
   	array30: array30$1,
-  	wugniu_lopha: wugniu_lopha$1,
-  	wugniu: wugniu$2,
-  	soutzoe: soutzoe$2,
   	stenotype: stenotype$2,
   	scj6: scj6$1,
-  	quick5: quick5$1
+  	quick5: quick5$1,
+  	xiaobai_simp: xiaobai_simp$1
   };
 
   var luna_pinyin = [
@@ -654,16 +594,6 @@
   ];
   var luna_pinyin_fluency = [
   	"stroke"
-  ];
-  var jyut6ping3 = [
-  	"luna_pinyin",
-  	"stroke",
-  	"cangjie5"
-  ];
-  var jyut6ping3_ipa = [
-  	"luna_pinyin",
-  	"stroke",
-  	"cangjie5"
   ];
   var double_pinyin = [
   	"luna_pinyin"
@@ -703,12 +633,6 @@
   	"terra_pinyin",
   	"stroke"
   ];
-  var zyenpheng = [
-  	"luna_pinyin"
-  ];
-  var sampheng = [
-  	"luna_pinyin"
-  ];
   var cangjie5 = [
   	"luna_quanpin"
   ];
@@ -721,15 +645,6 @@
   var array30 = [
   	"luna_quanpin"
   ];
-  var wugniu_lopha = [
-  	"luna_pinyin"
-  ];
-  var wugniu$1 = [
-  	"luna_pinyin"
-  ];
-  var soutzoe$1 = [
-  	"luna_pinyin"
-  ];
   var stenotype$1 = [
   	"luna_pinyin"
   ];
@@ -739,11 +654,12 @@
   var quick5 = [
   	"luna_quanpin"
   ];
+  var xiaobai_simp = [
+  	"luna_quanpin"
+  ];
   var dependencyMap = {
   	luna_pinyin: luna_pinyin,
   	luna_pinyin_fluency: luna_pinyin_fluency,
-  	jyut6ping3: jyut6ping3,
-  	jyut6ping3_ipa: jyut6ping3_ipa,
   	double_pinyin: double_pinyin,
   	double_pinyin_abc: double_pinyin_abc,
   	double_pinyin_flypy: double_pinyin_flypy,
@@ -756,50 +672,20 @@
   	terra_pinyin: terra_pinyin,
   	bopomofo: bopomofo$1,
   	bopomofo_express: bopomofo_express,
-  	zyenpheng: zyenpheng,
-  	sampheng: sampheng,
   	cangjie5: cangjie5,
   	cangjie5_express: cangjie5_express,
   	stroke: stroke$1,
   	array30: array30,
-  	wugniu_lopha: wugniu_lopha,
-  	wugniu: wugniu$1,
-  	soutzoe: soutzoe$1,
   	stenotype: stenotype$1,
   	scj6: scj6,
-  	quick5: quick5
+  	quick5: quick5,
+  	xiaobai_simp: xiaobai_simp
   };
 
-  var cantonese = [
-  	{
-  		name: "jyut6ping3.prism.bin",
-  		md5: "5449db95af0fba0aa87ec44695033d3f"
-  	},
-  	{
-  		name: "jyut6ping3.reverse.bin",
-  		md5: "61d0d6d737159187c1bdef9e299d62bf"
-  	},
-  	{
-  		name: "jyut6ping3.schema.yaml",
-  		md5: "a7ca63a2c115a4f94a1d6dd3456025fc"
-  	},
-  	{
-  		name: "jyut6ping3.table.bin",
-  		md5: "8c3610806e682fc6c263d835ef134659"
-  	},
-  	{
-  		name: "jyut6ping3_ipa.prism.bin",
-  		md5: "ade9842464a86563c7becc4c97e8b5e8"
-  	},
-  	{
-  		name: "jyut6ping3_ipa.schema.yaml",
-  		md5: "f38558f91b530e2b0c72faa725aeb24b"
-  	}
-  ];
   var wubi = [
   	{
   		name: "wubi86.prism.bin",
-  		md5: "531262bd7dd0b37387480a6be793e992"
+  		md5: "6fd543a2732c327608896ec77c95569e"
   	},
   	{
   		name: "wubi86.reverse.bin",
@@ -807,7 +693,7 @@
   	},
   	{
   		name: "wubi86.schema.yaml",
-  		md5: "8d909e711934ced60b061569e7f78670"
+  		md5: "8deadd5945ef0e8d254365f907d6baba"
   	},
   	{
   		name: "wubi86.table.bin",
@@ -830,44 +716,10 @@
   		md5: "47aff1514de471d8937c1730944dca85"
   	}
   ];
-  var ipa = [
-  	{
-  		name: "ipa_xsampa.prism.bin",
-  		md5: "1f89f323b398e55b41a3d51292e153b4"
-  	},
-  	{
-  		name: "ipa_xsampa.reverse.bin",
-  		md5: "204c1a057beff33f33e4e6e2334d9388"
-  	},
-  	{
-  		name: "ipa_xsampa.schema.yaml",
-  		md5: "3de5dc8e1373f3445eb3eb6372757725"
-  	},
-  	{
-  		name: "ipa_xsampa.table.bin",
-  		md5: "2643f70120a14876bf358e77fae47def"
-  	},
-  	{
-  		name: "ipa_yunlong.prism.bin",
-  		md5: "e99012d354473ed9251fde4d664cf360"
-  	},
-  	{
-  		name: "ipa_yunlong.reverse.bin",
-  		md5: "bb4ede9eca7365defaa9631dacf2d0c6"
-  	},
-  	{
-  		name: "ipa_yunlong.schema.yaml",
-  		md5: "bca1844fbfc48f6141d419cb154cbc00"
-  	},
-  	{
-  		name: "ipa_yunlong.table.bin",
-  		md5: "ca7388b30a151620453ef1684408c34f"
-  	}
-  ];
   var bopomofo = [
   	{
   		name: "bopomofo.prism.bin",
-  		md5: "cfdb9263986831e1d21c23654ec3543b"
+  		md5: "18098153fe8122dd0cf51ad859385e0f"
   	},
   	{
   		name: "bopomofo.schema.yaml",
@@ -875,7 +727,7 @@
   	},
   	{
   		name: "bopomofo_express.prism.bin",
-  		md5: "a12cc380155da94b5fb4e97e0bcffe4f"
+  		md5: "91affb22303874a39a2fa8d4b41e2dfd"
   	},
   	{
   		name: "bopomofo_express.schema.yaml",
@@ -885,23 +737,23 @@
   var cangjie = [
   	{
   		name: "cangjie5.prism.bin",
-  		md5: "b9cf1ba7d30cfcea467771b61422701b"
+  		md5: "46bcbd50ef0c452c51bee7e34df3dc8c"
   	},
   	{
   		name: "cangjie5.reverse.bin",
-  		md5: "302de203207d03703306bece4b57d86e"
+  		md5: "695a8bcddf67b27558b1868318cfa658"
   	},
   	{
   		name: "cangjie5.schema.yaml",
-  		md5: "df8cbfe8269ac88860873e5fc02eb4c5"
+  		md5: "0b768b370805f7be54fa4bab2fd06316"
   	},
   	{
   		name: "cangjie5.table.bin",
-  		md5: "1c854e997f5fe1c7690cd7f40bb4df96"
+  		md5: "390879988e5779b29f3f8e0bd60943ad"
   	},
   	{
   		name: "cangjie5_express.prism.bin",
-  		md5: "75fdabf12b40399baf77cb3c8ee62fe8"
+  		md5: "fdfc04eb4c10f4502cd69bae62a832ba"
   	},
   	{
   		name: "cangjie5_express.schema.yaml",
@@ -911,11 +763,11 @@
   var stroke = [
   	{
   		name: "stroke.prism.bin",
-  		md5: "1f26c416eb52ea8f3561138ceb11c6c1"
+  		md5: "d21e27a81187bf058527e519f0aa67b9"
   	},
   	{
   		name: "stroke.reverse.bin",
-  		md5: "a086c66e7d7ce40e4941fcb5d9e349b4"
+  		md5: "2e0f7babfeb626770e68ad55f3baa506"
   	},
   	{
   		name: "stroke.schema.yaml",
@@ -923,7 +775,7 @@
   	},
   	{
   		name: "stroke.table.bin",
-  		md5: "797242fa9b16802d8cac5c0f4fafe726"
+  		md5: "55068a995707ff31c911d7cd2af4f5f7"
   	}
   ];
   var array = [
@@ -944,54 +796,10 @@
   		md5: "e6dde610a837ae475807936ae77270d0"
   	}
   ];
-  var wugniu = [
-  	{
-  		name: "wugniu.prism.bin",
-  		md5: "f819b520ea3ffe24f56b32903fe3898e"
-  	},
-  	{
-  		name: "wugniu.schema.yaml",
-  		md5: "ee539505db7b3e4503a3a0f4cae62617"
-  	},
-  	{
-  		name: "wugniu_lopha.prism.bin",
-  		md5: "ddc49adef5f36fb8accc38d162c3e7bb"
-  	},
-  	{
-  		name: "wugniu_lopha.reverse.bin",
-  		md5: "3cd2200a259a83b80fcb356682174ce1"
-  	},
-  	{
-  		name: "wugniu_lopha.schema.yaml",
-  		md5: "f548d1bc05160aca287f455e1c94d338"
-  	},
-  	{
-  		name: "wugniu_lopha.table.bin",
-  		md5: "89ebfd89994a67472b2378f488338a76"
-  	}
-  ];
-  var soutzoe = [
-  	{
-  		name: "soutzoe.prism.bin",
-  		md5: "4af9c71a9e69294ca4dab79a4eafcefa"
-  	},
-  	{
-  		name: "soutzoe.reverse.bin",
-  		md5: "db12cdab4004bf6efa49542152fb7cfe"
-  	},
-  	{
-  		name: "soutzoe.schema.yaml",
-  		md5: "40f575d07cf52d64c1a15c5a58f255a7"
-  	},
-  	{
-  		name: "soutzoe.table.bin",
-  		md5: "6239f14f75ec3cbb0d913b6947f8e8c0"
-  	}
-  ];
   var stenotype = [
   	{
   		name: "stenotype.prism.bin",
-  		md5: "c120d2ace6fca1b1b52016b268e37203"
+  		md5: "986af9a4a8cfe295ad3c7884dd1f2652"
   	},
   	{
   		name: "stenotype.schema.yaml",
@@ -1001,11 +809,11 @@
   var scj = [
   	{
   		name: "scj6.prism.bin",
-  		md5: "bd95bef1a1cd46f289c7750337072373"
+  		md5: "1f7c7b2330a8058cba5be328e4860417"
   	},
   	{
   		name: "scj6.reverse.bin",
-  		md5: "efb9d5051b2ce3e4d91a4a8dc4b63027"
+  		md5: "a902a4e442e9e15011e532dbf3fb9446"
   	},
   	{
   		name: "scj6.schema.yaml",
@@ -1013,17 +821,17 @@
   	},
   	{
   		name: "scj6.table.bin",
-  		md5: "4216472d63de2550ee944ac5e97c557a"
+  		md5: "e0c43ec9862f999a1907408596018d25"
   	}
   ];
   var quick = [
   	{
   		name: "quick5.prism.bin",
-  		md5: "3bde0fa40d486200ce17c45574575cca"
+  		md5: "9b44199f6ddf7de5d28097da678b7dcf"
   	},
   	{
   		name: "quick5.reverse.bin",
-  		md5: "27444b0d2825ee331e992058d419be34"
+  		md5: "16549ca49a8dac115c227696fe44b6bc"
   	},
   	{
   		name: "quick5.schema.yaml",
@@ -1031,45 +839,44 @@
   	},
   	{
   		name: "quick5.table.bin",
-  		md5: "25954fec90c31dedb99a45812c7447a9"
+  		md5: "9fbda05373f2b1fa250358911b2cde3b"
   	}
   ];
   var targetFiles = {
   	"luna-pinyin": [
   	{
   		name: "luna_pinyin.prism.bin",
-  		md5: "7d9d35a535f4314e0e639a755a49a803"
+  		md5: "4cd7ffbe72384440f02cc1383b4ab094"
   	},
   	{
   		name: "luna_pinyin.reverse.bin",
-  		md5: "09b9cb91da7877ba3031a2b489cbb872"
+  		md5: "69b6755f9493932788125b8de4ac4947"
   	},
   	{
   		name: "luna_pinyin.schema.yaml",
-  		md5: "b3555fff5919fb9a87cb7418d50705ea"
+  		md5: "b65e8177efc46a9c3b519183e7eb0e4b"
   	},
   	{
   		name: "luna_pinyin.table.bin",
-  		md5: "3459c9adedacd1e8a5549151c6eebfaf"
+  		md5: "fcc7ea435ec40adfd584e9d296ebd3e3"
   	},
   	{
   		name: "luna_pinyin_fluency.schema.yaml",
-  		md5: "754f317e79fe2eb7b49916080682353a"
+  		md5: "5a48bc22ac651089f77737d212e6e82d"
   	},
   	{
   		name: "luna_quanpin.prism.bin",
-  		md5: "9ac86ebd50964ca73777e95d39ffcdfa"
+  		md5: "65d0193fc6ac1e36cbff44f0b1467d85"
   	},
   	{
   		name: "luna_quanpin.schema.yaml",
-  		md5: "9aeff9d907c95ba1649f05d9985d166d"
+  		md5: "0cdd7f78f444c634e81261df81b874a8"
   	}
   ],
-  	cantonese: cantonese,
   	"double-pinyin": [
   	{
   		name: "double_pinyin.prism.bin",
-  		md5: "8f0f67cc03e7997e6fb1f54340d0900f"
+  		md5: "9600b90a52a64411bd5ffc4e9e3034b1"
   	},
   	{
   		name: "double_pinyin.schema.yaml",
@@ -1077,7 +884,7 @@
   	},
   	{
   		name: "double_pinyin_abc.prism.bin",
-  		md5: "37de99c9f1f41eb0b0ca49d3e8437e77"
+  		md5: "be790f1479535b53c2ddfd7ca92f85d9"
   	},
   	{
   		name: "double_pinyin_abc.schema.yaml",
@@ -1085,7 +892,7 @@
   	},
   	{
   		name: "double_pinyin_flypy.prism.bin",
-  		md5: "768868e81ef8ec82082b7cdf60877665"
+  		md5: "595f6b225fabcc8ebc9b82cd7fe43996"
   	},
   	{
   		name: "double_pinyin_flypy.schema.yaml",
@@ -1093,7 +900,7 @@
   	},
   	{
   		name: "double_pinyin_mspy.prism.bin",
-  		md5: "553677ad635979a6c6ad41e8e81bafbc"
+  		md5: "6845a703998953d7c260f57e73a0bed2"
   	},
   	{
   		name: "double_pinyin_mspy.schema.yaml",
@@ -1101,7 +908,7 @@
   	},
   	{
   		name: "double_pinyin_pyjj.prism.bin",
-  		md5: "5e111aefe2225f4ae81247c5d8671782"
+  		md5: "5c3aed4a07b5882a450d2b5b9920816f"
   	},
   	{
   		name: "double_pinyin_pyjj.schema.yaml",
@@ -1112,29 +919,29 @@
   	"pinyin-simp": [
   	{
   		name: "pinyin_simp.prism.bin",
-  		md5: "396310ce988926a9b042e46367bd7cdc"
+  		md5: "f63d0ae4f9fa9ae0f8ca3756254ba112"
   	},
   	{
   		name: "pinyin_simp.reverse.bin",
-  		md5: "ca9481c53e46b9e83959059dbed3245f"
+  		md5: "0a6da52bdc7437661d449d59abdf8094"
   	},
   	{
   		name: "pinyin_simp.schema.yaml",
-  		md5: "afd22c2b963905a5784b785d347807ce"
+  		md5: "a8f31e89a6d2b7c5db47fbc9c929b221"
   	},
   	{
   		name: "pinyin_simp.table.bin",
-  		md5: "1b3d113faba63c656d600206c44144ff"
+  		md5: "5a9c1633422d813e39f324461b9319c6"
   	}
   ],
   	"terra-pinyin": [
   	{
   		name: "terra_pinyin.prism.bin",
-  		md5: "b18b47791691f7673836fd5e5acc7356"
+  		md5: "b9608538b802715e49b88389fa9d80b4"
   	},
   	{
   		name: "terra_pinyin.reverse.bin",
-  		md5: "6dcec3929ee0be53c3b16c64539604b0"
+  		md5: "786ff4d6db340c4f72eaa9bd10f2722c"
   	},
   	{
   		name: "terra_pinyin.schema.yaml",
@@ -1142,45 +949,34 @@
   	},
   	{
   		name: "terra_pinyin.table.bin",
-  		md5: "3889cac922d8acc149e1498897970f10"
+  		md5: "cc9c8bed8612199ca53591947142830e"
   	}
   ],
-  	ipa: ipa,
   	bopomofo: bopomofo,
-  	"middle-chinese": [
-  	{
-  		name: "sampheng.prism.bin",
-  		md5: "edccb12d4111233c6c02cccd989c195b"
-  	},
-  	{
-  		name: "sampheng.schema.yaml",
-  		md5: "47d5a80503aac65038f641958672829b"
-  	},
-  	{
-  		name: "zyenpheng.prism.bin",
-  		md5: "7ad3323279ae37dbdaf2dd4b804b8618"
-  	},
-  	{
-  		name: "zyenpheng.reverse.bin",
-  		md5: "0d3b84ce7e7b2714cb4a0eea35536d38"
-  	},
-  	{
-  		name: "zyenpheng.schema.yaml",
-  		md5: "e7c18923cb4e305362f0b7ae48b2c329"
-  	},
-  	{
-  		name: "zyenpheng.table.bin",
-  		md5: "dc2e6122b5e0753e6c12887d21c38195"
-  	}
-  ],
   	cangjie: cangjie,
   	stroke: stroke,
   	array: array,
-  	wugniu: wugniu,
-  	soutzoe: soutzoe,
   	stenotype: stenotype,
   	scj: scj,
-  	quick: quick
+  	quick: quick,
+  	"zhou9110/rime-xiaobai_simp": [
+  	{
+  		name: "xiaobai.reverse.bin",
+  		md5: "bc0519b8692ba7edbcf044c4f19ee37a"
+  	},
+  	{
+  		name: "xiaobai.table.bin",
+  		md5: "ec5e9ce0f7b48c1be4ba34d7552ca31a"
+  	},
+  	{
+  		name: "xiaobai_simp.prism.bin",
+  		md5: "567b74a04448edb706b844abccac10c4"
+  	},
+  	{
+  		name: "xiaobai_simp.schema.yaml",
+  		md5: "4187a7cb77ce4c3f1e74588968966217"
+  	}
+  ]
   };
 
   const RIME_USER = "/rime";

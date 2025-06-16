@@ -60,6 +60,9 @@ export default defineComponent({
       type: Function,
       default: () => null
     },
+    returnKeyText: {
+      type: String
+    }
   },
   components: { RecordButton },
   setup() {
@@ -81,30 +84,30 @@ export default defineComponent({
         default: [
           "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
           "q w e r t y u i o p",
-          " a s d f g h j k l {enter}",
+          "a s d f g h j k l {enter}",
           "{shift} z x c v b n m {bksp}",
-          "{mic} @ , {space} . {settings} {hide}",
+          "{mic} @ , {space} . {hide}",
         ],
         micOn: [
-          "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
+          "{esc} 1 2 3 4 5 6 7 8 9 0",
           "q w e r t y u i o p",
-          " a s d f g h j k l {enter}",
+          "a s d f g h j k l {enter}",
           "{shift} z x c v b n m {bksp}",
-          "{mic} ，@ {space} 。 {settings} {hide}",
+          "{mic} ，@ {space} 。 {hide}",
         ],
         eng: [
-          "{esc} 1 2 3 4 5 6 7 8 9 0 - =",
+          "{esc} 1 2 3 4 5 6 7 8 9 0",
           "q w e r t y u i o p",
-          " a s d f g h j k l {enter}",
+          "a s d f g h j k l {enter}",
           "@ z x c v b n m {bksp}",
-          "{mic} ， {space} 。 {settings} {hide}",
+          "{mic} ， {space} 。 {hide}",
         ],
         shift: [
-          "{esc} ~ ! @ # $ % ^ & * ( ) _ +",
+          "{esc} ~ ! @ # $ % ^ & * ( )",
           "Q W E R T Y U I O P",
-          ' A S D F G H J K L {enter}',
+          'A S D F G H J K L {enter}',
           "{shift} Z X C V B N M {bksp}",
-          "{mic} , {space} . {settings} {hide}",
+          "{mic} , {space} . {hide}",
         ],
       },
       mergeDisplay: true,
@@ -112,7 +115,7 @@ export default defineComponent({
         '{enter}': KeyboardReturnRoundSvg,
         '{settings}': SettingsRegularSvg,
         '{bksp}': BackspaceRegularSvg,
-        "{hide}": "back",
+        "{hide}": this.returnKeyText ?? KeyboardHideOutlinedSvg,
         "{shift}": "⇧",
         "{lang}": currentLanguage.value === "chinese" ? langBtnCn : langBtnEn,
         "{esc}": "esc",
@@ -223,7 +226,7 @@ export default defineComponent({
 }
 
 .hg-theme-default .hg-row:not(:last-child) {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .hg-theme-default .hg-row .hg-button:not(:last-child) {
@@ -252,7 +255,7 @@ export default defineComponent({
 }
 
 .hg-theme-default .hg-button.hg-button-shift {
-  flex: 2;
+  flex: 1.5;
 }
 
 /* Border radius for buttons at 4 corners */

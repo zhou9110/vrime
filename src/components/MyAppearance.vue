@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { isMobile } from '../util';
-import { NCheckbox, NFlex, NSelect, NSpace, NP, NGrid, NGridItem } from 'naive-ui';
+import { NCheckbox, NFlex, NSelect, NTooltip, NIcon, NSpace, NP, NGrid, NGridItem } from 'naive-ui';
 import { autoSwitchKeyboardLayout, forceVertical, pageSize } from '../control';
+import { QuestionCircle } from '@vicons/fa';
 
 const options = [
   { label: '默认', value: 0 },
@@ -24,8 +25,16 @@ const options = [
       </n-checkbox>
     </n-grid-item>
     <n-grid-item>
-      <div style="flex: 1">
-        <n-checkbox v-model:checked="autoSwitchKeyboardLayout">自动切换九键和全键盘 (beta)</n-checkbox>
+      <div style="flex: 1; align-items: center;">
+        <n-checkbox v-model:checked="autoSwitchKeyboardLayout">自动切换九键和全键盘 (beta) </n-checkbox>
+        <n-tooltip>
+          <template #trigger>
+            <n-icon>
+              <QuestionCircle />
+            </n-icon>
+          </template>
+          当窗口拖窄时，自动切换成九键输入法
+        </n-tooltip>
       </div>
     </n-grid-item>
   </n-grid>
