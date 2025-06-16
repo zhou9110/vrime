@@ -62,6 +62,12 @@ const copiedText = ref('')
 const FORCE_VERTICAL = 'forceVertical'
 const forceVertical = savedBooleanRef(FORCE_VERTICAL, false)
 
+const AUTO_SWITCH_KEYBOARD_LAYOUT = 'autoSwitchKeyboardLayout'
+const autoSwitchKeyboardLayout = savedBooleanRef(AUTO_SWITCH_KEYBOARD_LAYOUT, true)
+
+// Use a tuple to store the layout, first element is the layout, second element is for some special variants, e.g. 仓颉、五笔、注音
+const currentKeyboardLayout = ref<["qwerty", "mobile" | "full" | "cangjie" | "zhuyin" | "wubi" | null] | ["t9", "mobile" | "xiaobai" | null]>(["qwerty", null])
+
 const schemaId = ref<string>(schemas[0].id)
 const ime = ref<string>('') // visual vs internal
 
@@ -417,8 +423,11 @@ export {
   autoCopy,
   copiedText,
   forceVertical,
+  autoSwitchKeyboardLayout,
+  currentKeyboardLayout,
   loading,
   schemaId,
+  prevSchemaId,
   ime,
   defaultSelectOptions,
   selectOptions,

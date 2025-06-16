@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, Teleport, ref, onMounted } from "vue";
+import { defineProps, defineEmits, Teleport, ref, onMounted, computed } from "vue";
 import { NText, NSpace, NButtonGroup, NButton, NIcon, NCheckbox, NFlex } from "naive-ui";
 import {
   Cut20Regular,
@@ -9,7 +9,7 @@ import {
   Delete20Regular,
 } from "@vicons/fluent";
 import { UndoOutlined, RedoOutlined } from "@vicons/material";
-import { getTextarea } from "../util";
+import { getTextarea, isMobile } from "../util";
 import { text, autoCopy, copiedText, schemaId, variant } from "../control";
 import RecordButton from "./RecordButtonInBar.vue";
 
@@ -28,8 +28,10 @@ function copy() {
 }
 
 async function cut() {
-  await copy();
-  text.value = "";
+  if (text.value) {
+    await copy();
+    text.value = "";
+  }
 }
 
 function clear() {
@@ -63,18 +65,21 @@ async function paste() {
 }
 
 const elementIsReady = ref(false)
+
+const buttonSize = computed(() => isMobile.value ? "medium" : "large")
+
 onMounted(() => {
   setTimeout(() => {
     elementIsReady.value = document.getElementById("copied") !== null
-    console.log(elementIsReady.value) 
+    console.log(elementIsReady.value)
   }, 1000)
 })
 </script>
 
 <template>
-  <n-flex justify="space-between">
+  <n-flex justify="space-between" style="overflow-x: auto;" :wrap="false">
     <n-space style="align-items: center">
-      <n-button-group style="gap: 5px" size="large">
+      <n-button-group :class="isMobile ? 'mobile' : 'desktop'" style="gap: 5px;" :size="buttonSize">
         <n-button secondary @click="cut">
           <template #icon>
             <n-icon>
@@ -105,7 +110,7 @@ onMounted(() => {
         </Teleport>
       </n-flex>
     </n-space>
-    <n-space class="right-btns" style="align-items: center; gap: 5px">
+    <n-space class="right-btns" :class="isMobile ? 'mobile' : 'desktop'" justify="end" style="align-items: center; gap: 5px">
       <RecordButton v-if="!props.showKeyboard" :get-voice-recognition-ref="props.getVoiceRecognitionRef" />
       <!-- <n-button secondary @click="undo">
           <template #icon>
@@ -117,14 +122,15 @@ onMounted(() => {
             <n-icon :component="RedoOutlined" />
           </template>
         </n-button> -->
-      <n-button secondary style="height: 50px; min-width: 80px; font-size: 16px" @click="clear"
-        size="large">
+      <n-button secondary @click="clear"
+        :size="buttonSize">
         <template #icon>
           <n-icon :component="Delete20Regular" />
         </template>
         清空
       </n-button>
-      <n-button secondary style="height: 50px; min-width: 100px; font-size: 16px" @click="selectAll" size="medium">
+      <n-button secondary class="select-all" @click="selectAll"
+        :size="buttonSize">
         全选
       </n-button>
       <n-checkbox style="font-size: 16px" :checked="props.showKeyboard" @update:checked="$emit('toggleKeyboard')">
@@ -135,15 +141,17 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.n-button-group .n-button {
+.n-button-group.desktop .n-button {
   font-size: 18px;
   height: 50px;
   padding: 10px;
   min-width: 50px;
 }
 
-.right-btns .n-button {
-
+.right-btns.desktop .n-button {
+  height: 50px;
+  min-width: 100px;
+  font-size: 16px;
 }
 
 .line-clamped {

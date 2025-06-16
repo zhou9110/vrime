@@ -8,6 +8,7 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM", "WebWorker"],

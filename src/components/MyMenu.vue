@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect } from "vue";
+import { computed, watchEffect, defineEmits } from "vue";
 import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex, NTooltip } from "naive-ui";
 import { WeatherMoon16Regular, Circle16Regular } from "@vicons/fluent";
 import {
@@ -26,6 +26,8 @@ import {
   selectIME,
 } from "../control";
 import { getTextarea } from "../util";
+
+const emit = defineEmits(["select-ime"]);
 
 const variantLabel = computed(() =>
   showVariant.value && !deployed.value ? variant.value.name : ""
@@ -57,6 +59,7 @@ function resetFocus() {
 
 function onSelectIME(value: string) {
   resetFocus();
+  emit("select-ime", value);
   selectIME(value);
 }
 </script>
