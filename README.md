@@ -152,6 +152,8 @@ Project Link: [https://github.com/zhou9110/vrime](https://github.com/zhou9110/vr
 
 * [My RIME 梧桐输入法](https://github.com/LibreService/my_rime)
 * [RIME | 中州韻輸入法引擎](https://rime.im/)
+* [小白输入法](https://github.com/xiaobai9978/xiaobai-t9)
+* [Naive UI](https://github.com/tusen-ai/naive-ui)
 * [Simple Keyboard](https://github.com/hodgef/simple-keyboard)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
