@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue'
 import { NModal, NProgress, NButton, NText, NAlert, NA } from 'naive-ui'
 import { createOnlineRecognizer, type OnlineRecognizer } from '../sherpa-onnx-asr';
 import { isRecording, recognisedText } from '../control';
+import { ModelLoader } from '../modelLoader';
 
 // const { showRecorder } = defineProps<{ showRecorder: boolean }>()
 
@@ -200,31 +201,85 @@ export default defineComponent({
         console.log('Recognizer already loaded');
         return;
       }
+
+      // Initialize ModelLoader with CDN URL and progress callback
+      const cdn = '__VOICE_RECOGNITION_CDN__'
+      const modelLoader = new ModelLoader(cdn, (progress) => {
+        const percentage = Math.round((progress.loaded / progress.total) * 100)
+        this.status = `Downloading ${progress.fileName} (${percentage}%)...`
+      });
+
+      // Model files needed by sherpa-onnx
+      const modelFiles = [
+        'sherpa-onnx-wasm-main-asr.wasm',
+        'sherpa-onnx-wasm-main-asr.data'
+      ];
+
+      // Preload and cache all model files
+      try {
+        this.status = 'Checking cache and downloading models...'
+        await modelLoader.preloadFiles(modelFiles);
+        this.status = 'Models ready. Initializing recognizer...'
+      } catch (error) {
+        console.error('Error preloading model files:', error);
+        this.status = 'Error downloading models';
+        return;
+      }
+
       const Module: any = {};
+
+      // Store blob URLs for cleanup
+      const blobURLs: string[] = [];
+
       // https://emscripten.org/docs/api_reference/module.html#Module.locateFile
       Module.locateFile = function (path: string, scriptDirectory = '') {
-        // console.log(`path: ${path}, scriptDirectory: ${scriptDirectory}`);
-        // return scriptDirectory + path;
-        const cdn = '__VOICE_RECOGNITION_CDN__'
+        console.log(`locateFile called for: ${path}`);
+
+        // Try to get from loaded files
+        const arrayBuffer = modelLoader.getLoadedFile(path);
+        if (arrayBuffer) {
+          // Determine MIME type based on file extension
+          let mimeType = 'application/octet-stream';
+          if (path.endsWith('.wasm')) {
+            mimeType = 'application/wasm';
+          } else if (path.endsWith('.data')) {
+            mimeType = 'application/octet-stream';
+          }
+
+          const blobURL = modelLoader.createBlobURL(path, arrayBuffer, mimeType);
+          blobURLs.push(blobURL);
+          console.log(`Using cached/loaded file for ${path}`);
+          return blobURL;
+        }
+
+        // Fallback to CDN if not in cache (shouldn't happen after preload)
+        console.warn(`File ${path} not found in cache, falling back to CDN`);
         return cdn + path;
       };
 
-      // https://emscripten.org/docs/api_reference/module.html#Module.locateFile
+      // https://emscripten.org/docs/api_reference/module.html#Module.setStatus
       Module.setStatus = (status: string) => {
         console.log(`status ${status}`);
-        if (this.status == "Loading model...") {
-          status = 'Model downloaded. Now loading model and initializing recongizer...'
+        if (status.includes('Downloading')) {
+          // Skip download status as we handle it ourselves
+          return;
         }
-        this.status = status
+        this.status = status || 'Initializing...'
       };
 
       Module.onRuntimeInitialized = () => {
-        console.log('inited!');
+        console.log('Runtime initialized!');
 
         recognizer = createOnlineRecognizer(Module, undefined);
         this.recognizer = recognizer;
         console.log('recognizer is created!', recognizer);
+        this.status = 'Model loaded successfully!';
         this.$emit('modelLoaded');
+
+        // Clean up blob URLs after a delay to ensure they're no longer needed
+        setTimeout(() => {
+          blobURLs.forEach(url => URL.revokeObjectURL(url));
+        }, 5000);
       };
 
       // @ts-ignore
@@ -243,6 +298,7 @@ export default defineComponent({
         });
       } catch (e) {
         console.error('Error loading module:', e);
+        this.status = 'Error loading module';
       }
     },
     // Audio Context 可以理解成像 Unity shader graph 一样，几个节点之间相互连接的图 // 连接的关系类似这样?: [mediaStream] -> [recorder] -> [audioCtx.destination] let audioCtx = null
@@ -364,7 +420,7 @@ export default defineComponent({
     style="max-width: 400px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
     <n-alert :title="alertObj.title" :type="alertObj.type">
       <n-text v-if="modelLoaded">模型加载成功，可以关闭弹窗，开始语音识别</n-text>
-      <n-text v-else>该功能需要先下载语音识别模型才能使用，大小约为200MB。目前尚不支持缓存结果，页面刷新后需要重新下载。</n-text>
+      <n-text v-else>该功能需要先下载语音识别模型才能使用，大小约为200MB。模型会缓存到本地，下次访问时无需重新下载。</n-text>
     </n-alert>
     <div v-if="!modelLoaded" style="display: flex; flex-direction: column; align-items: center; width: 100%">
       <n-button size="medium" type="primary" @click="startLoading" class="mt-1">开始下载模型</n-button>
@@ -407,6 +463,4 @@ export default defineComponent({
 .mt-1 {
   margin-top: 1rem;
 }
-
-.actions {}
 </style>
