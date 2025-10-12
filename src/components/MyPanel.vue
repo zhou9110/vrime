@@ -19,9 +19,11 @@ import {
   hideComment,
   changeLanguage,
   selectIME,
-  syncOptions
+  syncOptions,
+  ime
 } from '../control'
 import { isMobile, getTextarea } from '../util'
+import T9PinYinUtils, { isValidT9Sequence } from '../utils/t9Pinyin'
 
 const props = defineProps<{
   debugMode?: boolean
@@ -55,6 +57,10 @@ const editing = ref<boolean>(false)
 const showMenu = ref<boolean>(false)
 const xOverflow = ref<boolean>(false)
 const exclusiveShift = ref<boolean>(false)
+
+// T9 pinyin candidates
+const pinyinCandidates = ref<string[]>([])
+const currentT9Sequence = ref<string>('')
 
 async function debug(e: KeyboardEvent, rimeKey: string) {
   editing.value = true
@@ -143,8 +149,8 @@ function handleBackspace() {
   const textarea = getTextarea()
   const { selectionStart, selectionEnd } = textarea
   console.log({ selectionStart, selectionEnd })
-  let newSelectionStart = undefined
-  let newSelectionEnd = undefined
+  let newSelectionStart
+  let newSelectionEnd
   if (selectionStart !== selectionEnd) {
     // Just delete the selected part
     text.value = text.value.slice(0, selectionStart) + text.value.slice(selectionEnd)
@@ -175,6 +181,8 @@ async function analyze(result: RIME_RESULT, rimeKey: string) {
     editing.value = false
     showMenu.value = false
     dragged.value = false
+    pinyinCandidates.value = []
+    currentT9Sequence.value = ''
     insert(result.committed)
   } else if (result.state === 1) { // ACCEPTED
     preEditHead.value = result.head
@@ -203,20 +211,41 @@ async function analyze(result: RIME_RESULT, rimeKey: string) {
     if (result.committed) {
       insert(result.committed)
     }
+
+    // Update T9 pinyin candidates for T9 input methods
+    const isT9IME = ime.value === 'yuyan_t9_pinyin' || ime.value === 'xiaobai_simp'
+    if (isT9IME && result.body) {
+      // Extract numeric sequence from preEditBody
+      const numericSeq = result.body.match(/[2-9]+/g)?.join('') || ''
+      if (numericSeq && isValidT9Sequence(numericSeq)) {
+        currentT9Sequence.value = numericSeq
+        const t9Seq = T9PinYinUtils.NumKey2T9Key(numericSeq)
+        console.log('t9Seq', t9Seq, 'candidates', T9PinYinUtils.t9KeyToPinyin(t9Seq))
+        pinyinCandidates.value = T9PinYinUtils.t9KeyToPinyin(t9Seq)
+      } else {
+        pinyinCandidates.value = []
+        currentT9Sequence.value = ''
+      }
+    } else {
+      pinyinCandidates.value = []
+      currentT9Sequence.value = ''
+    }
   } else { // REJECTED, UNHANDLED
     editing.value = false
     showMenu.value = false
+    pinyinCandidates.value = []
+    currentT9Sequence.value = ''
     if (result.state === 2 && result.updatedSchema) {
       await selectIME(result.updatedSchema.split('/')[0])
     }
     if (result.state === 3 && isPrintable(rimeKey)) {
       insert(rimeKey)
     }
-    if (result.state === 3 && rimeKey === "{BackSpace}") {
+    if (result.state === 3 && rimeKey === '{BackSpace}') {
       handleBackspace()
     }
-    if (result.state === 3 && rimeKey === "{Return}") {
-      insert("\n")
+    if (result.state === 3 && rimeKey === '{Return}') {
+      insert('\n')
     }
   }
   textarea.focus()
@@ -260,7 +289,7 @@ function onKeydown(e: KeyboardEvent) {
   // begin: code specific to Android Chromium
   if (key === 'Unidentified') {
     // Update: avoid skipping backspace event when using hardware keyboard in android
-    if (code !== "Backspace") {
+    if (code !== 'Backspace') {
       androidChromium = true
       acStart = textarea.selectionStart
       acEnd = textarea.selectionEnd
@@ -440,8 +469,10 @@ onUnmounted(() => { // Cleanup for HMR
 
 defineExpose({
   debug,
-  onKeydown: onKeydown,
-  editing
+  onKeydown,
+  editing,
+  pinyinCandidates,
+  currentT9Sequence
 })
 </script>
 
@@ -455,18 +486,15 @@ defineExpose({
       {{ preEditBody }}
     </n-text>&nbsp;
     {{ preEditTail }}
-    <n-menu v-show="menuOptions.length" :options="menuOptions"
-      class="text-candidates"
+    <n-menu v-show="menuOptions.length" :options="menuOptions" class="text-candidates"
       :mode="forceVertical || (xOverflow && !isMobile) ? 'vertical' : 'horizontal'" :value="highlighted"
-      @update:value="onClick"
-      @touchstart.stop="e => console.log('touch stopped')"
-      @mousedown.stop="e => console.log('click stopped')"
-    />
+      @update:value="onClick" @touchstart.stop="e => console.log('touch stopped')"
+      @mousedown.stop="e => console.log('click stopped')" />
     <n-button quaternary :disabled="prevDisabled">
-      <n-icon :component="CaretLeft" @click="onPageChange(true)" size="20" />
+      <n-icon :component="CaretLeft" size="20" @click="onPageChange(true)" />
     </n-button>
     <n-button quaternary :disabled="nextDisabled">
-      <n-icon :component="CaretRight" @click="onPageChange(false)" size="20" />
+      <n-icon :component="CaretRight" size="20" @click="onPageChange(false)" />
     </n-button>
   </n-popover>
 </template>

@@ -427,7 +427,6 @@ export {
   currentKeyboardLayout,
   loading,
   schemaId,
-  prevSchemaId,
   ime,
   defaultSelectOptions,
   selectOptions,
