@@ -151,9 +151,9 @@ schema:
   dependencies:
     - stroke
   description: |
-    朙月拼音＋MSPY雙拼方案。
+    朙月拼音＋微軟雙拼方案。
 
-  name: "MSPY雙拼"
+  name: "微軟雙拼"
   schema_id: double_pinyin_mspy
   version: 0.15
 speller:

@@ -8,7 +8,7 @@ import {
   getBinaryNames,
   GitHubDownloader
 } from '@libreservice/micro-plum'
-import { rf, utf8, ensure, md5sum } from './util.js'
+import { rf, utf8, ensure, md5sum, LocalDownloader } from './util.js'
 import packageJson from '../package.json' assert { type: 'json' }
 import schemas from '../schemas.json' assert { type: 'json' }
 
@@ -30,6 +30,7 @@ const targetManifest: { [key: string]: string[] } = {} // maps target to files d
 const targetLicense: { [key: string]: string } = {}
 const ids = []
 const disabledIds: string[] = []
+const prebuiltIds: string[] = [] // schemas that use prebuilt binaries
 
 async function install (recipe: Recipe, target?: string) {
   const manifest = await recipe.load()
@@ -79,6 +80,23 @@ function bumpVersion (oldVersion: string | undefined) {
   return [major, minor, Number(patch) + 1].join('.')
 }
 
+/**
+ * Determines if a target path points to a local directory
+ * Local schemas can be loaded from the filesystem instead of GitHub
+ *
+ * Usage: In schemas.json, set target to a local path:
+ * {
+ *   "id": "my_schema",
+ *   "name": "My Schema",
+ *   "target": "../path/to/schema",  // or "./path" or "/absolute/path"
+ *   "prebuilt": true  // if using prebuilt binary files
+ * }
+ */
+function isLocalTarget (target: string): boolean {
+  // Local targets start with ../ or / or are absolute paths
+  return target.startsWith('../') || target.startsWith('./') || target.startsWith('/')
+}
+
 // Main
 
 for (const fileName of ['rime.lua', 'lua', 'opencc']) {
@@ -101,12 +119,25 @@ writeFileSync(emojiJson, JSON.stringify(emojiContent))
 rmSync(emojiCategory, rf)
 
 for (const schema of schemas) {
-  const recipe = new Recipe(new GitHubDownloader(schema.target, [schema.id]))
-  const target = recipe.loader.repo.match(/(rime\/rime-)?(.*)/)![2]
+  // Determine if this is a local or remote target
+  const isLocal = isLocalTarget(schema.target)
+
+  // Create appropriate loader based on target type
+  const loader = isLocal
+    ? new LocalDownloader(schema.target, [schema.id])
+    : new GitHubDownloader(schema.target, [schema.id])
+
+  const recipe = new Recipe(loader)
+
+  // For local targets, extract target name from path; for GitHub, use existing logic
+  const target = isLocal
+    ? schema.target.split('/').pop()! // Get last segment of path as target name
+    : recipe.loader.repo.match(/(rime\/rime-)?(.*)/)![2]
+
   if (!(target in targetManifest)) {
     targetManifest[target] = []
     targetFiles[target] = []
-    targetLicense[target] = schema.license ?? "MIT"
+    targetLicense[target] = schema.license ?? 'MIT'
   }
   ids.push(schema.id)
   // @ts-ignore
@@ -114,6 +145,10 @@ for (const schema of schemas) {
     disabledIds.push(schema.id)
   } else {
     schemaName[schema.id] = schema.name
+  }
+  // @ts-ignore
+  if (schema.prebuilt) {
+    prebuiltIds.push(schema.id)
   }
   schemaTarget[schema.id] = target
   if (schema.dependencies) {
@@ -165,7 +200,8 @@ ensure(spawnSync(platform() === 'win32' ? '.\\rime_api_console.exe' : './rime_ap
 }))
 
 chdir(root)
-ids.forEach(parseYaml)
+// Only parse compiled schemas, skip prebuilt ones (they don't have build/ directory outputs)
+ids.filter(id => !prebuiltIds.includes(id)).forEach(parseYaml)
 
 for (const [target, manifest] of Object.entries(targetManifest)) {
   // find all built files that belongs to a target('s npm package)

@@ -186,5 +186,12 @@
     "group": "九键",
     "target": "zhou9110/rime-xiaobai_simp",
     "dependencies": ["luna_quanpin"]
+  },
+  {
+    "id": "yuyan_t9_pinyin",
+    "name": "语燕九键",
+    "group": "九键",
+    "target": "zhou9110/rime-yuyan_t9_pinyin",
+    "dependencies": ["luna_quanpin"]
   }
 ]

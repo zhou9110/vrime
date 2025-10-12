@@ -416,6 +416,7 @@
   var scj6$3 = "快速仓颉";
   var quick5$3 = "速成";
   var xiaobai_simp$3 = "小白九键";
+  var yuyan_t9_pinyin$3 = "语燕九键";
   var schemaName = {
   	luna_pinyin: luna_pinyin$3,
   	luna_pinyin_fluency: luna_pinyin_fluency$3,
@@ -438,7 +439,8 @@
   	stenotype: stenotype$4,
   	scj6: scj6$3,
   	quick5: quick5$3,
-  	xiaobai_simp: xiaobai_simp$3
+  	xiaobai_simp: xiaobai_simp$3,
+  	yuyan_t9_pinyin: yuyan_t9_pinyin$3
   };
 
   var luna_pinyin$2 = {
@@ -514,6 +516,10 @@
   	dict: "xiaobai",
   	prism: "xiaobai_simp"
   };
+  var yuyan_t9_pinyin$2 = {
+  	dict: "luna_pinyin",
+  	prism: "yuyan_t9_pinyin"
+  };
   var schemaFiles = {
   	luna_pinyin: luna_pinyin$2,
   	luna_pinyin_fluency: luna_pinyin_fluency$2,
@@ -537,7 +543,8 @@
   	stenotype: stenotype$3,
   	scj6: scj6$2,
   	quick5: quick5$2,
-  	xiaobai_simp: xiaobai_simp$2
+  	xiaobai_simp: xiaobai_simp$2,
+  	yuyan_t9_pinyin: yuyan_t9_pinyin$2
   };
 
   var luna_pinyin$1 = "luna-pinyin";
@@ -563,6 +570,7 @@
   var scj6$1 = "scj";
   var quick5$1 = "quick";
   var xiaobai_simp$1 = "zhou9110/rime-xiaobai_simp";
+  var yuyan_t9_pinyin$1 = "zhou9110/rime-yuyan_t9_pinyin";
   var schemaTarget = {
   	luna_pinyin: luna_pinyin$1,
   	luna_pinyin_fluency: luna_pinyin_fluency$1,
@@ -586,7 +594,8 @@
   	stenotype: stenotype$2,
   	scj6: scj6$1,
   	quick5: quick5$1,
-  	xiaobai_simp: xiaobai_simp$1
+  	xiaobai_simp: xiaobai_simp$1,
+  	yuyan_t9_pinyin: yuyan_t9_pinyin$1
   };
 
   var luna_pinyin = [
@@ -657,6 +666,9 @@
   var xiaobai_simp = [
   	"luna_quanpin"
   ];
+  var yuyan_t9_pinyin = [
+  	"luna_quanpin"
+  ];
   var dependencyMap = {
   	luna_pinyin: luna_pinyin,
   	luna_pinyin_fluency: luna_pinyin_fluency,
@@ -679,7 +691,8 @@
   	stenotype: stenotype$1,
   	scj6: scj6,
   	quick5: quick5,
-  	xiaobai_simp: xiaobai_simp
+  	xiaobai_simp: xiaobai_simp,
+  	yuyan_t9_pinyin: yuyan_t9_pinyin
   };
 
   var wubi = [
@@ -719,29 +732,29 @@
   var bopomofo = [
   	{
   		name: "bopomofo.prism.bin",
-  		md5: "18098153fe8122dd0cf51ad859385e0f"
+  		md5: "c1278e7f9226189e9317287953fae78c"
   	},
   	{
   		name: "bopomofo.schema.yaml",
-  		md5: "2c657fdc0c9ac5894f3e4244949f2ef4"
+  		md5: "192d106e67555eaa288721567997bde6"
   	},
   	{
   		name: "bopomofo_express.prism.bin",
-  		md5: "91affb22303874a39a2fa8d4b41e2dfd"
+  		md5: "c090c042943418591167802c791e70e4"
   	},
   	{
   		name: "bopomofo_express.schema.yaml",
-  		md5: "d15617e84bc8cb6d001dba90c8bf5cfb"
+  		md5: "f561b9d3743f79bc557e3fb8c463a380"
   	}
   ];
   var cangjie = [
   	{
   		name: "cangjie5.prism.bin",
-  		md5: "46bcbd50ef0c452c51bee7e34df3dc8c"
+  		md5: "20296dded7f3062faf7a8c517cf31a42"
   	},
   	{
   		name: "cangjie5.reverse.bin",
-  		md5: "695a8bcddf67b27558b1868318cfa658"
+  		md5: "d848049ab6069b1120189fc5f6151b6f"
   	},
   	{
   		name: "cangjie5.schema.yaml",
@@ -749,11 +762,11 @@
   	},
   	{
   		name: "cangjie5.table.bin",
-  		md5: "390879988e5779b29f3f8e0bd60943ad"
+  		md5: "30493238367ea0203ebdb75eb1d426d1"
   	},
   	{
   		name: "cangjie5_express.prism.bin",
-  		md5: "fdfc04eb4c10f4502cd69bae62a832ba"
+  		md5: "ca6ef6b29663c3063a1e1d72de58a51a"
   	},
   	{
   		name: "cangjie5_express.schema.yaml",
@@ -763,19 +776,19 @@
   var stroke = [
   	{
   		name: "stroke.prism.bin",
-  		md5: "d21e27a81187bf058527e519f0aa67b9"
+  		md5: "6eafd1e9620254a7b5297f418878f779"
   	},
   	{
   		name: "stroke.reverse.bin",
-  		md5: "2e0f7babfeb626770e68ad55f3baa506"
+  		md5: "eae499a58d2b94d2438b3bb2ffc5e4d2"
   	},
   	{
   		name: "stroke.schema.yaml",
-  		md5: "44e4e9b9b7560c88374b6227816567d4"
+  		md5: "104032be71bea2b1cc7ea65bede494cc"
   	},
   	{
   		name: "stroke.table.bin",
-  		md5: "55068a995707ff31c911d7cd2af4f5f7"
+  		md5: "9ec845b54a22954fc1a5fcc2d817db5a"
   	}
   ];
   var array = [
@@ -799,21 +812,21 @@
   var stenotype = [
   	{
   		name: "stenotype.prism.bin",
-  		md5: "986af9a4a8cfe295ad3c7884dd1f2652"
+  		md5: "abb097cf54a84c31c10c9edef685ef31"
   	},
   	{
   		name: "stenotype.schema.yaml",
-  		md5: "0a6f54723a56922d7c73aa8fb654ee05"
+  		md5: "7e6af3748383d5e9ed45c48b5467544e"
   	}
   ];
   var scj = [
   	{
   		name: "scj6.prism.bin",
-  		md5: "1f7c7b2330a8058cba5be328e4860417"
+  		md5: "8c38ecd205f60475328b0bce5aaf9255"
   	},
   	{
   		name: "scj6.reverse.bin",
-  		md5: "a902a4e442e9e15011e532dbf3fb9446"
+  		md5: "bf8191c5d48f493fef0d32671fe91059"
   	},
   	{
   		name: "scj6.schema.yaml",
@@ -821,17 +834,17 @@
   	},
   	{
   		name: "scj6.table.bin",
-  		md5: "e0c43ec9862f999a1907408596018d25"
+  		md5: "868e8be661a0fd1784af0762850d1421"
   	}
   ];
   var quick = [
   	{
   		name: "quick5.prism.bin",
-  		md5: "9b44199f6ddf7de5d28097da678b7dcf"
+  		md5: "e92bb954376e23242b5a9b05211ceb86"
   	},
   	{
   		name: "quick5.reverse.bin",
-  		md5: "16549ca49a8dac115c227696fe44b6bc"
+  		md5: "5f2aa17364c0819715389341428e66c3"
   	},
   	{
   		name: "quick5.schema.yaml",
@@ -839,18 +852,18 @@
   	},
   	{
   		name: "quick5.table.bin",
-  		md5: "9fbda05373f2b1fa250358911b2cde3b"
+  		md5: "22c183295074bcde228604acd1187091"
   	}
   ];
   var targetFiles = {
   	"luna-pinyin": [
   	{
   		name: "luna_pinyin.prism.bin",
-  		md5: "4cd7ffbe72384440f02cc1383b4ab094"
+  		md5: "e0497dfc3a8bf5406dc956d86b198eab"
   	},
   	{
   		name: "luna_pinyin.reverse.bin",
-  		md5: "69b6755f9493932788125b8de4ac4947"
+  		md5: "00e3d7892479025cd9fb6d1e8ca312db"
   	},
   	{
   		name: "luna_pinyin.schema.yaml",
@@ -858,7 +871,7 @@
   	},
   	{
   		name: "luna_pinyin.table.bin",
-  		md5: "fcc7ea435ec40adfd584e9d296ebd3e3"
+  		md5: "118739bdc45d46cccf8afb704fd62804"
   	},
   	{
   		name: "luna_pinyin_fluency.schema.yaml",
@@ -866,7 +879,7 @@
   	},
   	{
   		name: "luna_quanpin.prism.bin",
-  		md5: "65d0193fc6ac1e36cbff44f0b1467d85"
+  		md5: "d93fae1b719022e0c3aae4efaa09151d"
   	},
   	{
   		name: "luna_quanpin.schema.yaml",
@@ -876,7 +889,7 @@
   	"double-pinyin": [
   	{
   		name: "double_pinyin.prism.bin",
-  		md5: "9600b90a52a64411bd5ffc4e9e3034b1"
+  		md5: "88c0cf78815507730790dcda527fef5b"
   	},
   	{
   		name: "double_pinyin.schema.yaml",
@@ -884,7 +897,7 @@
   	},
   	{
   		name: "double_pinyin_abc.prism.bin",
-  		md5: "be790f1479535b53c2ddfd7ca92f85d9"
+  		md5: "8670b8290bf645cc1c0f481f8e430423"
   	},
   	{
   		name: "double_pinyin_abc.schema.yaml",
@@ -892,7 +905,7 @@
   	},
   	{
   		name: "double_pinyin_flypy.prism.bin",
-  		md5: "595f6b225fabcc8ebc9b82cd7fe43996"
+  		md5: "41c52332b932736e2901f231b3aad8a8"
   	},
   	{
   		name: "double_pinyin_flypy.schema.yaml",
@@ -900,19 +913,19 @@
   	},
   	{
   		name: "double_pinyin_mspy.prism.bin",
-  		md5: "6845a703998953d7c260f57e73a0bed2"
+  		md5: "204238b9d053356ffb7823ab7d8e96b8"
   	},
   	{
   		name: "double_pinyin_mspy.schema.yaml",
-  		md5: "da893bb1ccb222953447bc03e28a7aa3"
+  		md5: "c003fa9a25e2fab5f92d87868ac2d193"
   	},
   	{
   		name: "double_pinyin_pyjj.prism.bin",
-  		md5: "5c3aed4a07b5882a450d2b5b9920816f"
+  		md5: "2f1afb7211c578cd4cb087b0754d58f1"
   	},
   	{
   		name: "double_pinyin_pyjj.schema.yaml",
-  		md5: "fa420f3c963b79af67c8c52c27cbffc2"
+  		md5: "8c0b98e7395f454375331f51953ab3e6"
   	}
   ],
   	wubi: wubi,
@@ -937,19 +950,19 @@
   	"terra-pinyin": [
   	{
   		name: "terra_pinyin.prism.bin",
-  		md5: "b9608538b802715e49b88389fa9d80b4"
+  		md5: "04f58a899cff09faed70a7a4526254ad"
   	},
   	{
   		name: "terra_pinyin.reverse.bin",
-  		md5: "786ff4d6db340c4f72eaa9bd10f2722c"
+  		md5: "36c9dd7499616465aca09ef896a26c64"
   	},
   	{
   		name: "terra_pinyin.schema.yaml",
-  		md5: "e1d2aabdde916f7bb782d4e924b529c7"
+  		md5: "db9b5fd43de95964b8832a4cc076f563"
   	},
   	{
   		name: "terra_pinyin.table.bin",
-  		md5: "cc9c8bed8612199ca53591947142830e"
+  		md5: "b35fe1fd19df4295ce4405fa947a27e3"
   	}
   ],
   	bopomofo: bopomofo,
@@ -975,6 +988,16 @@
   	{
   		name: "xiaobai_simp.schema.yaml",
   		md5: "4187a7cb77ce4c3f1e74588968966217"
+  	}
+  ],
+  	"zhou9110/rime-yuyan_t9_pinyin": [
+  	{
+  		name: "yuyan_t9_pinyin.prism.bin",
+  		md5: "67e30a26a9485ab94665b73c86ea7033"
+  	},
+  	{
+  		name: "yuyan_t9_pinyin.schema.yaml",
+  		md5: "dbba2cddf826c5906fd9bf50f50679b2"
   	}
   ]
   };
