@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { NIcon, NButton, NText, NMenu, NSwitch, NSpace, NTooltip } from 'naive-ui'
+import { computed, ref } from 'vue'
+import { NIcon, NButton, NText, NSwitch, NSpace, NTooltip, useMessage } from 'naive-ui'
 import { Github } from '@vicons/fa'
 import { HeadsetVr24Filled, Keyboard20Regular, Settings32Regular } from '@vicons/fluent'
-import { LightModeFilled, DarkModeFilled } from '@vicons/material'
-import { currentTheme, toggleDrawer, isMobile, useMobileHeightBreakpoint } from '../util'
+import { LightModeFilled, DarkModeFilled, FeedbackOutlined } from '@vicons/material'
+import { currentTheme, toggleDrawer, isMobile } from '../util'
+import FeedbackForm from './FeedbackForm.vue'
+
+const message = useMessage()
 
 const prop = defineProps<{
   icon: string,
@@ -12,9 +15,9 @@ const prop = defineProps<{
 }>()
 
 const isDark = computed({
-  get: () => (currentTheme.value === "dark"),
+  get: () => (currentTheme.value === 'dark'),
   set: (val) => {
-    currentTheme.value = val ? "dark" : "light"
+    currentTheme.value = val ? 'dark' : 'light'
   }
 })
 
@@ -22,19 +25,23 @@ function toRepo() {
   window.open(prop.homepage, '_blank')
 }
 
-const mobileHeightMatches = useMobileHeightBreakpoint()
+const showFeedbackModal = ref(false)
 
-// <n-icon
-//   :size="28"
-//   style="padding-right: 16px; cursor: pointer"
-//   @click="toRepo"
-// >
-//   <github />
-// </n-icon>
+function openFeedback() {
+  showFeedbackModal.value = true
+}
+
+function handleFeedbackSuccess() {
+  message.success('感谢您的反馈！我们已收到您的消息。')
+}
+
+function handleFeedbackError(errorMessage: string) {
+  message.error(errorMessage)
+}
 </script>
 
 <template>
-  <div class="vrime-header" style="padding-left: 24px; display: flex; align-items: center; cursor: pointer" @click="toRepo">
+  <div class="vrime-header" style="padding-left: 24px; display: flex; align-items: center; cursor: pointer">
     <!-- <img :src="icon" style="width: 48px; height: 48px"> -->
     <n-icon size="40">
       <HeadsetVr24Filled />
@@ -43,7 +50,7 @@ const mobileHeightMatches = useMobileHeightBreakpoint()
     <n-icon size="35">
       <Keyboard20Regular />
     </n-icon>
-    <n-text style="font-size: 18px; margin-left: 12px" v-if="!isMobile">
+    <n-text v-if="!isMobile" style="font-size: 18px; margin-left: 12px">
       在线中文输入法 (Quest用)
     </n-text>
   </div>
@@ -61,13 +68,27 @@ const mobileHeightMatches = useMobileHeightBreakpoint()
       </template>
       <div>浅色/深色模式</div>
     </n-tooltip>
-    <n-button id="settings-btn" text style="font-size: 24px" @click="toggleDrawer">
-      <n-icon :size="28" :component="Settings32Regular" />
-    </n-button>
+    <n-tooltip>
+      <template #trigger>
+        <n-button text style="font-size: 24px" @click="openFeedback">
+          <n-icon :size="28" :component="FeedbackOutlined" />
+        </n-button>
+      </template>
+      <div>提交反馈</div>
+    </n-tooltip>
+    <n-tooltip>
+      <template #trigger>
+        <n-button id="settings-btn" text style="font-size: 24px" @click="toggleDrawer">
+          <n-icon :size="28" :component="Settings32Regular" />
+        </n-button>
+      </template>
+      <div>设置</div>
+    </n-tooltip>
     <n-icon :size="28" style="padding-right: 16px; cursor: pointer" @click="toRepo">
       <github />
     </n-icon>
   </n-space>
+  <FeedbackForm v-model:show="showFeedbackModal" @success="handleFeedbackSuccess" @error="handleFeedbackError" />
 </template>
 
 <style>

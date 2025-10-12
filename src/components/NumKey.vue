@@ -2,7 +2,6 @@
 import { defineProps, useSlots } from 'vue';
 import { NButton } from 'naive-ui'
 
-const NUMPAD0_KEYCODE = 96
 const props = defineProps<{ number?: number | string, keyName?: string }>()
 const emit = defineEmits(['onKeyPress'])
 
@@ -18,14 +17,8 @@ function onKeyPress() {
     }
     return
   }
-  const eventBody = {
-    "key": `${props.number}`,
-    "keyCode": NUMPAD0_KEYCODE + props.number,
-    "which": NUMPAD0_KEYCODE + props.number,
-    "code": `Numpad${props.number}`,
-    "description": `Number Pad ${props.number}`,
-  }
-  emit('onKeyPress', new KeyboardEvent('keydown', eventBody))
+  const num = typeof props.number === 'number' ? props.number : parseInt(props.number || '0', 10)
+  emit('onKeyPress', num)
 }
 </script>
 

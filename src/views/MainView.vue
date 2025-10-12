@@ -18,6 +18,7 @@ import {
   toggleDrawer,
   isMobile,
   useMobileHeightBreakpoint,
+  getImeGroup,
 } from "../util";
 import {
   init,
@@ -130,6 +131,19 @@ function triggerPanelKeyDown(button: string | KeyboardEvent) {
     return;
   }
 
+  if (button === "{segment}") {
+    // Send Shift+Left for word segmentation
+    panel.value?.onKeydown(
+      new KeyboardEvent("keydown", {
+        key: "Left",
+        code: "ArrowLeft",
+        keyCode: 37,
+        shiftKey: true,
+      })
+    );
+    return;
+  }
+
   if (button === "{lang}") changeLanguage();
 
   if (button === "，" || button === "。") {
@@ -163,7 +177,10 @@ function triggerPanelKeyDown(button: string | KeyboardEvent) {
 const mobileHeightMatches = useMobileHeightBreakpoint();
 
 function chooseKeyboardFromIME(imeName: string) {
-  if (imeName === "xiaobai_simp") {
+  // Find group by imeName
+  const groupName = getImeGroup(imeName)
+  console.log('imeName', imeName, 'group name', groupName)
+  if (groupName === "九键") {
     currentKeyboardLayout.value = ["t9", null];
   } else {
     currentKeyboardLayout.value = ["qwerty", null];
@@ -182,24 +199,24 @@ function getRows() {
 
 const rows = computed(() => getRows());
 
-const prevSchemaId = ref(schemaId.value)
+const prevSchemaId = ref(schemaId.value);
 
 watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
   if (isMobileVal && newAutoSwitch) {
     prevSchemaId.value = ime.value || schemaId.value;
     console.log("prevSchemaId set to:", prevSchemaId.value);
-    chooseKeyboardFromIME("xiaobai_simp")
+    chooseKeyboardFromIME("xiaobai_simp");
     selectIME("xiaobai_simp");
   } else {
     if (prevSchemaId.value) {
       selectIME(prevSchemaId.value);
-      chooseKeyboardFromIME(prevSchemaId.value)
+      chooseKeyboardFromIME(prevSchemaId.value);
       return;
     } else {
       currentKeyboardLayout.value = ["qwerty", null];
     }
   }
-})
+});
 </script>
 <!-- header-style="background: #1c1c26" body-style="background: #101014" -->
 <template>
@@ -212,28 +229,19 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
     <instruction :showKeyboard="showKeyboard" />
     <my-menu @select-ime="chooseKeyboardFromIME" />
     <div style="display: flex; align-items: center">
-      <n-input
-        id="container"
-        ref="inputInstRef"
-        :input-props="{
-          inputmode: showKeyboard ? 'none' : 'text'
-        }"
-        v-model:value="text"
-        type="textarea"
-        :rows="rows"
-        clearable
-        @focus="onFocus"
-        size="large"
-      />
+      <n-input id="container" ref="inputInstRef" :input-props="{
+        inputmode: showKeyboard ? 'none' : 'text',
+      }" v-model:value="text" type="textarea" :rows="rows" clearable @focus="onFocus" size="large" />
       <MySearchButton />
     </div>
     <my-bar :showKeyboard="showKeyboard" @toggle-keyboard="() => (showKeyboard = !showKeyboard)" @select-all="selectAll"
       :getVoiceRecognitionRef="voiceRecognitionRefFn" />
     <template v-if="showKeyboard">
       <T9Keyboard v-if="currentKeyboardLayout[0] === 't9'" @onKeyPress="triggerPanelKeyDown" />
-      <MobileSimpleKeyboard
-        v-else-if="isMobile || (currentKeyboardLayout[0] === 'qwerty' && currentKeyboardLayout[1] === 'mobile')"
-        @onKeyPress="triggerPanelKeyDown" :getVoiceRecognitionRef="voiceRecognitionRefFn" />
+      <MobileSimpleKeyboard v-else-if="
+        isMobile ||
+        (currentKeyboardLayout[0] === 'qwerty' && currentKeyboardLayout[1] === 'mobile')
+      " @onKeyPress="triggerPanelKeyDown" :getVoiceRecognitionRef="voiceRecognitionRefFn" />
       <SimpleKeyboard v-else @onKeyPress="triggerPanelKeyDown" :getVoiceRecognitionRef="voiceRecognitionRefFn" />
     </template>
     <my-panel ref="panel" :debug-mode="simulatorDebugMode" :showKeyboard="showKeyboard" />
