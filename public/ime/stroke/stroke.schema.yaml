@@ -168,6 +168,7 @@ schema:
     - "四季的風"
     - "雪齋"
     - "Kunki Chou"
+    - "宋天"
   dependencies:
     - luna_pinyin
   description: |
@@ -176,7 +177,7 @@ schema:
 
   name: "五筆畫"
   schema_id: stroke
-  version: 0.5
+  version: 0.6
 speller:
   alphabet: abcdefghijklmnopqrstuvwxyz
   delimiter: " '"

@@ -94,6 +94,10 @@ export class ModelLoader {
     console.log('All model files preloaded')
   }
 
+  async checkAllFilesCached(): Promise<boolean> {
+    return false
+  }
+
   getLoadedFile(fileName: string): ArrayBuffer | undefined {
     return this.loadedFiles.get(fileName)
   }

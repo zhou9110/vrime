@@ -143,7 +143,8 @@ recognizer:
     url: "^(www[.]|https?:|ftp:|mailto:).*$"
 reverse_lookup:
   comment_format:
-    - "xform/e?r5$/er5/"
+    - "xform/^m(\\d)$/mu$1/"
+    - "xform/^r5$/er5/"
     - "xform/iu/iou/"
     - "xform/ui/uei/"
     - "xform/ong/ung/"
@@ -152,9 +153,10 @@ reverse_lookup:
     - "xform/iu/v/"
     - "xform/^([jqx])u/$1v/"
     - "xform/([iuv])n/$1en/"
-    - "xform/zh/Z/"
-    - "xform/ch/C/"
-    - "xform/sh/S/"
+    - "xform/^zhi?/Z/"
+    - "xform/^chi?/C/"
+    - "xform/^shi?/S/"
+    - "xform/^([zcsr])i/$1/"
     - "xform/ai/A/"
     - "xform/ei/I/"
     - "xform/ao/O/"
