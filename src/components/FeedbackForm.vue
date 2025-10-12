@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NModal, NForm, NFormItem, NInput, NButton, NSpace } from 'naive-ui'
+import {
+  NModal, NForm, NFormItem, NInput, NButton, NSpace, type FormInst
+} from 'naive-ui'
 import { text } from '../control'
 
 const props = defineProps<{
@@ -13,7 +15,7 @@ const emit = defineEmits<{
   'error': [message: string]
 }>()
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInst | null>(null)
 const isSubmitting = ref(false)
 
 const formValue = ref({
@@ -52,6 +54,9 @@ async function handleSubmit(e: Event) {
   try {
     const form = e.target as HTMLFormElement
     const formData = new FormData(form)
+    Object.entries(formValue.value).map(([name, content]) => {
+      formData.append(name, content)
+    })
 
     const response = await fetch('/', {
       method: 'POST',
