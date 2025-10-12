@@ -12,5 +12,14 @@
   <body>
     <div id="app"></div>
     <script type="module" src="./src/main.ts"></script>
+
+    <!-- Hidden form for Netlify Forms detection -->
+    <form name="feedback" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="feedback" />
+      <input type="text" name="name" />
+      <input type="email" name="contact" />
+      <textarea name="feedback"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
   </body>
 </html>

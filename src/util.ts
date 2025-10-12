@@ -3,6 +3,8 @@ import { LocationQuery } from 'vue-router'
 import { useBreakpoint } from 'vooks'
 import { useOsTheme } from 'naive-ui'
 
+import schemas from "../schemas.json"
+
 let query: LocationQuery
 
 function setQuery (_query: LocationQuery) {
@@ -59,6 +61,10 @@ function useMobileHeightBreakpoint(callback?: (matches: boolean, query: MediaQue
   return matches
 }
 
+function getImeGroup(imeId: string) {
+  return schemas.find((item) => item.id === imeId)?.group
+}
+
 export {
   isMobile,
   currentTheme,
@@ -69,4 +75,5 @@ export {
   getQueryOrStoredString,
   toggleDrawer,
   useMobileHeightBreakpoint,
+  getImeGroup
 }
