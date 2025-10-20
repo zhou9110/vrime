@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, useSlots } from 'vue';
+import { useSlots } from 'vue';
 import { NButton } from 'naive-ui'
 
 const props = defineProps<{ number?: number | string, keyName?: string }>()
