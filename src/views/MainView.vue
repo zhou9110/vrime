@@ -25,6 +25,7 @@ import {
   text,
   changeLanguage,
   autoSwitchKeyboardLayout,
+  autoSwitchToT9Ime,
   currentKeyboardLayout,
   selectIME,
   schemaId,
@@ -204,8 +205,8 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
   if (isMobileVal && newAutoSwitch) {
     prevSchemaId.value = ime.value || schemaId.value
     console.log('prevSchemaId set to:', prevSchemaId.value)
-    chooseKeyboardFromIME('xiaobai_simp')
-    selectIME('xiaobai_simp')
+    chooseKeyboardFromIME(autoSwitchToT9Ime.value)
+    selectIME(autoSwitchToT9Ime.value)
   } else {
     if (prevSchemaId.value) {
       selectIME(prevSchemaId.value)

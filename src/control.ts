@@ -65,6 +65,9 @@ const forceVertical = savedBooleanRef(FORCE_VERTICAL, false)
 const AUTO_SWITCH_KEYBOARD_LAYOUT = 'autoSwitchKeyboardLayout'
 const autoSwitchKeyboardLayout = savedBooleanRef(AUTO_SWITCH_KEYBOARD_LAYOUT, true)
 
+const AUTO_SWITCH_T9_IME = 'autoSwitchT9Ime'
+const autoSwitchToT9Ime = savedRef(AUTO_SWITCH_T9_IME, "yuyan_t9_pinyin")
+
 // Use a tuple to store the layout, first element is the layout, second element is for some special variants, e.g. 仓颉、五笔、注音
 const currentKeyboardLayout = ref<["qwerty", "mobile" | "full" | "cangjie" | "zhuyin" | "wubi" | null] | ["t9", "mobile" | "xiaobai" | null]>(["qwerty", null])
 
@@ -424,6 +427,7 @@ export {
   copiedText,
   forceVertical,
   autoSwitchKeyboardLayout,
+  autoSwitchToT9Ime,
   currentKeyboardLayout,
   loading,
   schemaId,

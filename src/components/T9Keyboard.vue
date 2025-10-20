@@ -571,10 +571,9 @@ function onPinyinClick (pinyin: string) {
 .side {
   border-radius: 3px;
   grid-area: side;
-  overflow: auto;
+  overflow-y: scroll;
   background-color: rgba(166, 161, 161, 0.242);
   padding: 3px;
-  min-height: 260px;
 }
 
 .side>.side-key:not(:last-child)::after {
@@ -599,6 +598,7 @@ function onPinyinClick (pinyin: string) {
 .numpad {
   max-width: 800px;
   min-height: 200px;
+  max-height: 50vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);

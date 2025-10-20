@@ -67,8 +67,14 @@ function onSelectIME(value: string) {
 <template>
   <n-flex justify="space-between">
     <n-space>
-      <n-select style="width: 160px" :value="ime" :options="selectOptions" :loading="loading"
-        @update:value="onSelectIME" size="large" />
+      <n-select
+        style="width: 160px"
+        :value="ime"
+        :options="selectOptions"
+        :loading="loading"
+        @update:value="onSelectIME"
+        size="large"
+      />
       <n-button-group class="square-group" @click="resetFocus" size="large">
         <n-tooltip trigger="hover">
           <template #trigger>
@@ -80,7 +86,11 @@ function onSelectIME(value: string) {
         </n-tooltip>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary :disabled="isEnglish || singleVariant || deployed" @click="switchVariant">
+            <n-button
+              secondary
+              :disabled="isEnglish || singleVariant || deployed"
+              @click="switchVariant"
+            >
               {{ variantLabel }}
             </n-button>
           </template>
@@ -90,7 +100,9 @@ function onSelectIME(value: string) {
           <template #trigger>
             <n-button secondary @click="changeWidth">
               <template #icon>
-                <n-icon :component="isFullWidth ? Circle16Regular : WeatherMoon16Regular" />
+                <n-icon
+                  :component="isFullWidth ? Circle16Regular : WeatherMoon16Regular"
+                />
               </template>
             </n-button>
           </template>
