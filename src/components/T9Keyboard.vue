@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NFlex } from 'naive-ui'
-import { defineEmits, defineProps, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import type MyPanel from './MyPanel.vue'
 
 import SimpleKeyboard from './MobileSimpleKeyboard.vue'
@@ -111,17 +111,15 @@ function onPinyinClick (pinyin: string) {
       gap="5px"
     >
       <!-- Show pinyin candidates when available -->
-      <template v-if="hasPinyinCandidates">
-        <n-button
+      <template v-if="hasPinyinCandidates && ime !== 'xiaobai_simp'">
+        <SideKey
           v-for="pinyin in pinyinCandidates"
           :key="pinyin"
           class="side-key pinyin-key"
-          size="small"
-          secondary
           @click="onPinyinClick(pinyin)"
         >
           {{ pinyin }}
-        </n-button>
+        </SideKey>
       </template>
       <!-- Default symbols when no pinyin candidates -->
       <template v-else>
@@ -203,15 +201,15 @@ function onPinyinClick (pinyin: string) {
     <template v-if="currentLayout === 't9' && ime === 'xiaobai_simp'">
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="7"
         number="7"
         @on-key-press="onKeyPress"
       >
-        分词
+        功能键
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="8"
         number="8"
         @on-key-press="onKeyPress"
       >
@@ -219,7 +217,7 @@ function onPinyinClick (pinyin: string) {
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="9"
         number="9"
         @on-key-press="onKeyPress"
       >
@@ -236,7 +234,7 @@ function onPinyinClick (pinyin: string) {
       </n-button>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="4"
         number="4"
         @on-key-press="onKeyPress"
       >
@@ -244,7 +242,7 @@ function onPinyinClick (pinyin: string) {
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="5"
         number="5"
         @on-key-press="onKeyPress"
       >
@@ -252,7 +250,7 @@ function onPinyinClick (pinyin: string) {
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="6"
         number="6"
         @on-key-press="onKeyPress"
       >
@@ -267,7 +265,7 @@ function onPinyinClick (pinyin: string) {
       </n-button>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="1"
         number="1"
         @on-key-press="onKeyPress"
       >
@@ -275,7 +273,7 @@ function onPinyinClick (pinyin: string) {
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="2"
         number="2"
         @on-key-press="onKeyPress"
       >
@@ -283,7 +281,7 @@ function onPinyinClick (pinyin: string) {
       </NumKey>
       <NumKey
         class="numpad-key"
-        key-name=""
+        key-name="3"
         number="3"
         @on-key-press="onKeyPress"
       >
@@ -311,7 +309,7 @@ function onPinyinClick (pinyin: string) {
       />
       <NumKey
         class="numpad-key"
-        key-name=" "
+        key-name="0"
         number="0"
         @on-key-press="onKeyPress(' ')"
       >
@@ -339,7 +337,7 @@ function onPinyinClick (pinyin: string) {
         class="numpad-key"
         key-name="1"
         number="1"
-        @on-key-press="onKeyPress"
+        @on-key-press="onKeyPress('\'')"
       >
         分词
       </NumKey>
@@ -576,6 +574,7 @@ function onPinyinClick (pinyin: string) {
   overflow: auto;
   background-color: rgba(166, 161, 161, 0.242);
   padding: 3px;
+  min-height: 260px;
 }
 
 .side>.side-key:not(:last-child)::after {
@@ -592,8 +591,7 @@ function onPinyinClick (pinyin: string) {
 }
 
 .pinyin-key {
-  min-height: 40px;
-  font-size: 1.1em;
+  height: 65px;
   text-align: center;
   cursor: pointer;
 }
