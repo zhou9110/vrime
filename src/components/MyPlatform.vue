@@ -35,7 +35,8 @@ const platforms: {
       title: 'Windows',
       content: () => [
         h('div', {}, generateContent('Weasel', '小狼毫', 'https://github.com/rime/weasel')),
-        h('div', {}, generateContent('Rabbit', '玉兔毫', 'https://github.com/amorphobia/rabbit'))
+        h('div', {}, generateContent('Rabbit', '玉兔毫', 'https://github.com/amorphobia/rabbit')),
+        h('div', {}, generateContent('Xiaobai-t9', '小白T9', 'https://t9.xiaobai.pro/'))
       ]
     },
     {
@@ -51,7 +52,8 @@ const platforms: {
       title: 'Android',
       content: () => [
         h('div', {}, generateContent('fcitx5-android', '小企鹅', 'https://github.com/fcitx5-android/fcitx5-android')),
-        h('div', {}, generateContent('Trime', '同文', 'https://github.com/osfans/trime'))
+        h('div', {}, generateContent('Trime', '同文', 'https://github.com/osfans/trime')),
+        h('div', {}, generateContent('YuyanIme', '语燕输入法', 'https://github.com/gurecn/YuyanIme'))
       ]
     },
     {
