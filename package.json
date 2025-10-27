@@ -39,7 +39,12 @@
     "test:chromium": "playwright test --browser chromium --fully-parallel test/",
     "test:firefox": "playwright test --browser firefox --fully-parallel test/",
     "test:webkit": "playwright test --browser webkit --fully-parallel test/",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "release": "release-it",
+    "release:dry": "release-it --dry-run",
+    "release:patch": "release-it patch",
+    "release:minor": "release-it minor",
+    "release:major": "release-it major"
   },
   "devDependencies": {
     "@codemirror/language": "^6.10.2",
@@ -50,6 +55,7 @@
     "@libreservice/my-worker": "^0.4.2",
     "@libreservice/wasm-code": "^0.1.5",
     "@playwright/test": "^1.45.2",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
@@ -76,6 +82,7 @@
     "js-yaml": "^4.1.0",
     "luaparse": "^0.3.1",
     "naive-ui": "^2.39.0",
+    "release-it": "^19.0.5",
     "rimraf": "^6.0.1",
     "rollup": "^4.18.1",
     "rollup-plugin-esbuild": "^6.1.1",
