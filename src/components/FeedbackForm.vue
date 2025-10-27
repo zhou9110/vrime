@@ -114,7 +114,7 @@ function pasteFromTextbox() {
       <n-form-item label="反馈内容" path="feedback">
         <n-space vertical style="width: 100%">
           <n-input v-model:value="formValue.feedback" name="feedback" type="textarea"
-            :placeholder="'请告诉我们您的意见、建议或遇到的问题...\n(该功能在自行部署的服务器上无法使用)'" :autosize="{
+            :placeholder="'请告诉我们您的建议、想要的功能、或者遇到的问题...'" :autosize="{
               minRows: 4,
               maxRows: 8
             }" clearable />
@@ -127,7 +127,7 @@ function pasteFromTextbox() {
         <n-input v-model:value="formValue.name" name="name" placeholder="请输入您的姓名（可选）" clearable />
       </n-form-item>
       <n-form-item label="联系方式" path="contact">
-        <n-input v-model:value="formValue.contact" name="contact" placeholder="请输入您的邮箱，或其他联系方式（可选）" clearable />
+        <n-input v-model:value="formValue.contact" name="contact" placeholder="请输入一个联系方式（可选）" clearable />
       </n-form-item>
       <n-space justify="end" style="margin-top: 16px">
         <n-button :disabled="isSubmitting" @click="handleReset">

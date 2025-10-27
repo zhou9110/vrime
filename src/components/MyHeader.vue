@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { NIcon, NButton, NText, NSwitch, NSpace, NTooltip, useMessage } from 'naive-ui'
+import { computed, ref, inject, type Ref } from 'vue'
+import { NIcon, NButton, NText, NSwitch, NSpace, NTooltip, NBadge, useMessage } from 'naive-ui'
 import { Github } from '@vicons/fa'
-import { HeadsetVr24Filled, Keyboard20Regular, Settings32Regular } from '@vicons/fluent'
-import { LightModeFilled, DarkModeFilled, FeedbackOutlined } from '@vicons/material'
+import { HeadsetVr24Filled, Keyboard20Regular, Settings32Regular, PersonFeedback24Regular } from '@vicons/fluent'
+import { Bullhorn } from '@vicons/fa'
+import { LightModeFilled, DarkModeFilled, FeedbackOutlined, InfoOutlined } from '@vicons/material'
 import { currentTheme, toggleDrawer, isMobile } from '../util'
 import FeedbackForm from './FeedbackForm.vue'
+import type Announcement from './Announcement.vue'
 
 const message = useMessage()
 
@@ -13,6 +15,14 @@ const prop = defineProps<{
   icon: string,
   homepage: string
 }>()
+
+// Inject the announcement ref from App.vue
+const announcementRef = inject<Ref<InstanceType<typeof Announcement> | undefined>>('announcementRef')
+
+// Get unseen count from announcement component
+const unseenCount = computed(() => {
+  return announcementRef?.value?.unseenCount ?? 0
+})
 
 const isDark = computed({
   get: () => (currentTheme.value === 'dark'),
@@ -38,6 +48,10 @@ function handleFeedbackSuccess() {
 function handleFeedbackError(errorMessage: string) {
   message.error(errorMessage)
 }
+
+function openWhatsNew() {
+  announcementRef?.value?.openAnnouncement()
+}
 </script>
 
 <template>
@@ -51,7 +65,7 @@ function handleFeedbackError(errorMessage: string) {
       <Keyboard20Regular />
     </n-icon>
     <n-text v-if="!isMobile" style="font-size: 18px; margin-left: 12px">
-      在线中文输入法 (Quest用)
+      VRIME | 在线中文输入法
     </n-text>
   </div>
   <n-space>
@@ -70,8 +84,18 @@ function handleFeedbackError(errorMessage: string) {
     </n-tooltip>
     <n-tooltip>
       <template #trigger>
-        <n-button text style="font-size: 24px" @click="openFeedback">
-          <n-icon :size="28" :component="FeedbackOutlined" />
+        <n-badge :value="unseenCount" :max="9" :show="unseenCount > 0" dot>
+          <n-button text @click="openWhatsNew">
+            <n-icon :size="24" :component="Bullhorn" />
+          </n-button>
+        </n-badge>
+      </template>
+      <div>更新公告</div>
+    </n-tooltip>
+    <n-tooltip>
+      <template #trigger>
+        <n-button text @click="openFeedback">
+          <n-icon :size="28" :component="PersonFeedback24Regular" />
         </n-button>
       </template>
       <div>提交反馈</div>
