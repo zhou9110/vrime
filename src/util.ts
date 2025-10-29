@@ -3,7 +3,7 @@ import { LocationQuery } from 'vue-router'
 import { useBreakpoint } from 'vooks'
 import { useOsTheme } from 'naive-ui'
 
-import schemas from "../schemas.json"
+import schemas from '../schemas.json'
 
 let query: LocationQuery
 
@@ -34,11 +34,11 @@ function getQueryOrStoredString (key: string) {
   return getQueryString(key) || localStorage.getItem(key) || ''
 }
 
-function toggleDrawer() {
+function toggleDrawer () {
   showDrawer.value = !showDrawer.value
 }
 
-function useMobileHeightBreakpoint(callback?: (matches: boolean, query: MediaQueryList) => void) {
+function useMobileHeightBreakpoint (callback?: (matches: boolean, query: MediaQueryList) => void) {
   const mobileHeightQuery = matchMedia('(max-height: 768px)')
   const matches = ref(mobileHeightQuery.matches)
 
@@ -53,7 +53,7 @@ function useMobileHeightBreakpoint(callback?: (matches: boolean, query: MediaQue
     // 监听媒体查询变化
     mobileHeightQuery.addEventListener('change', onChange)
   })
-  
+
   onUnmounted(() => {
     mobileHeightQuery.removeEventListener('change', onChange)
   })
@@ -61,7 +61,7 @@ function useMobileHeightBreakpoint(callback?: (matches: boolean, query: MediaQue
   return matches
 }
 
-function getImeGroup(imeId: string) {
+function getImeGroup (imeId: string) {
   return schemas.find((item) => item.id === imeId)?.group
 }
 

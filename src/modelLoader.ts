@@ -11,12 +11,12 @@ export class ModelLoader {
   private onProgress?: (progress: LoadProgress) => void
   private loadedFiles = new Map<string, ArrayBuffer>()
 
-  constructor(baseURL: string, onProgress?: (progress: LoadProgress) => void) {
+  constructor (baseURL: string, onProgress?: (progress: LoadProgress) => void) {
     this.baseURL = baseURL
     this.onProgress = onProgress
   }
 
-  async fetchWithCache(fileName: string): Promise<ArrayBuffer> {
+  async fetchWithCache (fileName: string): Promise<ArrayBuffer> {
     // Check if already loaded in memory
     if (this.loadedFiles.has(fileName)) {
       console.log(`Model file "${fileName}" already loaded in memory`)
@@ -83,26 +83,26 @@ export class ModelLoader {
     return arrayBuffer
   }
 
-  createBlobURL(fileName: string, arrayBuffer: ArrayBuffer, mimeType: string): string {
+  createBlobURL (fileName: string, arrayBuffer: ArrayBuffer, mimeType: string): string {
     const blob = new Blob([arrayBuffer], { type: mimeType })
     return URL.createObjectURL(blob)
   }
 
-  async preloadFiles(fileNames: string[]): Promise<void> {
+  async preloadFiles (fileNames: string[]): Promise<void> {
     console.log(`Preloading ${fileNames.length} model files...`)
     await Promise.all(fileNames.map(fileName => this.fetchWithCache(fileName)))
     console.log('All model files preloaded')
   }
 
-  async checkAllFilesCached(): Promise<boolean> {
+  async checkAllFilesCached (): Promise<boolean> {
     return false
   }
 
-  getLoadedFile(fileName: string): ArrayBuffer | undefined {
+  getLoadedFile (fileName: string): ArrayBuffer | undefined {
     return this.loadedFiles.get(fileName)
   }
 
-  clear(): void {
+  clear (): void {
     this.loadedFiles.clear()
   }
 }

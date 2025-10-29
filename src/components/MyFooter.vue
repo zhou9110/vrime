@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { NA } from 'naive-ui';
-import { defineProps, ref } from 'vue';
-import { version as v } from '../../package.json';
-import { homepage } from '../../package.json'
+import { NA } from 'naive-ui'
+import { defineProps, ref } from 'vue'
+import { version as v, homepage } from '../../package.json'
 
 const props = defineProps<{
   commit?: string
@@ -45,10 +44,14 @@ const version = ref(v)
         AGPLv3
       </n-a>+)
     </p>
-    
+
     &copy;<span>
-      2024-{{new Date().getFullYear()}} David Zhou (<n-a href="https://github.com/zhou9110">@zhou9110</n-a>), My Rime authors (Qijia Liu (<n-a href="https://github.com/eagleoflqj">@eagleoflqj</n-a>), et al.)
+      2024-{{ new Date().getFullYear() }} David Zhou (<n-a href="https://github.com/zhou9110">@zhou9110</n-a>), My Rime authors (Qijia Liu (<n-a href="https://github.com/eagleoflqj">@eagleoflqj</n-a>), et al.)
     </span>
-    <p>Made with ❤️ and supported by <n-a href="https://aibuild.com">AIBUILD</n-a></p>
+    <p>
+      Made with ❤️ and supported by <n-a href="https://aibuild.com">
+        AIBUILD
+      </n-a>
+    </p>
   </div>
 </template>

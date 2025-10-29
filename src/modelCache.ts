@@ -18,13 +18,13 @@ const STORE_NAME = 'model-files'
 
 let dbInstance: IDBPDatabase<ModelCacheDB> | null = null
 
-async function getDB(): Promise<IDBPDatabase<ModelCacheDB>> {
+async function getDB (): Promise<IDBPDatabase<ModelCacheDB>> {
   if (dbInstance) {
     return dbInstance
   }
 
   dbInstance = await openDB<ModelCacheDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
+    upgrade (db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME)
       }
@@ -34,7 +34,7 @@ async function getDB(): Promise<IDBPDatabase<ModelCacheDB>> {
   return dbInstance
 }
 
-export async function getCachedModel(fileName: string): Promise<ArrayBuffer | null> {
+export async function getCachedModel (fileName: string): Promise<ArrayBuffer | null> {
   try {
     const db = await getDB()
     const cached = await db.get(STORE_NAME, fileName)
@@ -51,7 +51,7 @@ export async function getCachedModel(fileName: string): Promise<ArrayBuffer | nu
   }
 }
 
-export async function cacheModel(fileName: string, data: ArrayBuffer): Promise<void> {
+export async function cacheModel (fileName: string, data: ArrayBuffer): Promise<void> {
   try {
     const db = await getDB()
     await db.put(STORE_NAME, {
@@ -67,7 +67,7 @@ export async function cacheModel(fileName: string, data: ArrayBuffer): Promise<v
   }
 }
 
-export async function clearModelCache(): Promise<void> {
+export async function clearModelCache (): Promise<void> {
   try {
     const db = await getDB()
     await db.clear(STORE_NAME)
@@ -77,7 +77,7 @@ export async function clearModelCache(): Promise<void> {
   }
 }
 
-export async function getCacheSize(): Promise<number> {
+export async function getCacheSize (): Promise<number> {
   try {
     const db = await getDB()
     const allKeys = await db.getAllKeys(STORE_NAME)
@@ -97,7 +97,7 @@ export async function getCacheSize(): Promise<number> {
   }
 }
 
-export async function getAllCachedModels(): Promise<string[]> {
+export async function getAllCachedModels (): Promise<string[]> {
   try {
     const db = await getDB()
     const allKeys = await db.getAllKeys(STORE_NAME)

@@ -33,7 +33,7 @@ const SIMPLIFICATION = 'simplification'
 
 const deployed = ref<boolean>(false)
 
-export function savedBooleanRef(key: string, initial: boolean) {
+export function savedBooleanRef (key: string, initial: boolean) {
   const box = ref<boolean>(initial ? localStorage.getItem(key) !== 'false' : localStorage.getItem(key) === 'true')
   watchEffect(() => {
     localStorage.setItem(key, box.value.toString())
@@ -41,7 +41,7 @@ export function savedBooleanRef(key: string, initial: boolean) {
   return box
 }
 
-export function savedRef<T>(key: string, initial: T) {
+export function savedRef<T> (key: string, initial: T) {
   const saved = localStorage.getItem(key)
   let initValue = initial
   if (saved) {
@@ -67,17 +67,17 @@ const AUTO_SWITCH_KEYBOARD_LAYOUT = 'autoSwitchKeyboardLayout'
 const autoSwitchKeyboardLayout = savedBooleanRef(AUTO_SWITCH_KEYBOARD_LAYOUT, true)
 
 const AUTO_SWITCH_T9_IME = 'autoSwitchT9Ime'
-const autoSwitchToT9Ime = savedRef(AUTO_SWITCH_T9_IME, "yuyan_t9_pinyin")
+const autoSwitchToT9Ime = savedRef(AUTO_SWITCH_T9_IME, 'yuyan_t9_pinyin')
 
 // Use a tuple to store the layout, first element is the layout, second element is for some special variants, e.g. 仓颉、五笔、注音
-const currentKeyboardLayout = ref<["qwerty", "mobile" | "full" | "cangjie" | "zhuyin" | "wubi" | null] | ["t9", "mobile" | "xiaobai" | null]>(["qwerty", null])
+const currentKeyboardLayout = ref<['qwerty', 'mobile' | 'full' | 'cangjie' | 'zhuyin' | 'wubi' | null] | ['t9', 'mobile' | 'xiaobai' | null]>(['qwerty', null])
 
 const schemaId = ref<string>(schemas[0].id)
 const ime = ref<string>('') // visual vs internal
 
 const loading = ref<boolean>(true)
 
-function setLoading(value: boolean) {
+function setLoading (value: boolean) {
   showVariant.value = !value
   loading.value = value
   ime.value = value ? '' : schemaId.value
@@ -123,7 +123,7 @@ type HideComment = boolean | 'emoji'
 const schemaComment: { [key: string]: HideComment } = {}
 const hideComment = computed<HideComment>(() => schemaComment[schemaId.value] || false)
 
-function convertVariants(variants: Variants | undefined) {
+function convertVariants (variants: Variants | undefined) {
   if (variants) {
     if (variants.length) {
       return variants.map(variant => ({
@@ -153,7 +153,7 @@ function convertVariants(variants: Variants | undefined) {
 
 const language = getLanguage()
 
-function getDefaultVariantIndex(variants: Variants | undefined): number {
+function getDefaultVariantIndex (variants: Variants | undefined): number {
   if (variants) {
     for (let i = 0; i < variants.length; ++i) {
       if (variants[i].languages?.includes(language)) {
@@ -184,7 +184,7 @@ for (const schema of schemas as {
     continue
   }
 
-  function helper(id: string, name: string, group: string | undefined, extended: boolean | undefined, hideComment: HideComment | undefined, variants: Variants | undefined) {
+  function helper (id: string, name: string, group: string | undefined, extended: boolean | undefined, hideComment: HideComment | undefined, variants: Variants | undefined) {
     const item = {
       label: name,
       value: id
@@ -235,17 +235,17 @@ const showVariant = ref<boolean>(false)
 const variants = computed(() => schemaVariants[schemaId.value])
 
 const variantIndex = computed({
-  get() {
+  get () {
     return schemaVariantsIndex[schemaId.value].value
   },
-  set(newIndex) {
+  set (newIndex) {
     schemaVariantsIndex[schemaId.value].value = newIndex
   }
 })
 
 const variant = computed(() => variants.value[variantIndex.value])
 
-async function hasUserDefaultYaml() {
+async function hasUserDefaultYaml () {
   try {
     await FS.lstat('/rime/build/default.yaml')
     return true
@@ -254,7 +254,7 @@ async function hasUserDefaultYaml() {
   }
 }
 
-async function installFromQueryString() {
+async function installFromQueryString () {
   const plum: { target: string, schemaIds: string[] }[] = []
   let missing = false
   const available = await getAvailableSchemas()
@@ -284,7 +284,7 @@ async function installFromQueryString() {
   return false
 }
 
-async function init() {
+async function init () {
   if (await installFromQueryString()) {
     return
   }
@@ -339,7 +339,7 @@ const changeCharset = toggle(EXTENDED_CHARSET)
 const changePunctuation = toggle(ASCII_PUNCT)
 const changeEmoji = toggle(EMOJI_SUGGESTION)
 
-async function setVariant() {
+async function setVariant () {
   for (const v of variants.value) {
     if (v.id !== variant.value.id) {
       await setOption(v.id, false)
@@ -348,12 +348,12 @@ async function setVariant() {
   return setOption(variant.value.id, variant.value.value)
 }
 
-function changeVariant() {
+function changeVariant () {
   variantIndex.value = (variantIndex.value + 1) % variants.value.length
   return setVariant()
 }
 
-async function selectIME(targetIME: string) {
+async function selectIME (targetIME: string) {
   setLoading(true)
   try {
     await setIME(targetIME)
@@ -379,7 +379,7 @@ async function selectIME(targetIME: string) {
   setLoading(false)
 }
 
-function syncOptions(updatedOptions: string[]) {
+function syncOptions (updatedOptions: string[]) {
   if (updatedOptions.length === 1) { // global options or binary variant
     const updatedOption = updatedOptions[0]
     for (const [option, box] of Object.entries(basicOptionMap)) {

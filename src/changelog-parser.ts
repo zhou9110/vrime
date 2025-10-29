@@ -25,7 +25,7 @@ export interface ProductUpdate {
   sections: ChangelogSection[]
 }
 
-export function parseChangelog(markdown: string): ProductUpdate[] {
+export function parseChangelog (markdown: string): ProductUpdate[] {
   const lines = markdown.split('\n')
   const updates: ProductUpdate[] = []
   let currentUpdate: Partial<ProductUpdate> | null = null
@@ -125,28 +125,28 @@ export function parseChangelog(markdown: string): ProductUpdate[] {
 export const LAST_VIEWED_KEY = 'vrime_changelog_last_viewed'
 
 // Get last viewed timestamp from localStorage
-export function getLastViewedTimestamp(): number {
+export function getLastViewedTimestamp (): number {
   const stored = localStorage.getItem(LAST_VIEWED_KEY)
   return stored ? parseInt(stored, 10) : 0
 }
 
 // Update last viewed timestamp
-export function markChangelogAsViewed(): void {
+export function markChangelogAsViewed (): void {
   localStorage.setItem(LAST_VIEWED_KEY, Date.now().toString())
 }
 
 // Get updates released after a certain timestamp
-export function getUnseenUpdates(updates: ProductUpdate[]): ProductUpdate[] {
+export function getUnseenUpdates (updates: ProductUpdate[]): ProductUpdate[] {
   const lastViewed = getLastViewedTimestamp()
   return updates.filter(update => update.releasedAt > lastViewed)
 }
 
 // Get count of unseen updates
-export function getUnseenCount(updates: ProductUpdate[]): number {
+export function getUnseenCount (updates: ProductUpdate[]): number {
   return getUnseenUpdates(updates).length
 }
 
 // Check if update is new (released after last viewed)
-export function isNewUpdate(update: ProductUpdate): boolean {
+export function isNewUpdate (update: ProductUpdate): boolean {
   return update.releasedAt > getLastViewedTimestamp()
 }

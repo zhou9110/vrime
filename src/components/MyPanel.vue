@@ -62,7 +62,7 @@ const exclusiveShift = ref<boolean>(false)
 const pinyinCandidates = ref<string[]>([])
 const currentT9Sequence = ref<string>('')
 
-async function debug(e: KeyboardEvent, rimeKey: string) {
+async function debug (e: KeyboardEvent, rimeKey: string) {
   editing.value = true
   await input(rimeKey);
   (e.target as HTMLElement).focus()
@@ -121,17 +121,17 @@ const RIME_KEY_MAP: { [key: string]: string | undefined } = {
 
 const CONTROL_ALLOWLIST = ['`']
 
-function isPrintable(key: string) {
+function isPrintable (key: string) {
   return /^[a-z0-9!"#$%&'()*+,./:;<=>?@[\] ^_`{|}~\\-]$/i.test(key)
 }
 
 const regex = emojiRegex()
-function isEmoji(c: string) {
+function isEmoji (c: string) {
   regex.lastIndex = 0
   return regex.test(c)
 }
 
-function insert(toInsert: string) {
+function insert (toInsert: string) {
   const textarea = getTextarea()
   const { selectionStart, selectionEnd } = textarea
   text.value = text.value.slice(0, selectionStart) + toInsert + text.value.slice(selectionEnd)
@@ -145,7 +145,7 @@ function insert(toInsert: string) {
   })
 }
 
-function handleBackspace() {
+function handleBackspace () {
   const textarea = getTextarea()
   const { selectionStart, selectionEnd } = textarea
   console.log({ selectionStart, selectionEnd })
@@ -172,7 +172,7 @@ function handleBackspace() {
   })
 }
 
-async function analyze(result: RIME_RESULT, rimeKey: string) {
+async function analyze (result: RIME_RESULT, rimeKey: string) {
   const textarea = getTextarea()
   if (!('updatedSchema' in result) && result.updatedOptions) {
     syncOptions(result.updatedOptions)
@@ -251,7 +251,7 @@ async function analyze(result: RIME_RESULT, rimeKey: string) {
   textarea.focus()
 }
 
-async function input(rimeKey: string) {
+async function input (rimeKey: string) {
   const result = await process(rimeKey)
   return analyze(result, rimeKey)
 }
@@ -280,7 +280,7 @@ watch(text, (acNewText, acText) => {
 })
 // end: code specific to Android Chromium
 
-function onKeydown(e: KeyboardEvent) {
+function onKeydown (e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
     return
   }
@@ -379,7 +379,7 @@ function onKeydown(e: KeyboardEvent) {
   input(rimeKey)
 }
 
-function onKeyup(e: KeyboardEvent) {
+function onKeyup (e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
     return
   }
@@ -393,21 +393,21 @@ function onKeyup(e: KeyboardEvent) {
   }
 }
 
-async function onClick(key: number) {
+async function onClick (key: number) {
   const result = JSON.parse(await selectCandidateOnCurrentPage(key))
   return analyze(result, '')
 }
 
-async function onPageChange(backward: boolean) {
+async function onPageChange (backward: boolean) {
   const result = JSON.parse(await changePage(backward))
   return analyze(result, '')
 }
 
-function singleTouch(e: TouchEvent) {
+function singleTouch (e: TouchEvent) {
   return e.touches.length === 1 ? e.touches[0] : undefined
 }
 
-function handleDown(clientX: number, clientY: number) {
+function handleDown (clientX: number, clientY: number) {
   mouseX.value = clientX
   mouseY.value = clientY
   // As flip is turned on, update x to actual position to avoid layout shift on click
@@ -416,16 +416,16 @@ function handleDown(clientX: number, clientY: number) {
   dragging.value = true
 }
 
-function onMousedown(e: MouseEvent) {
+function onMousedown (e: MouseEvent) {
   handleDown(e.clientX, e.clientY)
 }
 
-function onTouchstart(e: TouchEvent) {
+function onTouchstart (e: TouchEvent) {
   const touch = singleTouch(e)
   touch && handleDown(touch.clientX, touch.clientY)
 }
 
-function handleMove(clientX: number, clientY: number) {
+function handleMove (clientX: number, clientY: number) {
   if (!dragging.value) {
     return
   }
@@ -436,16 +436,16 @@ function handleMove(clientX: number, clientY: number) {
   mouseY.value = clientY
 }
 
-function onMousemove(e: MouseEvent) {
+function onMousemove (e: MouseEvent) {
   handleMove(e.clientX, e.clientY)
 }
 
-function onTouchmove(e: TouchEvent) {
+function onTouchmove (e: TouchEvent) {
   const touch = singleTouch(e)
   touch && handleMove(touch.clientX, touch.clientY)
 }
 
-function onMouseupOrTouchend() {
+function onMouseupOrTouchend () {
   dragging.value = false
 }
 
@@ -477,8 +477,18 @@ defineExpose({
 </script>
 
 <template>
-  <n-popover :show="showMenu" :show-arrow="false" :x="x" :y="y" :flip="!dragging" placement="bottom-start"
-    trigger="manual" style="cursor: move" @mousedown="onMousedown" @touchstart="onTouchstart">
+  <n-popover
+    :show="showMenu"
+    :show-arrow="false"
+    :x="x"
+    :y="y"
+    :flip="!dragging"
+    placement="bottom-start"
+    trigger="manual"
+    style="cursor: move"
+    @mousedown="onMousedown"
+    @touchstart="onTouchstart"
+  >
     <n-text type="success">
       {{ preEditHead }}
     </n-text>&nbsp;
@@ -486,15 +496,35 @@ defineExpose({
       {{ preEditBody }}
     </n-text>&nbsp;
     {{ preEditTail }}
-    <n-menu v-show="menuOptions.length" :options="menuOptions" class="text-candidates"
-      :mode="forceVertical || (xOverflow && !isMobile) ? 'vertical' : 'horizontal'" :value="highlighted"
-      @update:value="onClick" @touchstart.stop="e => console.log('touch stopped')"
-      @mousedown.stop="e => console.log('click stopped')" />
-    <n-button quaternary :disabled="prevDisabled">
-      <n-icon :component="CaretLeft" size="20" @click="onPageChange(true)" />
+    <n-menu
+      v-show="menuOptions.length"
+      :options="menuOptions"
+      class="text-candidates"
+      :mode="forceVertical || (xOverflow && !isMobile) ? 'vertical' : 'horizontal'"
+      :value="highlighted"
+      @update:value="onClick"
+      @touchstart.stop="e => console.log('touch stopped')"
+      @mousedown.stop="e => console.log('click stopped')"
+    />
+    <n-button
+      quaternary
+      :disabled="prevDisabled"
+    >
+      <n-icon
+        :component="CaretLeft"
+        size="20"
+        @click="onPageChange(true)"
+      />
     </n-button>
-    <n-button quaternary :disabled="nextDisabled">
-      <n-icon :component="CaretRight" size="20" @click="onPageChange(false)" />
+    <n-button
+      quaternary
+      :disabled="nextDisabled"
+    >
+      <n-icon
+        :component="CaretRight"
+        size="20"
+        @click="onPageChange(false)"
+      />
     </n-button>
   </n-popover>
 </template>

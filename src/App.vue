@@ -22,13 +22,19 @@ provide('announcementRef', announcementRef)
 </script>
 
 <template>
-  <n-config-provider :theme="currentTheme === 'dark' ? darkTheme : null" :locale="zhCN">
+  <n-config-provider
+    :theme="currentTheme === 'dark' ? darkTheme : null"
+    :locale="zhCN"
+  >
     <n-message-provider>
       <MyPwa />
       <Announcement ref="announcementRef" />
       <my-layout>
         <template #header>
-          <my-header icon="./icon.svg" :homepage="homepage" />
+          <my-header
+            icon="./icon.svg"
+            :homepage="homepage"
+          />
         </template>
         <template #content>
           <n-notification-provider :max="1">

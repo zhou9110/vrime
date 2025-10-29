@@ -74,20 +74,34 @@ defineExpose({
       footer: 'soft'
     }"
   >
-    <div v-if="productUpdates.length > 0" style="max-height: 70vh; overflow-y: auto; padding: 4px">
+    <div
+      v-if="productUpdates.length > 0"
+      style="max-height: 70vh; overflow-y: auto; padding: 4px"
+    >
       <div
         v-for="(update, index) in productUpdates"
         :key="update.version"
         style="margin-bottom: 32px"
       >
-        <n-divider v-if="index > 0" style="margin: 32px 0" />
+        <n-divider
+          v-if="index > 0"
+          style="margin: 32px 0"
+        />
 
         <!-- Update Header -->
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
-          <n-tag type="success" size="medium" :bordered="false">
+          <n-tag
+            type="success"
+            size="medium"
+            :bordered="false"
+          >
             v{{ update.version }}
           </n-tag>
-          <n-badge v-if="isNewUpdate(update)" value="新" type="error" />
+          <n-badge
+            v-if="isNewUpdate(update)"
+            value="新"
+            type="error"
+          />
           <span style="color: var(--n-text-color); opacity: 0.6; font-size: 14px">
             {{ update.date }}
           </span>
@@ -132,13 +146,19 @@ defineExpose({
       </div>
     </div>
 
-    <div v-else-if="!loading" style="text-align: center; padding: 40px; opacity: 0.6">
+    <div
+      v-else-if="!loading"
+      style="text-align: center; padding: 40px; opacity: 0.6"
+    >
       暂无更新记录
     </div>
 
     <template #footer>
       <div style="display: flex; justify-content: flex-end; gap: 12px">
-        <n-button type="primary" @click="markAsViewed">
+        <n-button
+          type="primary"
+          @click="markAsViewed"
+        >
           知道了
         </n-button>
       </div>

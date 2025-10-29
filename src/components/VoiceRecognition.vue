@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { NModal, NProgress, NButton, NText, NAlert, NA } from 'naive-ui'
-import { createOnlineRecognizer, type OnlineRecognizer } from '../sherpa-onnx-asr';
-import { isRecording, recognisedText } from '../control';
-import { ModelLoader } from '../modelLoader';
+import { createOnlineRecognizer, type OnlineRecognizer } from '../sherpa-onnx-asr'
+import { isRecording, recognisedText } from '../control'
+import { ModelLoader } from '../modelLoader'
 
 // const { showRecorder } = defineProps<{ showRecorder: boolean }>()
 
@@ -11,41 +11,40 @@ import { ModelLoader } from '../modelLoader';
 // from https://mdn.github.io/web-dictaphone/scripts/app.js
 // and https://gist.github.com/meziantou/edb7217fddfbb70e899e
 
-
 // this function is copied from
 // https://github.com/awslabs/aws-lex-browser-audio-capture/blob/master/lib/worker.js#L46
-function downsampleBuffer(buffer: any, exportSampleRate: number) {
+function downsampleBuffer (buffer: any, exportSampleRate: number) {
   if (exportSampleRate === recordSampleRate) {
-    return buffer;
+    return buffer
   }
-  var sampleRateRatio = recordSampleRate / exportSampleRate;
-  var newLength = Math.round(buffer.length / sampleRateRatio);
-  var result = new Float32Array(newLength);
-  var offsetResult = 0;
-  var offsetBuffer = 0;
+  const sampleRateRatio = recordSampleRate / exportSampleRate
+  const newLength = Math.round(buffer.length / sampleRateRatio)
+  const result = new Float32Array(newLength)
+  let offsetResult = 0
+  let offsetBuffer = 0
   while (offsetResult < result.length) {
-    var nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
-    var accum = 0, count = 0;
-    for (var i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
-      accum += buffer[i];
-      count++;
+    const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio)
+    let accum = 0; let count = 0
+    for (let i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+      accum += buffer[i]
+      count++
     }
-    result[offsetResult] = accum / count;
-    offsetResult++;
-    offsetBuffer = nextOffsetBuffer;
+    result[offsetResult] = accum / count
+    offsetResult++
+    offsetBuffer = nextOffsetBuffer
   }
-  return result;
+  return result
 };
 
-let lastResult = '';
-const resultListRef = ref<string[]>([]);
+let lastResult = ''
+const resultListRef = ref<string[]>([])
 
-let expectedSampleRate = 16000;
-let recordSampleRate: number; // the sampleRate of the microphone
-let recorder: any = null;
+const expectedSampleRate = 16000
+let recordSampleRate: number // the sampleRate of the microphone
+const recorder: any = null
 
-let recognizer: OnlineRecognizer | null = null;
-let recognizer_stream: any = null;
+let recognizer: OnlineRecognizer | null = null
+let recognizer_stream: any = null
 
 // import("/sherpa-onnx-wasm-main-asr.js?url").then((module) => {
 //   console.log('module loaded', module);
@@ -56,71 +55,70 @@ let recognizer_stream: any = null;
 //   console.error('Error loading module:', error);
 // });
 
-function getDebugDisplayResult() {
-  let i = 0;
-  let ans = '';
+function getDebugDisplayResult () {
+  let i = 0
+  let ans = ''
   const resultList = resultListRef.value
-  for (let s in resultList) {
+  for (const s in resultList) {
     if (resultList[s] == '') {
-      continue;
+      continue
     }
 
-    ans += '' + i + ': ' + resultList[s] + '\n';
-    i += 1;
+    ans += '' + i + ': ' + resultList[s] + '\n'
+    i += 1
   }
 
   if (lastResult.length > 0) {
-    ans += '' + i + ': ' + lastResult + '\n';
+    ans += '' + i + ': ' + lastResult + '\n'
   }
-  return ans;
+  return ans
 }
 
-
-function getDisplayResult() {
-  let i = 0;
-  let ans = '';
+function getDisplayResult () {
+  let i = 0
+  let ans = ''
   const resultList = resultListRef.value
-  for (let s in resultList) {
+  for (const s in resultList) {
     if (resultList[s] == '') {
-      continue;
+      continue
     }
 
-    ans += resultList[s] + '\n';
-    i += 1;
+    ans += resultList[s] + '\n'
+    i += 1
   }
 
   if (lastResult.length > 0) {
-    ans += lastResult + '\n';
+    ans += lastResult + '\n'
   }
-  return ans;
+  return ans
 }
 
 export default defineComponent({
-  name: "VoiceRecognition",
+  name: 'VoiceRecognition',
   components: {
     NModal, NProgress, NButton, NText, NAlert, NA
   },
-  setup() {
+  emits: ['setInput', 'modelLoaded'],
+  setup () {
     return {
       isRecording,
       stream: ref<MediaStream | null>(null),
       recognisedText,
-      resultList: resultListRef,
+      resultList: resultListRef
     }
   },
-  emits: ['setInput', 'modelLoaded'],
-  data() {
+  data () {
     return {
       failureReason: '',
       status: '',
       showModal: false,
       audioCtx: null as AudioContext | null,
       recognizer: null as OnlineRecognizer | null,
-      showRecorder: false,
+      showRecorder: false
     }
   },
   computed: {
-    percentage() {
+    percentage () {
       if (!this.status) {
         return 0
       }
@@ -132,266 +130,15 @@ export default defineComponent({
       const total = Number(matched[2])
       return Math.round(Math.min(downloaded / total, 1) * 100)
     },
-    modelLoaded() {
+    modelLoaded () {
       return this.recognizer !== null
     },
-    alertObj() {
+    alertObj () {
       if (this.recognizer !== null) {
-        return { title: "模型加载成功", type: "success" } as const
+        return { title: '模型加载成功', type: 'success' } as const
       } else {
         return { title: '模型未加载', type: 'info' } as const
       }
-    },
-  },
-  methods: {
-    async onStart() {
-      if (this.recognizer === null) {
-        console.log('Recognizer not loaded, showing modal first');
-        this.showModal = true;
-        return;
-      }
-      const audioContext = await this.startRecording();
-      this.audioCtx = audioContext
-      console.log('recorder started');
-
-      this.recognisedText = '';
-      this.resultList = [];
-      this.isRecording = true;
-    },
-    async onStop() {
-      console.log('recorder stopped');
-
-      this.$emit('setInput', this.recognisedText);
-
-      this.resultList = [];
-
-      if (this.stream) {
-        this.stream.getTracks().forEach((track) => track.stop());
-        this.stream.getAudioTracks().forEach((track) => track.stop());
-        this.stream = null;
-      }
-
-      if (!this.audioCtx || !this.audioCtx?.close) {
-        console.error('Audio context close method not available! Current value:', this.audioCtx);
-        return
-      }
-      try {
-        await this.audioCtx.close()
-        console.log('Audio context closed');
-        this.audioCtx = null;
-      } catch (error) {
-        console.error('Error closing audio context:', error);
-      };
-      this.onClear();
-    },
-    onClear() {
-      this.recognisedText = '';
-      this.resultList = [];
-    },
-    openModal() {
-      this.isRecording = true;
-    },
-    closeModal() {
-      this.isRecording = false;
-      this.showModal = false;
-    },
-    async startLoading() {
-      console.log('Start loading sherpa-onnx model...');
-      if (this.recognizer !== null) {
-        console.log('Recognizer already loaded');
-        return;
-      }
-
-      // Initialize ModelLoader with CDN URL and progress callback
-      const cdn = '__VOICE_RECOGNITION_CDN__'
-      const modelLoader = new ModelLoader(cdn, (progress) => {
-        const percentage = Math.round((progress.loaded / progress.total) * 100)
-        this.status = `Downloading ${progress.fileName} (${percentage}%)...`
-      });
-
-      // Model files needed by sherpa-onnx
-      const modelFiles = [
-        'sherpa-onnx-wasm-main-asr.wasm',
-        'sherpa-onnx-wasm-main-asr.data'
-      ];
-
-      // Preload and cache all model files
-      try {
-        this.status = 'Checking cache and downloading models...'
-        await modelLoader.preloadFiles(modelFiles);
-        this.status = 'Models ready. Initializing recognizer...'
-      } catch (error) {
-        console.error('Error preloading model files:', error);
-        this.status = 'Error downloading models';
-        return;
-      }
-
-      const Module: any = {};
-
-      // Store blob URLs for cleanup
-      const blobURLs: string[] = [];
-
-      // https://emscripten.org/docs/api_reference/module.html#Module.locateFile
-      Module.locateFile = function (path: string, scriptDirectory = '') {
-        console.log(`locateFile called for: ${path}`);
-
-        // Try to get from loaded files
-        const arrayBuffer = modelLoader.getLoadedFile(path);
-        if (arrayBuffer) {
-          // Determine MIME type based on file extension
-          let mimeType = 'application/octet-stream';
-          if (path.endsWith('.wasm')) {
-            mimeType = 'application/wasm';
-          } else if (path.endsWith('.data')) {
-            mimeType = 'application/octet-stream';
-          }
-
-          const blobURL = modelLoader.createBlobURL(path, arrayBuffer, mimeType);
-          blobURLs.push(blobURL);
-          console.log(`Using cached/loaded file for ${path}`);
-          return blobURL;
-        }
-
-        // Fallback to CDN if not in cache (shouldn't happen after preload)
-        console.warn(`File ${path} not found in cache, falling back to CDN`);
-        return cdn + path;
-      };
-
-      // https://emscripten.org/docs/api_reference/module.html#Module.setStatus
-      Module.setStatus = (status: string) => {
-        console.log(`status ${status}`);
-        if (status.includes('Downloading')) {
-          // Skip download status as we handle it ourselves
-          return;
-        }
-        this.status = status || 'Initializing...'
-      };
-
-      Module.onRuntimeInitialized = () => {
-        console.log('Runtime initialized!');
-
-        recognizer = createOnlineRecognizer(Module, undefined);
-        this.recognizer = recognizer;
-        console.log('recognizer is created!', recognizer);
-        this.status = 'Model loaded successfully!';
-        this.$emit('modelLoaded');
-
-        // Clean up blob URLs after a delay to ensure they're no longer needed
-        setTimeout(() => {
-          blobURLs.forEach(url => URL.revokeObjectURL(url));
-        }, 5000);
-      };
-
-      // @ts-ignore
-      window.Module = Module;
-
-      // import module for side effects to add attributes to the Module object
-      try {
-        // Dynamically import the emscripten JS script
-        await new Promise((resolve, reject) => {
-          const script = document.createElement('script');
-          script.src = 'sherpa-onnx-wasm-main-asr.js';
-          script.async = true;
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-      } catch (e) {
-        console.error('Error loading module:', e);
-        this.status = 'Error loading module';
-      }
-    },
-    // Audio Context 可以理解成像 Unity shader graph 一样，几个节点之间相互连接的图 // 连接的关系类似这样?: [mediaStream] -> [recorder] -> [audioCtx.destination] let audioCtx = null
-    async startRecording() {
-      const constraints = { audio: true };
-      let audioCtx: AudioContext | null = null;
-      const onSuccess = async (stream: MediaStream) => {
-        audioCtx = new AudioContext({ sampleRate: 16000 });
-
-        await audioCtx.audioWorklet.addModule('processor.js');
-
-        recordSampleRate = audioCtx.sampleRate;
-        console.log('sample rate ' + recordSampleRate);
-
-        const mediaStream = audioCtx.createMediaStreamSource(stream);
-        console.log('media stream', mediaStream);
-
-        const recorder = new AudioWorkletNode(audioCtx, 'microphone-processor'); // the microphone
-
-        mediaStream.connect(recorder);
-        recorder.connect(audioCtx.destination);
-
-        recorder.port.onmessage = (event) => {
-          let samples = new Float32Array(event.data);
-          samples = downsampleBuffer(samples, expectedSampleRate);
-
-          recognizer = this.recognizer!;
-
-          if (recognizer_stream == null && recognizer !== null) {
-            recognizer_stream = recognizer.createStream();
-          }
-
-          recognizer_stream.acceptWaveform(expectedSampleRate, samples);
-          while (recognizer.isReady(recognizer_stream)) {
-            recognizer.decode(recognizer_stream);
-          }
-
-          let isEndpoint = recognizer.isEndpoint(recognizer_stream);
-          let result = recognizer.getResult(recognizer_stream).text;
-
-          // @ts-ignore
-          if (recognizer.config.modelConfig.paraformer.encoder != '') {
-            let tailPaddings = new Float32Array(expectedSampleRate);
-            recognizer_stream.acceptWaveform(expectedSampleRate, tailPaddings);
-            while (recognizer.isReady(recognizer_stream)) {
-              recognizer.decode(recognizer_stream);
-            }
-            result = recognizer.getResult(recognizer_stream).text;
-          }
-
-          if (result.length > 0 && lastResult != result) {
-            lastResult = result;
-          }
-
-          if (isEndpoint) {
-            if (lastResult.length > 0) {
-              this.resultList.push(lastResult);
-              lastResult = '';
-            }
-            recognizer.reset(recognizer_stream);
-          }
-
-          // let textArea = document.getElementById('results')!;
-          // textArea.scrollTop = textArea.scrollHeight;
-          this.recognisedText = getDisplayResult();
-
-          // The original code also has some logic to store the audio buffer, not necessary in our case
-        };
-        return audioCtx;
-      }
-
-      const onError = (err: Error) => { console.log('The following error occured: ' + err, err.stack); };
-
-      // Get user media 首先获取麦克风音频的 Media Stream，
-      // 然后在onSuccess里传给AudioContext, 以实时stream的方式传给recognizer 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        this.stream = stream;
-        await onSuccess(stream);
-        return audioCtx;
-      } catch (err) {
-        onError(err as Error);
-        console.error('Error accessing media devices.', err);
-        return null;
-      }
-    }
-  },
-  mounted() {
-    if ((window as any).navigator.mediaDevices.getUserMedia) {
-      console.log('getUserMedia supported.');
-    } else {
-      console.log('getUserMedia not supported on your browser!');
-      alert('getUserMedia not supported on your browser!');
     }
   },
   watch: {
@@ -405,9 +152,260 @@ export default defineComponent({
     //     return
     //   }
     // },
-    showModal(val) {
+    showModal (val) {
       if (!val && this.recognizer === null) {
-        this.isRecording = false;
+        this.isRecording = false
+      }
+    }
+  },
+  mounted () {
+    if ((window as any).navigator.mediaDevices.getUserMedia) {
+      console.log('getUserMedia supported.')
+    } else {
+      console.log('getUserMedia not supported on your browser!')
+      alert('getUserMedia not supported on your browser!')
+    }
+  },
+  methods: {
+    async onStart () {
+      if (this.recognizer === null) {
+        console.log('Recognizer not loaded, showing modal first')
+        this.showModal = true
+        return
+      }
+      const audioContext = await this.startRecording()
+      this.audioCtx = audioContext
+      console.log('recorder started')
+
+      this.recognisedText = ''
+      this.resultList = []
+      this.isRecording = true
+    },
+    async onStop () {
+      console.log('recorder stopped')
+
+      this.$emit('setInput', this.recognisedText)
+
+      this.resultList = []
+
+      if (this.stream) {
+        this.stream.getTracks().forEach((track) => track.stop())
+        this.stream.getAudioTracks().forEach((track) => track.stop())
+        this.stream = null
+      }
+
+      if (!this.audioCtx || !this.audioCtx?.close) {
+        console.error('Audio context close method not available! Current value:', this.audioCtx)
+        return
+      }
+      try {
+        await this.audioCtx.close()
+        console.log('Audio context closed')
+        this.audioCtx = null
+      } catch (error) {
+        console.error('Error closing audio context:', error)
+      };
+      this.onClear()
+    },
+    onClear () {
+      this.recognisedText = ''
+      this.resultList = []
+    },
+    openModal () {
+      this.isRecording = true
+    },
+    closeModal () {
+      this.isRecording = false
+      this.showModal = false
+    },
+    async startLoading () {
+      console.log('Start loading sherpa-onnx model...')
+      if (this.recognizer !== null) {
+        console.log('Recognizer already loaded')
+        return
+      }
+
+      // Initialize ModelLoader with CDN URL and progress callback
+      const cdn = '__VOICE_RECOGNITION_CDN__'
+      const modelLoader = new ModelLoader(cdn, (progress) => {
+        const percentage = Math.round((progress.loaded / progress.total) * 100)
+        this.status = `Downloading ${progress.fileName} (${percentage}%)...`
+      })
+
+      // Model files needed by sherpa-onnx
+      const modelFiles = [
+        'sherpa-onnx-wasm-main-asr.wasm',
+        'sherpa-onnx-wasm-main-asr.data'
+      ]
+
+      // Preload and cache all model files
+      try {
+        this.status = 'Checking cache and downloading models...'
+        await modelLoader.preloadFiles(modelFiles)
+        this.status = 'Models ready. Initializing recognizer...'
+      } catch (error) {
+        console.error('Error preloading model files:', error)
+        this.status = 'Error downloading models'
+        return
+      }
+
+      const Module: any = {}
+
+      // Store blob URLs for cleanup
+      const blobURLs: string[] = []
+
+      // https://emscripten.org/docs/api_reference/module.html#Module.locateFile
+      Module.locateFile = function (path: string, scriptDirectory = '') {
+        console.log(`locateFile called for: ${path}`)
+
+        // Try to get from loaded files
+        const arrayBuffer = modelLoader.getLoadedFile(path)
+        if (arrayBuffer) {
+          // Determine MIME type based on file extension
+          let mimeType = 'application/octet-stream'
+          if (path.endsWith('.wasm')) {
+            mimeType = 'application/wasm'
+          } else if (path.endsWith('.data')) {
+            mimeType = 'application/octet-stream'
+          }
+
+          const blobURL = modelLoader.createBlobURL(path, arrayBuffer, mimeType)
+          blobURLs.push(blobURL)
+          console.log(`Using cached/loaded file for ${path}`)
+          return blobURL
+        }
+
+        // Fallback to CDN if not in cache (shouldn't happen after preload)
+        console.warn(`File ${path} not found in cache, falling back to CDN`)
+        return cdn + path
+      }
+
+      // https://emscripten.org/docs/api_reference/module.html#Module.setStatus
+      Module.setStatus = (status: string) => {
+        console.log(`status ${status}`)
+        if (status.includes('Downloading')) {
+          // Skip download status as we handle it ourselves
+          return
+        }
+        this.status = status || 'Initializing...'
+      }
+
+      Module.onRuntimeInitialized = () => {
+        console.log('Runtime initialized!')
+
+        recognizer = createOnlineRecognizer(Module, undefined)
+        this.recognizer = recognizer
+        console.log('recognizer is created!', recognizer)
+        this.status = 'Model loaded successfully!'
+        this.$emit('modelLoaded')
+
+        // Clean up blob URLs after a delay to ensure they're no longer needed
+        setTimeout(() => {
+          blobURLs.forEach(url => URL.revokeObjectURL(url))
+        }, 5000)
+      }
+
+      // @ts-ignore
+      window.Module = Module
+
+      // import module for side effects to add attributes to the Module object
+      try {
+        // Dynamically import the emscripten JS script
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = 'sherpa-onnx-wasm-main-asr.js'
+          script.async = true
+          script.onload = resolve
+          script.onerror = reject
+          document.body.appendChild(script)
+        })
+      } catch (e) {
+        console.error('Error loading module:', e)
+        this.status = 'Error loading module'
+      }
+    },
+    // Audio Context 可以理解成像 Unity shader graph 一样，几个节点之间相互连接的图 // 连接的关系类似这样?: [mediaStream] -> [recorder] -> [audioCtx.destination] let audioCtx = null
+    async startRecording () {
+      const constraints = { audio: true }
+      let audioCtx: AudioContext | null = null
+      const onSuccess = async (stream: MediaStream) => {
+        audioCtx = new AudioContext({ sampleRate: 16000 })
+
+        await audioCtx.audioWorklet.addModule('processor.js')
+
+        recordSampleRate = audioCtx.sampleRate
+        console.log('sample rate ' + recordSampleRate)
+
+        const mediaStream = audioCtx.createMediaStreamSource(stream)
+        console.log('media stream', mediaStream)
+
+        const recorder = new AudioWorkletNode(audioCtx, 'microphone-processor') // the microphone
+
+        mediaStream.connect(recorder)
+        recorder.connect(audioCtx.destination)
+
+        recorder.port.onmessage = (event) => {
+          let samples = new Float32Array(event.data)
+          samples = downsampleBuffer(samples, expectedSampleRate)
+
+          recognizer = this.recognizer!
+
+          if (recognizer_stream == null && recognizer !== null) {
+            recognizer_stream = recognizer.createStream()
+          }
+
+          recognizer_stream.acceptWaveform(expectedSampleRate, samples)
+          while (recognizer.isReady(recognizer_stream)) {
+            recognizer.decode(recognizer_stream)
+          }
+
+          const isEndpoint = recognizer.isEndpoint(recognizer_stream)
+          let result = recognizer.getResult(recognizer_stream).text
+
+          // @ts-ignore
+          if (recognizer.config.modelConfig.paraformer.encoder != '') {
+            const tailPaddings = new Float32Array(expectedSampleRate)
+            recognizer_stream.acceptWaveform(expectedSampleRate, tailPaddings)
+            while (recognizer.isReady(recognizer_stream)) {
+              recognizer.decode(recognizer_stream)
+            }
+            result = recognizer.getResult(recognizer_stream).text
+          }
+
+          if (result.length > 0 && lastResult != result) {
+            lastResult = result
+          }
+
+          if (isEndpoint) {
+            if (lastResult.length > 0) {
+              this.resultList.push(lastResult)
+              lastResult = ''
+            }
+            recognizer.reset(recognizer_stream)
+          }
+
+          // let textArea = document.getElementById('results')!;
+          // textArea.scrollTop = textArea.scrollHeight;
+          this.recognisedText = getDisplayResult()
+
+          // The original code also has some logic to store the audio buffer, not necessary in our case
+        }
+        return audioCtx
+      }
+
+      const onError = (err: Error) => { console.log('The following error occured: ' + err, err.stack) }
+
+      // Get user media 首先获取麦克风音频的 Media Stream，
+      // 然后在onSuccess里传给AudioContext, 以实时stream的方式传给recognizer
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        this.stream = stream
+        await onSuccess(stream)
+        return audioCtx
+      } catch (err) {
+        onError(err as Error)
+        console.error('Error accessing media devices.', err)
+        return null
       }
     }
   }
@@ -415,46 +413,121 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-modal :show="showModal" v-on:update:show="closeModal" preset="card" size="medium" title="使用须知"
+  <n-modal
+    :show="showModal"
+    preset="card"
+    size="medium"
+    title="使用须知"
     content-style="display: flex; flex-direction: column; justify-content: center; align-items:center"
-    style="max-width: 400px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-    <n-alert :title="alertObj.title" :type="alertObj.type">
-      <n-text v-if="modelLoaded">模型加载成功，可以关闭弹窗，开始语音识别</n-text>
-      <n-text v-else>该功能需要先下载语音识别模型才能使用，大小约为200MB。模型会缓存到本地，下次访问时无需重新下载。</n-text>
+    style="max-width: 400px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"
+    @update:show="closeModal"
+  >
+    <n-alert
+      :title="alertObj.title"
+      :type="alertObj.type"
+    >
+      <n-text v-if="modelLoaded">
+        模型加载成功，可以关闭弹窗，开始语音识别
+      </n-text>
+      <n-text v-else>
+        该功能需要先下载语音识别模型才能使用，大小约为200MB。模型会缓存到本地，下次访问时无需重新下载。
+      </n-text>
     </n-alert>
-    <div v-if="!modelLoaded" style="display: flex; flex-direction: column; align-items: center; width: 100%">
-      <n-button size="medium" type="primary" @click="startLoading" class="mt-1">开始下载模型</n-button>
-      <div id="status" style="width: 100%;" v-show="!!status">
+    <div
+      v-if="!modelLoaded"
+      style="display: flex; flex-direction: column; align-items: center; width: 100%"
+    >
+      <n-button
+        size="medium"
+        type="primary"
+        class="mt-1"
+        @click="startLoading"
+      >
+        开始下载模型
+      </n-button>
+      <div
+        v-show="!!status"
+        id="status"
+        style="width: 100%;"
+      >
         <p>
           {{ status }}
         </p>
-        <n-progress style="width: 100%;" type="line" :percentage="percentage" processing />
+        <n-progress
+          style="width: 100%;"
+          type="line"
+          :percentage="percentage"
+          processing
+        />
       </div>
     </div>
-    <div v-else style="display: flex; flex-direction: column; align-items: center; width: 100%">
-      <n-button size="medium" type="primary" @click="() => { onStart(); closeModal(); }" class="mt-1">好的</n-button>
+    <div
+      v-else
+      style="display: flex; flex-direction: column; align-items: center; width: 100%"
+    >
+      <n-button
+        size="medium"
+        type="primary"
+        class="mt-1"
+        @click="() => { onStart(); closeModal(); }"
+      >
+        好的
+      </n-button>
 
-      <div id="singleAudioContent" class="tab-content loading" v-if="false">
+      <div
+        v-if="false"
+        id="singleAudioContent"
+        class="tab-content loading"
+      >
         <div style="display: flex; gap: 1.5rem;">
           <h3>Debug用</h3>
           <div style="flex: 1; display: flex; flex-direction: row; align-items: center; gap: 1rem;">
-            <n-button id="startBtn" @click="onStart">Start</n-button>
-            <n-button id="stopBtn" @click="onStop">Stop</n-button>
-            <n-button id="clearBtn" @click="onClear">Clear</n-button>
+            <n-button
+              id="startBtn"
+              @click="onStart"
+            >
+              Start
+            </n-button>
+            <n-button
+              id="stopBtn"
+              @click="onStop"
+            >
+              Stop
+            </n-button>
+            <n-button
+              id="clearBtn"
+              @click="onClear"
+            >
+              Clear
+            </n-button>
           </div>
         </div>
         <n-text style="font-size: 1rem; font-weight: bold; padding-top: 15px; border-radius: 8px;">
           识别结果
         </n-text>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 1rem;">
-          <textarea id="results" rows="10" placeholder="Output will appear here..." readonly :value="recognisedText"
-            style="flex: 1; padding: 0.75rem; font-size: 1rem; border: 1px solid #ced4da; border-radius: 8px; resize: none; background-color: #f8f9fa;"></textarea>
+          <textarea
+            id="results"
+            rows="10"
+            placeholder="Output will appear here..."
+            readonly
+            :value="recognisedText"
+            style="flex: 1; padding: 0.75rem; font-size: 1rem; border: 1px solid #ced4da; border-radius: 8px; resize: none; background-color: #f8f9fa;"
+          />
         </div>
       </div>
     </div>
     <template #footer>
-      <n-text depth="3" style="text-align: right; width: 100%;">语音识别模型来自 <n-a
-          href="https://github.com/k2-fsa/sherpa-onnx">Sherpa-onnx</n-a> 项目</n-text>
+      <n-text
+        depth="3"
+        style="text-align: right; width: 100%;"
+      >
+        语音识别模型来自 <n-a
+          href="https://github.com/k2-fsa/sherpa-onnx"
+        >
+          Sherpa-onnx
+        </n-a> 项目
+      </n-text>
     </template>
   </n-modal>
 </template>

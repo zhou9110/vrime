@@ -175,7 +175,7 @@ function triggerPanelKeyDown (button: string | KeyboardEvent) {
 
 const mobileHeightMatches = useMobileHeightBreakpoint()
 
-function getRows() {
+function getRows () {
   if (mobileHeightMatches.value) {
     return 2
   }
@@ -195,7 +195,7 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
     console.log('prevSchemaId set to:', prevSchemaId.value)
     selectIME(autoSwitchToT9Ime.value)
   } else if (prevSchemaId.value) {
-      selectIME(prevSchemaId.value)
+    selectIME(prevSchemaId.value)
   }
 })
 </script>

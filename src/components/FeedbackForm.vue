@@ -36,11 +36,11 @@ const rules = {
   }
 }
 
-function handleClose() {
+function handleClose () {
   emit('update:show', false)
 }
 
-async function handleSubmit(e: Event) {
+async function handleSubmit (e: Event) {
   e.preventDefault()
 
   try {
@@ -54,7 +54,7 @@ async function handleSubmit(e: Event) {
   try {
     const form = e.target as HTMLFormElement
     const formData = new FormData(form)
-    Object.entries(formValue.value).map(([name, content]) => {
+    Object.entries(formValue.value).forEach(([name, content]) => {
       formData.append(name, content)
     })
 
@@ -79,11 +79,11 @@ async function handleSubmit(e: Event) {
   }
 }
 
-function handleReset() {
+function handleReset () {
   formValue.value = { name: '', contact: '', feedback: '' }
 }
 
-function pasteFromTextbox() {
+function pasteFromTextbox () {
   // 将打字框的内容添加到反馈内容中
   if (text.value) {
     // 如果反馈框已有内容，换行后添加
@@ -97,46 +97,114 @@ function pasteFromTextbox() {
 </script>
 
 <template>
-  <n-modal :show="props.show" preset="card" title="提交反馈" style="max-width: 600px" :bordered="false" :segmented="{
-    content: 'soft',
-    footer: 'soft'
-  }" @update:show="(val) => emit('update:show', val)">
-    <n-form name="feedback" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" ref="formRef"
-      :model="formValue" :rules="rules" label-placement="left" label-width="80" require-mark-placement="right-hanging"
-      @submit="handleSubmit">
-      <input type="hidden" name="form-name" value="feedback">
+  <n-modal
+    :show="props.show"
+    preset="card"
+    title="提交反馈"
+    style="max-width: 600px"
+    :bordered="false"
+    :segmented="{
+      content: 'soft',
+      footer: 'soft'
+    }"
+    @update:show="(val) => emit('update:show', val)"
+  >
+    <n-form
+      ref="formRef"
+      name="feedback"
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      :model="formValue"
+      :rules="rules"
+      label-placement="left"
+      label-width="80"
+      require-mark-placement="right-hanging"
+      @submit="handleSubmit"
+    >
+      <input
+        type="hidden"
+        name="form-name"
+        value="feedback"
+      >
       <!-- Honeypot 字段（防止垃圾邮件） -->
       <p style="display: none">
         <label>
           Don't fill this out if you're human: <input name="bot-field">
         </label>
       </p>
-      <n-form-item label="反馈内容" path="feedback">
-        <n-space vertical style="width: 100%">
-          <n-input v-model:value="formValue.feedback" name="feedback" type="textarea"
-            :placeholder="'请告诉我们您的建议、想要的功能、或者遇到的问题...'" :autosize="{
+      <n-form-item
+        label="反馈内容"
+        path="feedback"
+      >
+        <n-space
+          vertical
+          style="width: 100%"
+        >
+          <n-input
+            v-model:value="formValue.feedback"
+            name="feedback"
+            type="textarea"
+            :placeholder="'请告诉我们您的建议、想要的功能、或者遇到的问题...'"
+            :autosize="{
               minRows: 4,
               maxRows: 8
-            }" clearable />
-          <n-button secondary size="small" :disabled="!text" @click="pasteFromTextbox">
+            }"
+            clearable
+          />
+          <n-button
+            secondary
+            size="small"
+            :disabled="!text"
+            @click="pasteFromTextbox"
+          >
             粘贴打字框内容
           </n-button>
         </n-space>
       </n-form-item>
-      <n-form-item label="姓名" path="name">
-        <n-input v-model:value="formValue.name" name="name" placeholder="请输入您的姓名（可选）" clearable />
+      <n-form-item
+        label="姓名"
+        path="name"
+      >
+        <n-input
+          v-model:value="formValue.name"
+          name="name"
+          placeholder="请输入您的姓名（可选）"
+          clearable
+        />
       </n-form-item>
-      <n-form-item label="联系方式" path="contact">
-        <n-input v-model:value="formValue.contact" name="contact" placeholder="请输入一个联系方式（可选）" clearable />
+      <n-form-item
+        label="联系方式"
+        path="contact"
+      >
+        <n-input
+          v-model:value="formValue.contact"
+          name="contact"
+          placeholder="请输入一个联系方式（可选）"
+          clearable
+        />
       </n-form-item>
-      <n-space justify="end" style="margin-top: 16px">
-        <n-button :disabled="isSubmitting" @click="handleReset">
+      <n-space
+        justify="end"
+        style="margin-top: 16px"
+      >
+        <n-button
+          :disabled="isSubmitting"
+          @click="handleReset"
+        >
           重置
         </n-button>
-        <n-button :disabled="isSubmitting" @click="handleClose">
+        <n-button
+          :disabled="isSubmitting"
+          @click="handleClose"
+        >
           取消
         </n-button>
-        <n-button type="primary" attr-type="submit" :loading="isSubmitting">
+        <n-button
+          type="primary"
+          attr-type="submit"
+          :loading="isSubmitting"
+        >
           提交反馈
         </n-button>
       </n-space>

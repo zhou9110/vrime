@@ -3,14 +3,14 @@ import { ref, watch } from 'vue'
 
 import { NSelect, NButton, NIcon, NTooltip } from 'naive-ui'
 
-import { OpenInNewOutlined } from "@vicons/material"
+import { OpenInNewOutlined } from '@vicons/material'
 
-import { text } from "../control"
+import { text } from '../control'
 
 const options = [
   {
     label: '哔哩哔哩',
-    value: 'https://search.bilibili.com/all?keyword=',
+    value: 'https://search.bilibili.com/all?keyword='
   },
   {
     label: 'Google',
@@ -30,28 +30,28 @@ const options = [
   }
 ]
 
-const previousSavedValue = localStorage.getItem("searchOption")
+const previousSavedValue = localStorage.getItem('searchOption')
 
 const value = ref(previousSavedValue ? JSON.parse(previousSavedValue) : options[0].value)
 const validateStatus = ref()
 const showTooltip = ref(false)
 
 watch(value, (newValue) => {
-  localStorage.setItem("searchOption", JSON.stringify(newValue))
+  localStorage.setItem('searchOption', JSON.stringify(newValue))
 })
 
 const search = async () => {
   const searchKeyWord = text.value
   const dropdownValue = value.value
   if (!dropdownValue) {
-    validateStatus.value = "error"
+    validateStatus.value = 'error'
     showTooltip.value = true
     setTimeout(() => {
       showTooltip.value = false
     }, 3000)
-    return;
+    return
   }
-  window.open(`${dropdownValue}${encodeURIComponent(searchKeyWord)}`, "__blank")
+  window.open(`${dropdownValue}${encodeURIComponent(searchKeyWord)}`, '__blank')
 }
 
 const getOptionLabel = () => {
@@ -63,14 +63,33 @@ const getOptionLabel = () => {
 
 <template>
   <div
-    style="margin-left: 5px; min-width: 100px; display: flex;  flex-direction: column; align-items: stretch; gap: 8px;">
-    <n-tooltip :show="showTooltip" trigger="manual">
+    style="margin-left: 5px; min-width: 100px; display: flex;  flex-direction: column; align-items: stretch; gap: 8px;"
+  >
+    <n-tooltip
+      :show="showTooltip"
+      trigger="manual"
+    >
       <template #trigger>
-        <n-select size="large" v-model:value="value" :status="validateStatus" :options="options"
-        default-value="哔哩哔哩" :consistent-menu-width="false" clearable></n-select>
+        <n-select
+          v-model:value="value"
+          size="large"
+          :status="validateStatus"
+          :options="options"
+          default-value="哔哩哔哩"
+          :consistent-menu-width="false"
+          clearable
+        />
       </template>
       <span>请选择一个选项</span>
     </n-tooltip>
-    <n-button size="large" type="primary" @click="search">搜索&nbsp;<n-icon size="18"><OpenInNewOutlined /></n-icon></n-button>
+    <n-button
+      size="large"
+      type="primary"
+      @click="search"
+    >
+      搜索&nbsp;<n-icon size="18">
+        <OpenInNewOutlined />
+      </n-icon>
+    </n-button>
   </div>
 </template>

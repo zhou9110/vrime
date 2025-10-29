@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, useSlots } from 'vue';
+import { defineProps, useSlots } from 'vue'
 import { NButton } from 'naive-ui'
 
 const props = defineProps<{ number?: number | string, keyName?: string }>()
@@ -7,13 +7,13 @@ const emit = defineEmits(['onKeyPress'])
 
 const slots = useSlots()
 
-function onKeyPress() {
+function onKeyPress () {
   // When number and keyName are not provided, use the slot text instead
   if (props.number === undefined && props.keyName === undefined) {
     const slotText = slots.default?.()[0].children
     console.log('slotText', slotText)
     if (typeof slotText === 'string') {
-      emit('onKeyPress', slotText);
+      emit('onKeyPress', slotText)
     }
     return
   }
@@ -23,8 +23,13 @@ function onKeyPress() {
 </script>
 
 <template>
-  <n-button size="large" class="number-key" secondary v-on:click="onKeyPress">
-    <slot></slot>
+  <n-button
+    size="large"
+    class="number-key"
+    secondary
+    @click="onKeyPress"
+  >
+    <slot />
     <span class="number-indicator">{{ props.keyName ?? props.number }}</span>
   </n-button>
 </template>

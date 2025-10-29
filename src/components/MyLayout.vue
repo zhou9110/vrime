@@ -11,9 +11,9 @@ const mobileHeightMatches = useMobileHeightBreakpoint()
   >
     <slot name="header" />
   </n-layout-header>
-    <!-- style="top:48px" -->
-    <!-- :style="{ top: mobileHeightMatches ? '0px' : '48px' }" -->
-    <n-layout
+  <!-- style="top:48px" -->
+  <!-- :style="{ top: mobileHeightMatches ? '0px' : '48px' }" -->
+  <n-layout
     position="absolute"
     :native-scrollbar="false"
     style="top:48px"

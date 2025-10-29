@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, watchEffect, defineEmits } from "vue";
-import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex, NTooltip } from "naive-ui";
-import { WeatherMoon16Regular, Circle16Regular } from "@vicons/fluent";
+import { computed, watchEffect, defineEmits } from 'vue'
+import { NButton, NButtonGroup, NIcon, NSpace, NSelect, NFlex, NTooltip } from 'naive-ui'
+import { WeatherMoon16Regular, Circle16Regular } from '@vicons/fluent'
 import {
   deployed,
   loading,
@@ -23,44 +23,44 @@ import {
   changeCharset,
   changePunctuation,
   changeEmoji,
-  selectIME,
-} from "../control";
-import { getTextarea } from "../util";
+  selectIME
+} from '../control'
+import { getTextarea } from '../util'
 
-const emit = defineEmits(["select-ime"]);
+const emit = defineEmits(['select-ime'])
 
 const variantLabel = computed(() =>
-  showVariant.value && !deployed.value ? variant.value.name : ""
-);
-const singleVariant = computed(() => !deployed.value && variants.value.length === 1);
+  showVariant.value && !deployed.value ? variant.value.name : ''
+)
+const singleVariant = computed(() => !deployed.value && variants.value.length === 1)
 
 watchEffect(() => {
   if (ime.value) {
-    localStorage.setItem("schemaId", ime.value);
+    localStorage.setItem('schemaId', ime.value)
   }
   if (variantLabel.value) {
-    localStorage.setItem("variantName", variantLabel.value);
+    localStorage.setItem('variantName', variantLabel.value)
   }
-});
+})
 
-async function switchVariant() {
-  showVariant.value = false;
-  await changeVariant();
-  showVariant.value = true;
+async function switchVariant () {
+  showVariant.value = false
+  await changeVariant()
+  showVariant.value = true
 }
 
 const extendedDisabled = computed(
   () => ime.value !== schemaId.value || !schemaExtended.includes(ime.value)
-);
+)
 
-function resetFocus() {
-  getTextarea().focus();
+function resetFocus () {
+  getTextarea().focus()
 }
 
-function onSelectIME(value: string) {
-  resetFocus();
-  emit("select-ime", value);
-  selectIME(value);
+function onSelectIME (value: string) {
+  resetFocus()
+  emit('select-ime', value)
+  selectIME(value)
 }
 </script>
 
@@ -72,13 +72,20 @@ function onSelectIME(value: string) {
         :value="ime"
         :options="selectOptions"
         :loading="loading"
-        @update:value="onSelectIME"
         size="large"
+        @update:value="onSelectIME"
       />
-      <n-button-group class="square-group" @click="resetFocus" size="large">
+      <n-button-group
+        class="square-group"
+        size="large"
+        @click="resetFocus"
+      >
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary @click="changeLanguage">
+            <n-button
+              secondary
+              @click="changeLanguage"
+            >
               {{ isEnglish ? "En" : "中" }}
             </n-button>
           </template>
@@ -98,7 +105,10 @@ function onSelectIME(value: string) {
         </n-tooltip>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary @click="changeWidth">
+            <n-button
+              secondary
+              @click="changeWidth"
+            >
               <template #icon>
                 <n-icon
                   :component="isFullWidth ? Circle16Regular : WeatherMoon16Regular"
@@ -110,7 +120,11 @@ function onSelectIME(value: string) {
         </n-tooltip>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary :disabled="extendedDisabled" @click="changeCharset">
+            <n-button
+              secondary
+              :disabled="extendedDisabled"
+              @click="changeCharset"
+            >
               {{ extendedDisabled ? "" : isExtendedCharset ? "增" : "常" }}
             </n-button>
           </template>
@@ -118,7 +132,11 @@ function onSelectIME(value: string) {
         </n-tooltip>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary :disabled="isEnglish" @click="changePunctuation">
+            <n-button
+              secondary
+              :disabled="isEnglish"
+              @click="changePunctuation"
+            >
               {{ isEnglishPunctuation ? "." : "。" }}
             </n-button>
           </template>
@@ -126,7 +144,10 @@ function onSelectIME(value: string) {
         </n-tooltip>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <n-button secondary @click="changeEmoji">
+            <n-button
+              secondary
+              @click="changeEmoji"
+            >
               {{ enableEmoji ? "😀" : "🚫" }}
             </n-button>
           </template>
@@ -135,7 +156,7 @@ function onSelectIME(value: string) {
       </n-button-group>
     </n-space>
     <n-space>
-      <span id="copied"></span>
+      <span id="copied" />
     </n-space>
   </n-flex>
 </template>
