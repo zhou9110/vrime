@@ -7,7 +7,7 @@ import SimpleKeyboard from './MobileSimpleKeyboard.vue'
 import NumKey from './NumKey.vue'
 import RecordButton from './RecordButton.vue'
 import SideKey from './T9SideKey.vue'
-import { ime } from '../control'
+import { currentKeyboardLayout } from '../control'
 
 const KeyboardReturnRoundSvg = '<svg style="width:24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M19 8v3H5.83l2.88-2.88A.996.996 0 1 0 7.3 6.71L2.71 11.3a.996.996 0 0 0 0 1.41L7.3 17.3a.996.996 0 1 0 1.41-1.41L5.83 13H20c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1s-1 .45-1 1z" fill="currentColor"></path></svg>'
 const BackspaceRegularSvg = '<svg style="width:24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41L17.59 17L19 15.59L15.41 12L19 8.41L17.59 7L14 10.59L10.41 7L9 8.41L12.59 12L9 15.59z" fill="currentColor"></path></svg>'
@@ -91,7 +91,6 @@ function onPinyinClick (pinyin: string) {
     }
   }, 50) // Small delay to ensure Escape is processed first
 }
-
 </script>
 
 <template>
@@ -103,15 +102,17 @@ function onPinyinClick (pinyin: string) {
   </template>
   <div
     v-else
-    class="numpad"
+    style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end"
   >
+    <div id="t9-menu-bar" />
+    <div class="numpad">
     <n-flex
       vertical
       class="side"
       gap="5px"
     >
       <!-- Show pinyin candidates when available -->
-      <template v-if="hasPinyinCandidates && ime !== 'xiaobai_simp'">
+        <template v-if="hasPinyinCandidates && currentKeyboardLayout[1] !== 'xiaobai'">
         <SideKey
           v-for="pinyin in pinyinCandidates"
           :key="pinyin"
@@ -195,10 +196,16 @@ function onPinyinClick (pinyin: string) {
         >
           +
         </SideKey>
+          <SideKey
+            class="side-key"
+            @on-key-press="onKeyPress"
+          >
+            :
+          </SideKey>
       </template>
     </n-flex>
 
-    <template v-if="currentLayout === 't9' && ime === 'xiaobai_simp'">
+      <template v-if="currentLayout === 't9' && currentKeyboardLayout[1] === 'xiaobai'">
       <NumKey
         class="numpad-key"
         key-name="7"
@@ -564,6 +571,7 @@ function onPinyinClick (pinyin: string) {
         />
       </n-button>
     </template>
+    </div>
   </div>
 </template>
 
@@ -595,7 +603,13 @@ function onPinyinClick (pinyin: string) {
   cursor: pointer;
 }
 
+#t9-menu-bar {
+  flex: 1;
+  min-height: 40px;
+}
+
 .numpad {
+  flex: 6;
   max-width: 800px;
   min-height: 200px;
   max-height: 50vh;

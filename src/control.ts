@@ -5,11 +5,12 @@ import {
   setPageSize,
   resetUserDirectory,
   FS,
-  deploy,
+  deploy
 } from './workerAPI'
 import {
   getQueryString,
-  getQueryOrStoredString
+  getQueryOrStoredString,
+  getImeGroup
 } from './util'
 import { getLanguage } from './locale'
 import schemas from '../schemas.json'
@@ -370,6 +371,8 @@ async function selectIME(targetIME: string) {
       // Other options aren't specific to a schema
       await setOption(option, box.value)
     }
+
+    chooseKeyboardFromIME(targetIME)
   } catch (e) {
     console.error(e)
   }
@@ -415,6 +418,18 @@ function syncOptions(updatedOptions: string[]) {
 const PAGE_SIZE = 'pageSize'
 const pageSize = savedRef<number>(PAGE_SIZE, 5)
 
+function chooseKeyboardFromIME (imeName: string) {
+  // Find group by imeName
+  const groupName = getImeGroup(imeName)
+  console.log('imeName', imeName, 'group name', groupName)
+  if (groupName === '九键') {
+    const keyboardVariant = imeName.includes('xiaobai') ? 'xiaobai' : 'mobile'
+    currentKeyboardLayout.value = ['t9', keyboardVariant]
+  } else {
+    currentKeyboardLayout.value = ['qwerty', null]
+  }
+}
+
 watchEffect(() => {
   setPageSize(pageSize.value)
 })
@@ -455,5 +470,6 @@ export {
   changePunctuation,
   changeEmoji,
   selectIME,
-  syncOptions
+  syncOptions,
+  chooseKeyboardFromIME
 }

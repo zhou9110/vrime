@@ -6,7 +6,6 @@ import type { InputInst } from 'naive-ui'
 import Instruction from '../components/Instruction.vue'
 import MyMenu from '../components/MyMenu.vue'
 import MyPanel from '../components/MyPanel.vue'
-import MyBar from '../components/MyBar.vue'
 import SimpleKeyboard from '../components/SimpleKeyboard.vue'
 import MySearchButton from '../components/MySearchButton.vue'
 import Settings from '../components/SettingsModal.vue'
@@ -17,8 +16,7 @@ import {
   showDrawer,
   toggleDrawer,
   isMobile,
-  useMobileHeightBreakpoint,
-  getImeGroup
+  useMobileHeightBreakpoint
 } from '../util'
 import {
   init,
@@ -29,7 +27,8 @@ import {
   currentKeyboardLayout,
   selectIME,
   schemaId,
-  ime
+  ime,
+  chooseKeyboardFromIME
 } from '../control'
 import { setMessage } from '../micro-plum'
 import VoiceRecognition from '../components/VoiceRecognition.vue'
@@ -176,18 +175,7 @@ function triggerPanelKeyDown (button: string | KeyboardEvent) {
 
 const mobileHeightMatches = useMobileHeightBreakpoint()
 
-function chooseKeyboardFromIME (imeName: string) {
-  // Find group by imeName
-  const groupName = getImeGroup(imeName)
-  console.log('imeName', imeName, 'group name', groupName)
-  if (groupName === '九键') {
-    currentKeyboardLayout.value = ['t9', null]
-  } else {
-    currentKeyboardLayout.value = ['qwerty', null]
-  }
-}
-
-function getRows () {
+function getRows() {
   if (mobileHeightMatches.value) {
     return 2
   }
@@ -205,15 +193,9 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
   if (isMobileVal && newAutoSwitch) {
     prevSchemaId.value = ime.value || schemaId.value
     console.log('prevSchemaId set to:', prevSchemaId.value)
-    chooseKeyboardFromIME(autoSwitchToT9Ime.value)
     selectIME(autoSwitchToT9Ime.value)
-  } else {
-    if (prevSchemaId.value) {
+  } else if (prevSchemaId.value) {
       selectIME(prevSchemaId.value)
-      chooseKeyboardFromIME(prevSchemaId.value)
-    } else {
-      currentKeyboardLayout.value = ['qwerty', null]
-    }
   }
 })
 </script>
