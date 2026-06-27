@@ -6,6 +6,7 @@ import type { InputInst } from 'naive-ui'
 import Instruction from '../components/Instruction.vue'
 import MyMenu from '../components/MyMenu.vue'
 import MyPanel from '../components/MyPanel.vue'
+import MyBar from '../components/MyBar.vue'
 import SimpleKeyboard from '../components/SimpleKeyboard.vue'
 import MySearchButton from '../components/MySearchButton.vue'
 import Settings from '../components/SettingsModal.vue'
@@ -42,14 +43,14 @@ init()
 let savedStart = 0
 let savedEnd = 0
 
-function onBlur () {
+function onBlur() {
   const textarea = getTextarea()
   savedStart = textarea.selectionStart
   savedEnd = textarea.selectionEnd
   console.log({ savedStart, savedEnd })
 }
 
-function onFocus () {
+function onFocus() {
   //   const textarea = getTextarea()
   //   textarea.selectionStart = savedStart
   //   textarea.selectionEnd = savedEnd
@@ -65,24 +66,24 @@ const simulatorDebugMode = ref<boolean>()
 
 const showKeyboard = ref(true)
 
-function appendToTextBox (newText: string) {
+function appendToTextBox(newText: string) {
   text.value = text.value + newText
 }
 
 // Select all
-function selectAll () {
+function selectAll() {
   // inputInstRef.value?.select()
   const textarea = getTextarea()
   textarea.focus()
   textarea.select()
 }
 
-function moveCursorToEnd () {
+function moveCursorToEnd() {
   const textarea = getTextarea()
   textarea.selectionStart = textarea.value.length
 }
 
-function triggerPanelKeyDown (button: string | KeyboardEvent) {
+function triggerPanelKeyDown(button: string | KeyboardEvent) {
   if (button instanceof KeyboardEvent) {
     panel.value?.onKeydown(button)
     return
@@ -175,7 +176,7 @@ function triggerPanelKeyDown (button: string | KeyboardEvent) {
 
 const mobileHeightMatches = useMobileHeightBreakpoint()
 
-function getRows () {
+function getRows() {
   if (mobileHeightMatches.value) {
     return 2
   }
@@ -203,69 +204,35 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
 <template>
   <n-modal v-model:show="showDrawer">
     <n-card style="width: 80vw; margin-top: 10px; margin-bottom: 15px">
-      <Settings
-        ref="drawer"
-        :debug-mode="simulatorDebugMode"
-        :panel="panel"
-      />
+      <Settings ref="drawer" :debug-mode="simulatorDebugMode" :panel="panel" />
     </n-card>
   </n-modal>
-  <n-flex
-    vertical
-    class="my-column"
-  >
+  <n-flex vertical class="my-column">
     <instruction :show-keyboard="showKeyboard" />
     <my-menu @select-ime="chooseKeyboardFromIME" />
     <div style="display: flex; align-items: center">
-      <n-input
-        id="container"
-        ref="inputInstRef"
-        v-model:value="text"
-        :input-props="{
-          inputmode: showKeyboard ? 'none' : 'text',
-        }"
-        type="textarea"
-        :rows="rows"
-        clearable
-        size="large"
-        @focus="onFocus"
-      />
+      <n-input id="container" ref="inputInstRef" v-model:value="text" :input-props="{
+        inputmode: showKeyboard ? 'none' : 'text',
+      }" type="textarea" :rows="rows" clearable size="large" @focus="onFocus" />
       <MySearchButton />
     </div>
-    <my-bar
+    <my-bar :show-keyboard="showKeyboard" :get-voice-recognition-ref="voiceRecognitionRefFn"
+      @toggle-keyboard="() => (showKeyboard = !showKeyboard)" @select-all="selectAll" />
+    <T9Keyboard
+      v-if="currentKeyboardLayout[0] === 't9'"
+      :panel="panel"
       :show-keyboard="showKeyboard"
-      :get-voice-recognition-ref="voiceRecognitionRefFn"
-      @toggle-keyboard="() => (showKeyboard = !showKeyboard)"
-      @select-all="selectAll"
+      @on-key-press="triggerPanelKeyDown"
+      @toggle-keyboard="showKeyboard = !showKeyboard"
     />
-    <template v-if="showKeyboard">
-      <T9Keyboard
-        v-if="currentKeyboardLayout[0] === 't9'"
-        :panel="panel"
-        @on-key-press="triggerPanelKeyDown"
-      />
-      <MobileSimpleKeyboard
-        v-else-if="
-          isMobile ||
-            (currentKeyboardLayout[0] === 'qwerty' && currentKeyboardLayout[1] === 'mobile')
-        "
-        :get-voice-recognition-ref="voiceRecognitionRefFn"
-        @on-key-press="triggerPanelKeyDown"
-      />
-      <SimpleKeyboard
-        v-else
-        :get-voice-recognition-ref="voiceRecognitionRefFn"
-        @on-key-press="triggerPanelKeyDown"
-      />
+    <template v-else-if="showKeyboard">
+      <MobileSimpleKeyboard v-if="
+        isMobile ||
+        (currentKeyboardLayout[0] === 'qwerty' && currentKeyboardLayout[1] === 'mobile')
+      " :get-voice-recognition-ref="voiceRecognitionRefFn" @on-key-press="triggerPanelKeyDown" />
+      <SimpleKeyboard v-else :get-voice-recognition-ref="voiceRecognitionRefFn" @on-key-press="triggerPanelKeyDown" />
     </template>
-    <my-panel
-      ref="panel"
-      :debug-mode="simulatorDebugMode"
-      :show-keyboard="showKeyboard"
-    />
-    <VoiceRecognition
-      ref="voiceRecognitionRef"
-      @set-input="appendToTextBox"
-    />
+    <my-panel ref="panel" :debug-mode="simulatorDebugMode" :show-keyboard="showKeyboard" />
+    <VoiceRecognition ref="voiceRecognitionRef" @set-input="appendToTextBox" />
   </n-flex>
 </template>

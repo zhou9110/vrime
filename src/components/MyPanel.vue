@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { nextTick, ref, toRefs, onMounted, onUnmounted, watch } from 'vue'
-import { NPopover, NMenu, MenuOption, NText, NButton, NIcon } from 'naive-ui'
-import { CaretLeft, CaretRight } from '@vicons/fa'
+import { nextTick, ref, toRefs, onMounted, onUnmounted, watch, computed } from "vue";
+import { NPopover, NMenu, MenuOption, NText, NButton, NIcon } from "naive-ui";
+import { CaretLeft, CaretRight } from "@vicons/fa";
 // @ts-ignore
-import getCaretCoordinates from 'textarea-caret'
-import emojiRegex from 'emoji-regex'
-import {
-  process,
-  changePage,
-  selectCandidateOnCurrentPage
-} from '../workerAPI'
+import getCaretCoordinates from "textarea-caret";
+import emojiRegex from "emoji-regex";
+import { process, changePage, selectCandidateOnCurrentPage } from "../workerAPI";
 import {
   text,
   autoCopy,
@@ -20,460 +16,489 @@ import {
   changeLanguage,
   selectIME,
   syncOptions,
-  ime
-} from '../control'
-import { isMobile, getTextarea } from '../util'
-import T9PinYinUtils, { isValidT9Sequence } from '../utils/t9Pinyin'
+  ime,
+  currentKeyboardLayout,
+} from "../control";
+import { isMobile, getTextarea } from "../util";
+import T9PinYinUtils, { isValidT9Sequence } from "../utils/t9Pinyin";
 
 const props = defineProps<{
-  debugMode?: boolean
-  showKeyboard: boolean
-}>()
+  debugMode?: boolean;
+  showKeyboard: boolean;
+}>();
 
-const {
-  debugMode,
-  showKeyboard
-} = toRefs(props)
+const { debugMode, showKeyboard } = toRefs(props);
 
-const mouseX = ref<number>(0)
-const mouseY = ref<number>(0)
-const dragging = ref<boolean>(false)
-const dragged = ref<boolean>(false)
-const x = ref<number>(0)
-const y = ref<number>(0)
+const mouseX = ref<number>(0);
+const mouseY = ref<number>(0);
+const dragging = ref<boolean>(false);
+const dragged = ref<boolean>(false);
+const x = ref<number>(0);
+const y = ref<number>(0);
 
-const preEditHead = ref<string>('')
-const preEditBody = ref<string>('')
-const preEditTail = ref<string>('')
+const preEditHead = ref<string>("");
+const preEditBody = ref<string>("");
+const preEditTail = ref<string>("");
 
-const menuOptions = ref<MenuOption[]>([])
-const highlighted = ref<number>(0)
+const menuOptions = ref<MenuOption[]>([]);
+const highlighted = ref<number>(0);
 
-const prevDisabled = ref<boolean>(true)
-const nextDisabled = ref<boolean>(false)
+const prevDisabled = ref<boolean>(true);
+const nextDisabled = ref<boolean>(false);
 
 // Call to librime is async so there's a delay from editing=true to showMenu=true
-const editing = ref<boolean>(false)
-const showMenu = ref<boolean>(false)
-const xOverflow = ref<boolean>(false)
-const exclusiveShift = ref<boolean>(false)
+const editing = ref<boolean>(false);
+const showMenu = ref<boolean>(false);
+const xOverflow = ref<boolean>(false);
+const exclusiveShift = ref<boolean>(false);
 
 // T9 pinyin candidates
-const pinyinCandidates = ref<string[]>([])
-const currentT9Sequence = ref<string>('')
+const pinyinCandidates = ref<string[]>([]);
+const currentT9Sequence = ref<string>("");
 
-async function debug (e: KeyboardEvent, rimeKey: string) {
-  editing.value = true
+// Check if current keyboard is T9 mode
+const isT9Mode = computed(() => currentKeyboardLayout.value[0] === "t9");
+
+async function debug(e: KeyboardEvent, rimeKey: string) {
+  editing.value = true;
   await input(rimeKey);
-  (e.target as HTMLElement).focus()
+  (e.target as HTMLElement).focus();
 }
 
 const RIME_KEY_MAP: { [key: string]: string | undefined } = {
-  Escape: 'Escape',
-  F4: 'F4',
-  Backspace: 'BackSpace',
-  Delete: 'Delete',
-  Tab: 'Tab',
-  Enter: 'Return',
-  Home: 'Home',
-  End: 'End',
-  PageUp: 'Page_Up',
-  PageDown: 'Page_Down',
-  Alt: 'Alt_L',
-  ArrowUp: 'Up',
-  ArrowRight: 'Right',
-  ArrowDown: 'Down',
-  ArrowLeft: 'Left',
-  '~': 'asciitilde',
-  '`': 'quoteleft',
-  '!': 'exclam',
-  '@': 'at',
-  '#': 'numbersign',
-  $: 'dollar',
-  '%': 'percent',
-  '^': 'asciicircum',
-  '&': 'ampersand',
-  '*': 'asterisk',
-  '(': 'parenleft',
-  ')': 'parenright',
-  '-': 'minus',
-  _: 'underscore',
-  '+': 'plus',
-  '=': 'equal',
-  '{': 'braceleft',
-  '[': 'bracketleft',
-  '}': 'braceright',
-  ']': 'bracketright',
-  ':': 'colon',
-  ';': 'semicolon',
-  '"': 'quotedbl',
-  "'": 'apostrophe',
-  '|': 'bar',
-  '\\': 'backslash',
-  '<': 'less',
-  ',': 'comma',
-  '>': 'greater',
-  '.': 'period',
-  '?': 'question',
-  '/': 'slash',
-  ' ': 'space'
+  Escape: "Escape",
+  F4: "F4",
+  Backspace: "BackSpace",
+  Delete: "Delete",
+  Tab: "Tab",
+  Enter: "Return",
+  Home: "Home",
+  End: "End",
+  PageUp: "Page_Up",
+  PageDown: "Page_Down",
+  Alt: "Alt_L",
+  ArrowUp: "Up",
+  ArrowRight: "Right",
+  ArrowDown: "Down",
+  ArrowLeft: "Left",
+  "~": "asciitilde",
+  "`": "quoteleft",
+  "!": "exclam",
+  "@": "at",
+  "#": "numbersign",
+  $: "dollar",
+  "%": "percent",
+  "^": "asciicircum",
+  "&": "ampersand",
+  "*": "asterisk",
+  "(": "parenleft",
+  ")": "parenright",
+  "-": "minus",
+  _: "underscore",
+  "+": "plus",
+  "=": "equal",
+  "{": "braceleft",
+  "[": "bracketleft",
+  "}": "braceright",
+  "]": "bracketright",
+  ":": "colon",
+  ";": "semicolon",
+  '"': "quotedbl",
+  "'": "apostrophe",
+  "|": "bar",
+  "\\": "backslash",
+  "<": "less",
+  ",": "comma",
+  ">": "greater",
+  ".": "period",
+  "?": "question",
+  "/": "slash",
+  " ": "space",
+};
+
+const CONTROL_ALLOWLIST = ["`"];
+
+function isPrintable(key: string) {
+  return /^[a-z0-9!"#$%&'()*+,./:;<=>?@[\] ^_`{|}~\\-]$/i.test(key);
 }
 
-const CONTROL_ALLOWLIST = ['`']
-
-function isPrintable (key: string) {
-  return /^[a-z0-9!"#$%&'()*+,./:;<=>?@[\] ^_`{|}~\\-]$/i.test(key)
+const regex = emojiRegex();
+function isEmoji(c: string) {
+  regex.lastIndex = 0;
+  return regex.test(c);
 }
 
-const regex = emojiRegex()
-function isEmoji (c: string) {
-  regex.lastIndex = 0
-  return regex.test(c)
-}
-
-function insert (toInsert: string) {
-  const textarea = getTextarea()
-  const { selectionStart, selectionEnd } = textarea
-  text.value = text.value.slice(0, selectionStart) + toInsert + text.value.slice(selectionEnd)
+function insert(toInsert: string) {
+  const textarea = getTextarea();
+  const { selectionStart, selectionEnd } = textarea;
+  text.value =
+    text.value.slice(0, selectionStart) + toInsert + text.value.slice(selectionEnd);
   if (autoCopy.value) {
-    navigator.clipboard.writeText(text.value)
-    copiedText.value = text.value
+    navigator.clipboard.writeText(text.value);
+    copiedText.value = text.value;
   }
   nextTick(() => {
-    textarea.selectionEnd = selectionStart + toInsert.length
-    textarea.selectionStart = selectionStart + toInsert.length
-  })
+    textarea.selectionEnd = selectionStart + toInsert.length;
+    textarea.selectionStart = selectionStart + toInsert.length;
+  });
 }
 
-function handleBackspace () {
-  const textarea = getTextarea()
-  const { selectionStart, selectionEnd } = textarea
-  console.log({ selectionStart, selectionEnd })
-  let newSelectionStart
-  let newSelectionEnd
+function handleBackspace() {
+  const textarea = getTextarea();
+  const { selectionStart, selectionEnd } = textarea;
+  console.log({ selectionStart, selectionEnd });
+  let newSelectionStart;
+  let newSelectionEnd;
   if (selectionStart !== selectionEnd) {
     // Just delete the selected part
-    text.value = text.value.slice(0, selectionStart) + text.value.slice(selectionEnd)
-    newSelectionStart = selectionStart
-    newSelectionEnd = selectionStart
+    text.value = text.value.slice(0, selectionStart) + text.value.slice(selectionEnd);
+    newSelectionStart = selectionStart;
+    newSelectionEnd = selectionStart;
   } else {
     // Remove the character before the cursor
-    text.value = text.value.slice(0, selectionStart - 1) + text.value.slice(selectionEnd)
-    newSelectionStart = selectionStart - 1
-    newSelectionEnd = selectionStart - 1
+    text.value = text.value.slice(0, selectionStart - 1) + text.value.slice(selectionEnd);
+    newSelectionStart = selectionStart - 1;
+    newSelectionEnd = selectionStart - 1;
   }
   if (autoCopy.value) {
-    navigator.clipboard.writeText(text.value)
-    copiedText.value = text.value
+    navigator.clipboard.writeText(text.value);
+    copiedText.value = text.value;
   }
   nextTick(() => {
-    textarea.selectionStart = newSelectionStart
-    textarea.selectionEnd = newSelectionEnd
-  })
+    textarea.selectionStart = newSelectionStart;
+    textarea.selectionEnd = newSelectionEnd;
+  });
 }
 
-async function analyze (result: RIME_RESULT, rimeKey: string) {
-  const textarea = getTextarea()
-  if (!('updatedSchema' in result) && result.updatedOptions) {
-    syncOptions(result.updatedOptions)
+async function analyze(result: RIME_RESULT, rimeKey: string) {
+  const textarea = getTextarea();
+  if (!("updatedSchema" in result) && result.updatedOptions) {
+    syncOptions(result.updatedOptions);
   }
-  if (result.state === 0) { // COMMITTED
-    editing.value = false
-    showMenu.value = false
-    dragged.value = false
-    pinyinCandidates.value = []
-    currentT9Sequence.value = ''
-    insert(result.committed)
-  } else if (result.state === 1) { // ACCEPTED
-    preEditHead.value = result.head
-    preEditBody.value = result.body
-    preEditTail.value = result.tail
-    highlighted.value = result.highlighted
+  if (result.state === 0) {
+    // COMMITTED
+    editing.value = false;
+    showMenu.value = false;
+    dragged.value = false;
+    pinyinCandidates.value = [];
+    currentT9Sequence.value = "";
+    insert(result.committed);
+  } else if (result.state === 1) {
+    // ACCEPTED
+    preEditHead.value = result.head;
+    preEditBody.value = result.body;
+    preEditTail.value = result.tail;
+    highlighted.value = result.highlighted;
     menuOptions.value = result.candidates.map((candidate, i) => {
-      let label = `${result.selectLabels?.[i] || i + 1} ${candidate.text}`
-      if (candidate.comment && (hideComment.value === false || (hideComment.value === 'emoji' && !isEmoji(candidate.text)))) {
-        label += ' ' + candidate.comment
+      let label = `${result.selectLabels?.[i] || i + 1} ${candidate.text}`;
+      if (
+        candidate.comment &&
+        (hideComment.value === false ||
+          (hideComment.value === "emoji" && !isEmoji(candidate.text)))
+      ) {
+        label += " " + candidate.comment;
       }
-      return { label, key: i }
-    })
-    prevDisabled.value = result.page === 0
-    nextDisabled.value = result.isLastPage
+      return { label, key: i };
+    });
+    prevDisabled.value = result.page === 0;
+    nextDisabled.value = result.isLastPage;
     if (!showMenu.value) {
-      showMenu.value = true
-      xOverflow.value = false
+      showMenu.value = true;
+      xOverflow.value = false;
     }
     nextTick(() => {
-      const panelWidth = document.querySelector('.n-popover')!.getBoundingClientRect().width
+      const panelWidth = document.querySelector(".n-popover")!.getBoundingClientRect()
+        .width;
       if (panelWidth > textarea.getBoundingClientRect().width) {
-        xOverflow.value = true
+        xOverflow.value = true;
       }
-    })
+    });
     if (result.committed) {
-      insert(result.committed)
+      insert(result.committed);
     }
 
     // Update T9 pinyin candidates for T9 input methods
-    const isT9IME = ime.value === 'yuyan_t9_pinyin' || ime.value === 'xiaobai_simp'
+    const isT9IME = ime.value === "yuyan_t9_pinyin" || ime.value === "xiaobai_simp";
     if (isT9IME && result.body) {
       // Extract numeric sequence from preEditBody
-      const numericSeq = result.body.match(/[2-9]+/g)?.join('') || ''
+      const numericSeq = result.body.match(/[2-9]+/g)?.join("") || "";
       if (numericSeq && isValidT9Sequence(numericSeq)) {
-        currentT9Sequence.value = numericSeq
-        const t9Seq = T9PinYinUtils.NumKey2T9Key(numericSeq)
-        console.log('t9Seq', t9Seq, 'candidates', T9PinYinUtils.t9KeyToPinyin(t9Seq))
-        pinyinCandidates.value = T9PinYinUtils.t9KeyToPinyin(t9Seq)
+        currentT9Sequence.value = numericSeq;
+        const t9Seq = T9PinYinUtils.NumKey2T9Key(numericSeq);
+        console.log("t9Seq", t9Seq, "candidates", T9PinYinUtils.t9KeyToPinyin(t9Seq));
+        pinyinCandidates.value = T9PinYinUtils.t9KeyToPinyin(t9Seq);
       } else {
-        pinyinCandidates.value = []
-        currentT9Sequence.value = ''
+        pinyinCandidates.value = [];
+        currentT9Sequence.value = "";
       }
     } else {
-      pinyinCandidates.value = []
-      currentT9Sequence.value = ''
+      pinyinCandidates.value = [];
+      currentT9Sequence.value = "";
     }
-  } else { // REJECTED, UNHANDLED
-    editing.value = false
-    showMenu.value = false
-    pinyinCandidates.value = []
-    currentT9Sequence.value = ''
+  } else {
+    // REJECTED, UNHANDLED
+    editing.value = false;
+    showMenu.value = false;
+    pinyinCandidates.value = [];
+    currentT9Sequence.value = "";
     if (result.state === 2 && result.updatedSchema) {
-      await selectIME(result.updatedSchema.split('/')[0])
+      await selectIME(result.updatedSchema.split("/")[0]);
     }
     if (result.state === 3 && isPrintable(rimeKey)) {
-      insert(rimeKey)
+      insert(rimeKey);
     }
-    if (result.state === 3 && rimeKey === '{BackSpace}') {
-      handleBackspace()
+    if (result.state === 3 && rimeKey === "{BackSpace}") {
+      handleBackspace();
     }
-    if (result.state === 3 && rimeKey === '{Return}') {
-      insert('\n')
+    if (result.state === 3 && rimeKey === "{Return}") {
+      insert("\n");
     }
   }
-  textarea.focus()
+  textarea.focus();
 }
 
-async function input (rimeKey: string) {
-  const result = await process(rimeKey)
-  return analyze(result, rimeKey)
+async function input(rimeKey: string) {
+  const result = await process(rimeKey);
+  return analyze(result, rimeKey);
 }
 
 // begin: code specific to Android Chromium
-let androidChromium = false
-let acStart = 0
-let acEnd = 0
+let androidChromium = false;
+let acStart = 0;
+let acEnd = 0;
 
 watch(text, (acNewText, acText) => {
   if (!androidChromium) {
-    return
+    return;
   }
-  androidChromium = false
-  if (acText.length + 1 === acNewText.length &&
+  androidChromium = false;
+  if (
+    acText.length + 1 === acNewText.length &&
     acText.substring(0, acStart) === acNewText.substring(0, acStart) &&
-    acText.substring(acEnd) === acNewText.substring(acEnd + 1)) {
-    const textarea = getTextarea()
-    text.value = acText
+    acText.substring(acEnd) === acNewText.substring(acEnd + 1)
+  ) {
+    const textarea = getTextarea();
+    text.value = acText;
     nextTick(() => {
-      editing.value = true
-      textarea.selectionEnd = acStart
-      input(acNewText[acStart])
-    })
+      editing.value = true;
+      textarea.selectionEnd = acStart;
+      input(acNewText[acStart]);
+    });
   }
-})
+});
 // end: code specific to Android Chromium
 
-function onKeydown (e: KeyboardEvent) {
+function onKeydown(e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
-    return
+    return;
   }
-  let { code, key } = e
-  const textarea = getTextarea()
+  let { code, key } = e;
+  const textarea = getTextarea();
   // begin: code specific to Android Chromium
-  if (key === 'Unidentified') {
+  if (key === "Unidentified") {
     // Update: avoid skipping backspace event when using hardware keyboard in android
-    if (code !== 'Backspace') {
-      androidChromium = true
-      acStart = textarea.selectionStart
-      acEnd = textarea.selectionEnd
-      return
+    if (code !== "Backspace") {
+      androidChromium = true;
+      acStart = textarea.selectionStart;
+      acEnd = textarea.selectionEnd;
+      return;
     } else {
       // Copy the code name to key attribute, because when using Hardware keyboard in Android,
       // the value of the event is like: { key: "Unidentified", code: "Backspace" }
-      key = code
+      key = code;
     }
   }
   // end: code specific to Android Chromium
-  if (key === 'Shift') {
-    exclusiveShift.value = true
-    return
+  if (key === "Shift") {
+    exclusiveShift.value = true;
+    return;
   }
-  exclusiveShift.value = false
+  exclusiveShift.value = false;
 
-  const isPrintableKey = isPrintable(key)
-  const isAlt = key === 'Alt'
-  const hasControl = e.getModifierState('Control')
-  const hasMeta = e.getModifierState('Meta')
-  const hasAlt = e.getModifierState('Alt')
-  const hasShift = e.getModifierState('Shift')
-  const isShortcut = hasControl || hasMeta || hasAlt || (hasShift && !isPrintableKey)
+  const isPrintableKey = isPrintable(key);
+  const isAlt = key === "Alt";
+  const hasControl = e.getModifierState("Control");
+  const hasMeta = e.getModifierState("Meta");
+  const hasAlt = e.getModifierState("Alt");
+  const hasShift = e.getModifierState("Shift");
+  const isShortcut = hasControl || hasMeta || hasAlt || (hasShift && !isPrintableKey);
 
   // In edit mode, rime handles every keydown;
   // In non-edit mode, only when the textarea is focused and a printable key (and Backspace) is down (w/o modifier) will activate rime.
   if (!editing.value) {
-    if (!showKeyboard.value && (document.activeElement !== textarea || (!isPrintableKey && key !== 'F4'))) {
+    if (
+      !showKeyboard.value &&
+      (document.activeElement !== textarea || (!isPrintableKey && key !== "F4"))
+    ) {
       // if (key === 'Backspace' && showKeyboard.value) {
       // Delete the last character in the input
       // text.value = text.value.slice(0, -1)
       // if (autoCopy.value) {
       //   copiedText.value = text.value
       // }
-      return
+      return;
     }
     // Other keys needs to be handled
-    const otherImportantKeys = ['F4', 'Backspace', 'Enter']
+    const otherImportantKeys = ["F4", "Backspace", "Enter"];
     if (!isPrintableKey && !otherImportantKeys.includes(key)) {
-      return
+      return;
     }
     // Don't send Control+x, Meta+x, Alt+x to librime, but allow them with Shift
     if (isShortcut && !hasShift && !(hasControl && CONTROL_ALLOWLIST.includes(key))) {
-      return
+      return;
     }
   }
-  let rimeKey: string | undefined
-  const wrap = (s: string) => `{${s}}`
+  let rimeKey: string | undefined;
+  const wrap = (s: string) => `{${s}}`;
   if (isShortcut || !isPrintableKey) {
-    rimeKey = /^[0-9a-z]$/i.test(key) ? key : RIME_KEY_MAP[key]
+    rimeKey = /^[0-9a-z]$/i.test(key) ? key : RIME_KEY_MAP[key];
     if (rimeKey === undefined) {
-      return
+      return;
     }
-    if (isAlt && code === 'AltRight') {
-      rimeKey = 'Alt_R'
+    if (isAlt && code === "AltRight") {
+      rimeKey = "Alt_R";
     }
-    const modifiers: string[] = []
+    const modifiers: string[] = [];
     if (hasControl) {
-      modifiers.push('Control')
+      modifiers.push("Control");
     }
     if (hasMeta) {
-      modifiers.push('Meta')
+      modifiers.push("Meta");
     }
     if (hasAlt && !isAlt) {
-      modifiers.push('Alt')
+      modifiers.push("Alt");
     }
     if (hasShift) {
-      modifiers.push('Shift')
+      modifiers.push("Shift");
     }
-    modifiers.push(rimeKey)
-    rimeKey = wrap(modifiers.join('+'))
-  } else if (code.startsWith('Numpad')) {
-    rimeKey = wrap(`KP_${code.substring(6)}`)
+    modifiers.push(rimeKey);
+    rimeKey = wrap(modifiers.join("+"));
+  } else if (code.startsWith("Numpad")) {
+    rimeKey = wrap(`KP_${code.substring(6)}`);
   } else {
-    rimeKey = key
+    rimeKey = key;
   }
 
   if (!dragged.value) {
-    const box = textarea.getBoundingClientRect()
-    const caret: { top: number, left: number, height: number } = getCaretCoordinates(textarea, textarea.selectionStart)
-    x.value = box.x + caret.left
-    y.value = isMobile.value ? 8 : box.y + caret.top + caret.height - textarea.scrollTop
+    const box = textarea.getBoundingClientRect();
+    const caret: { top: number; left: number; height: number } = getCaretCoordinates(
+      textarea,
+      textarea.selectionStart
+    );
+    x.value = box.x + caret.left;
+    y.value = isMobile.value ? 8 : box.y + caret.top + caret.height - textarea.scrollTop;
   }
-  editing.value = true
-  e.preventDefault()
-  input(rimeKey)
+  editing.value = true;
+  e.preventDefault();
+  input(rimeKey);
 }
 
-function onKeyup (e: KeyboardEvent) {
+function onKeyup(e: KeyboardEvent) {
   if (debugMode.value || loading.value) {
-    return
+    return;
   }
-  const { key } = e
-  if (key === 'Shift' && exclusiveShift.value) {
-    changeLanguage()
+  const { key } = e;
+  if (key === "Shift" && exclusiveShift.value) {
+    changeLanguage();
   }
-  exclusiveShift.value = false
+  exclusiveShift.value = false;
   if (editing.value) {
-    input(`{Release+${RIME_KEY_MAP[key] || key}}`)
+    input(`{Release+${RIME_KEY_MAP[key] || key}}`);
   }
 }
 
-async function onClick (key: number) {
-  const result = JSON.parse(await selectCandidateOnCurrentPage(key))
-  return analyze(result, '')
+async function onClick(key: number) {
+  const result = JSON.parse(await selectCandidateOnCurrentPage(key));
+  return analyze(result, "");
 }
 
-async function onPageChange (backward: boolean) {
-  const result = JSON.parse(await changePage(backward))
-  return analyze(result, '')
+async function onPageChange(backward: boolean) {
+  const result = JSON.parse(await changePage(backward));
+  return analyze(result, "");
 }
 
-function singleTouch (e: TouchEvent) {
-  return e.touches.length === 1 ? e.touches[0] : undefined
+function singleTouch(e: TouchEvent) {
+  return e.touches.length === 1 ? e.touches[0] : undefined;
 }
 
-function handleDown (clientX: number, clientY: number) {
-  mouseX.value = clientX
-  mouseY.value = clientY
+function handleDown(clientX: number, clientY: number) {
+  mouseX.value = clientX;
+  mouseY.value = clientY;
   // As flip is turned on, update x to actual position to avoid layout shift on click
-  const panel = document.querySelector('.n-popover')!
-  x.value = panel.getBoundingClientRect().left
-  dragging.value = true
+  const panel = document.querySelector(".n-popover")!;
+  x.value = panel.getBoundingClientRect().left;
+  dragging.value = true;
 }
 
-function onMousedown (e: MouseEvent) {
-  handleDown(e.clientX, e.clientY)
+function onMousedown(e: MouseEvent) {
+  handleDown(e.clientX, e.clientY);
 }
 
-function onTouchstart (e: TouchEvent) {
-  const touch = singleTouch(e)
-  touch && handleDown(touch.clientX, touch.clientY)
+function onTouchstart(e: TouchEvent) {
+  const touch = singleTouch(e);
+  touch && handleDown(touch.clientX, touch.clientY);
 }
 
-function handleMove (clientX: number, clientY: number) {
+function handleMove(clientX: number, clientY: number) {
   if (!dragging.value) {
-    return
+    return;
   }
-  dragged.value = true
-  x.value += clientX - mouseX.value
-  y.value += clientY - mouseY.value
-  mouseX.value = clientX
-  mouseY.value = clientY
+  dragged.value = true;
+  x.value += clientX - mouseX.value;
+  y.value += clientY - mouseY.value;
+  mouseX.value = clientX;
+  mouseY.value = clientY;
 }
 
-function onMousemove (e: MouseEvent) {
-  handleMove(e.clientX, e.clientY)
+function onMousemove(e: MouseEvent) {
+  handleMove(e.clientX, e.clientY);
 }
 
-function onTouchmove (e: TouchEvent) {
-  const touch = singleTouch(e)
-  touch && handleMove(touch.clientX, touch.clientY)
+function onTouchmove(e: TouchEvent) {
+  const touch = singleTouch(e);
+  touch && handleMove(touch.clientX, touch.clientY);
 }
 
-function onMouseupOrTouchend () {
-  dragging.value = false
+function onMouseupOrTouchend() {
+  dragging.value = false;
 }
 
 onMounted(() => {
-  document.addEventListener('keydown', onKeydown)
-  document.addEventListener('keyup', onKeyup)
-  document.addEventListener('mousemove', onMousemove)
-  document.addEventListener('touchmove', onTouchmove)
-  document.addEventListener('mouseup', onMouseupOrTouchend)
-  document.addEventListener('touchend', onMouseupOrTouchend)
-})
+  document.addEventListener("keydown", onKeydown);
+  document.addEventListener("keyup", onKeyup);
+  document.addEventListener("mousemove", onMousemove);
+  document.addEventListener("touchmove", onTouchmove);
+  document.addEventListener("mouseup", onMouseupOrTouchend);
+  document.addEventListener("touchend", onMouseupOrTouchend);
+});
 
-onUnmounted(() => { // Cleanup for HMR
-  document.removeEventListener('keydown', onKeydown)
-  document.removeEventListener('keyup', onKeyup)
-  document.removeEventListener('mousemove', onMousemove)
-  document.removeEventListener('touchmove', onTouchmove)
-  document.removeEventListener('mouseup', onMouseupOrTouchend)
-  document.removeEventListener('touchend', onMouseupOrTouchend)
-})
+onUnmounted(() => {
+  // Cleanup for HMR
+  document.removeEventListener("keydown", onKeydown);
+  document.removeEventListener("keyup", onKeyup);
+  document.removeEventListener("mousemove", onMousemove);
+  document.removeEventListener("touchmove", onTouchmove);
+  document.removeEventListener("mouseup", onMouseupOrTouchend);
+  document.removeEventListener("touchend", onMouseupOrTouchend);
+});
 
 defineExpose({
   debug,
   onKeydown,
   editing,
+  showMenu,
   pinyinCandidates,
-  currentT9Sequence
-})
+  currentT9Sequence,
+  menuOptions,
+  highlighted,
+  prevDisabled,
+  nextDisabled,
+  preEditHead,
+  preEditBody,
+  preEditTail,
+  onClick,
+  onPageChange,
+});
 </script>
 
 <template>
@@ -489,12 +514,8 @@ defineExpose({
     @mousedown="onMousedown"
     @touchstart="onTouchstart"
   >
-    <n-text type="success">
-      {{ preEditHead }}
-    </n-text>&nbsp;
-    <n-text type="info">
-      {{ preEditBody }}
-    </n-text>&nbsp;
+    <n-text type="success"> {{ preEditHead }} </n-text>&nbsp;
+    <n-text type="info"> {{ preEditBody }} </n-text>&nbsp;
     {{ preEditTail }}
     <n-menu
       v-show="menuOptions.length"
@@ -503,28 +524,14 @@ defineExpose({
       :mode="forceVertical || (xOverflow && !isMobile) ? 'vertical' : 'horizontal'"
       :value="highlighted"
       @update:value="onClick"
-      @touchstart.stop="e => console.log('touch stopped')"
-      @mousedown.stop="e => console.log('click stopped')"
+      @touchstart.stop="(e) => console.log('touch stopped')"
+      @mousedown.stop="(e) => console.log('click stopped')"
     />
-    <n-button
-      quaternary
-      :disabled="prevDisabled"
-    >
-      <n-icon
-        :component="CaretLeft"
-        size="20"
-        @click="onPageChange(true)"
-      />
+    <n-button quaternary :disabled="prevDisabled">
+      <n-icon :component="CaretLeft" size="20" @click="onPageChange(true)" />
     </n-button>
-    <n-button
-      quaternary
-      :disabled="nextDisabled"
-    >
-      <n-icon
-        :component="CaretRight"
-        size="20"
-        @click="onPageChange(false)"
-      />
+    <n-button quaternary :disabled="nextDisabled">
+      <n-icon :component="CaretRight" size="20" @click="onPageChange(false)" />
     </n-button>
   </n-popover>
 </template>

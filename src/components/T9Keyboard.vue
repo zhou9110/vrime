@@ -7,6 +7,7 @@ import SimpleKeyboard from './MobileSimpleKeyboard.vue'
 import NumKey from './NumKey.vue'
 import RecordButton from './RecordButton.vue'
 import SideKey from './T9SideKey.vue'
+import T9MenuBar from './T9MenuBar.vue'
 import { currentKeyboardLayout } from '../control'
 
 const KeyboardReturnRoundSvg =
@@ -18,9 +19,10 @@ const NUM_0_KEYCODE = 48
 
 const props = defineProps<{
   panel?: InstanceType<typeof MyPanel>;
+  showKeyboard?: boolean;
 }>()
 
-const emit = defineEmits(['onKeyPress'])
+const emit = defineEmits(['onKeyPress', 'toggleKeyboard'])
 
 const currentLayout = ref<'num' | 'abc' | 't9'>('t9')
 
@@ -104,10 +106,14 @@ function onPinyinClick (pinyin: string) {
   </template>
   <div
     v-else
-    style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end"
+    style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative;"
   >
-    <div id="t9-menu-bar" />
-    <div class="numpad">
+    <T9MenuBar
+      :panel="props.panel"
+      :show-keyboard="props.showKeyboard ?? true"
+      @toggle-keyboard="emit('toggleKeyboard')"
+    />
+    <div v-show="props.showKeyboard ?? true" class="numpad">
       <n-flex
         vertical
         class="side"
@@ -595,13 +601,9 @@ function onPinyinClick (pinyin: string) {
   cursor: pointer;
 }
 
-#t9-menu-bar {
-  flex: 1;
-  min-height: 40px;
-}
 
 .numpad {
-  flex: 6;
+  flex: 8;
   max-width: 800px;
   min-height: 200px;
   max-height: 50vh;

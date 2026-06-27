@@ -1,97 +1,101 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, Teleport, ref, onMounted, computed } from 'vue'
-import { NText, NSpace, NButtonGroup, NButton, NIcon, NCheckbox, NFlex } from 'naive-ui'
+import { defineProps, defineEmits, Teleport, ref, onMounted, computed } from "vue";
+import { NText, NSpace, NButtonGroup, NButton, NIcon, NCheckbox, NFlex } from "naive-ui";
 import {
   Cut20Regular,
   Copy20Regular,
   Clipboard20Regular,
-  ArrowUndo20Filled,
-  Delete20Regular
-} from '@vicons/fluent'
-import { UndoOutlined, RedoOutlined } from '@vicons/material'
-import { getTextarea, isMobile } from '../util'
-import { text, autoCopy, copiedText, schemaId, variant } from '../control'
-import RecordButton from './RecordButtonInBar.vue'
+  Delete20Regular,
+} from "@vicons/fluent";
+import { UndoOutlined, RedoOutlined } from "@vicons/material";
+import { getTextarea, isMobile } from "../util";
+import {
+  text,
+  autoCopy,
+  copiedText,
+  schemaId,
+  variant,
+  currentKeyboardLayout,
+} from "../control";
+import RecordButton from "./RecordButtonInBar.vue";
 
 const props = defineProps<{
   showKeyboard: boolean;
   getVoiceRecognitionRef: Function;
-}>()
+}>();
 
-const emit = defineEmits(['selectAll', 'toggleKeyboard'])
+const emit = defineEmits(["selectAll", "toggleKeyboard"]);
 
-function copy () {
-  const textarea = getTextarea()
-  textarea.focus()
-  copiedText.value = text.value
-  return navigator.clipboard.writeText(text.value)
+function copy() {
+  const textarea = getTextarea();
+  textarea.focus();
+  copiedText.value = text.value;
+  return navigator.clipboard.writeText(text.value);
 }
 
-async function cut () {
+async function cut() {
   if (text.value) {
-    await copy()
-    text.value = ''
+    await copy();
+    text.value = "";
   }
 }
 
-function clear () {
-  text.value = ''
+function clear() {
+  text.value = "";
 }
 
-function selectAll () {
-  emit('selectAll')
+function selectAll() {
+  emit("selectAll");
 }
 
-async function copyLink () {
+async function copyLink() {
   const usp = new URLSearchParams({
     schemaId: schemaId.value,
-    variantName: variant.value.name
-  })
-  const url = `${window.location.origin}${window.location.pathname}?${usp}`
-  await navigator.clipboard.writeText(url)
-  const textarea = getTextarea()
-  textarea.focus()
+    variantName: variant.value.name,
+  });
+  const url = `${window.location.origin}${window.location.pathname}?${usp}`;
+  await navigator.clipboard.writeText(url);
+  const textarea = getTextarea();
+  textarea.focus();
 }
 
-async function paste () {
-  const textarea = getTextarea()
-  textarea.focus()
-  const pastedText = await navigator.clipboard.readText()
-  text.value += pastedText
+async function paste() {
+  const textarea = getTextarea();
+  textarea.focus();
+  const pastedText = await navigator.clipboard.readText();
+  text.value += pastedText;
   if (autoCopy.value) {
-    navigator.clipboard.writeText(text.value)
-    copiedText.value = text.value
+    navigator.clipboard.writeText(text.value);
+    copiedText.value = text.value;
   }
 }
 
-const elementIsReady = ref(false)
+const elementIsReady = ref(false);
 
-const buttonSize = computed(() => isMobile.value ? 'medium' : 'large')
+const buttonSize = computed(() => (isMobile.value ? "medium" : "large"));
 
 onMounted(() => {
   setTimeout(() => {
-    elementIsReady.value = document.getElementById('copied') !== null
-    console.log(elementIsReady.value)
-  }, 1000)
-})
+    elementIsReady.value = document.getElementById("copied") !== null;
+    console.log(elementIsReady.value);
+  }, 1000);
+});
 </script>
 
 <template>
   <n-flex
+    v-show="currentKeyboardLayout[0] !== 't9'"
     justify="space-between"
-    style="overflow-x: auto;"
+    style="overflow-x: auto"
     :wrap="false"
   >
     <n-space style="align-items: center">
       <n-button-group
         :class="isMobile ? 'mobile' : 'desktop'"
-        style="gap: 5px;"
+        style="gap: 5px"
         :size="buttonSize"
       >
-        <n-button
-          secondary
-          @click="cut"
-        >
+        <n-button secondary @click="cut">
           <template #icon>
             <n-icon>
               <Cut20Regular />
@@ -100,20 +104,13 @@ onMounted(() => {
           </template>
           剪切
         </n-button>
-        <n-button
-          secondary
-          @click="copy"
-        >
+        <n-button secondary @click="copy">
           <template #icon>
             <n-icon :component="Copy20Regular" />
           </template>
           复制
         </n-button>
-        <n-button
-          secondary
-          title="粘贴"
-          @click="paste"
-        >
+        <n-button secondary title="粘贴" @click="paste">
           <template #icon>
             <n-icon :component="Clipboard20Regular" />
           </template>
@@ -122,19 +119,11 @@ onMounted(() => {
       </n-button-group>
       <!-- Least astonishment: user may explicitly cut, so shouldn't overwrite the clipboard. -->
       <n-flex>
-        <n-checkbox v-model:checked="autoCopy">
+        <n-checkbox v-model:checked="autoCopy" v-if="currentKeyboardLayout[0] !== 't9'">
           自动复制文字
         </n-checkbox>
-        <Teleport
-          v-if="elementIsReady"
-          defer
-          to="#copied"
-        >
-          <n-text
-            v-show="copiedText"
-            class="line-clamped"
-            type="warning"
-          >
+        <Teleport v-if="elementIsReady" defer to="#copied">
+          <n-text v-show="copiedText" class="line-clamped" type="warning">
             已复制：{{ copiedText }}
           </n-text>
         </Teleport>
@@ -160,25 +149,17 @@ onMounted(() => {
             <n-icon :component="RedoOutlined" />
           </template>
         </n-button> -->
-      <n-button
-        secondary
-        :size="buttonSize"
-        @click="clear"
-      >
+      <n-button secondary :size="buttonSize" @click="clear">
         <template #icon>
           <n-icon :component="Delete20Regular" />
         </template>
         清空
       </n-button>
-      <n-button
-        secondary
-        class="select-all"
-        :size="buttonSize"
-        @click="selectAll"
-      >
+      <n-button secondary class="select-all" :size="buttonSize" @click="selectAll">
         全选
       </n-button>
       <n-checkbox
+        v-if="currentKeyboardLayout[0] !== 't9'"
         style="font-size: 16px"
         :checked="props.showKeyboard"
         @update:checked="$emit('toggleKeyboard')"
