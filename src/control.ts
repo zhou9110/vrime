@@ -20,6 +20,7 @@ import {
   getAvailableSchemas
 } from './micro-plum'
 import { GitHubDownloader } from '@libreservice/micro-plum'
+import type { KeyHintMode } from './keyHints'
 
 const text = ref<string>('')
 
@@ -67,6 +68,10 @@ const autoSwitchKeyboardLayout = savedBooleanRef(AUTO_SWITCH_KEYBOARD_LAYOUT, tr
 
 const AUTO_SWITCH_T9_IME = 'autoSwitchT9Ime'
 const autoSwitchToT9Ime = savedRef(AUTO_SWITCH_T9_IME, "yuyan_t9_pinyin")
+
+// How extra key-position hints (注音/仓颉/五笔 字根, 双拼 韵母) are shown on keys.
+const KEY_HINT_MODE = 'keyHintMode'
+const keyHintMode = savedRef<KeyHintMode>(KEY_HINT_MODE, 'both')
 
 // Use a tuple to store the layout, first element is the layout, second element is for some special variants, e.g. 仓颉、五笔、注音
 const currentKeyboardLayout = ref<["qwerty", "mobile" | "full" | "cangjie" | "zhuyin" | "wubi" | null] | ["t9", "mobile" | "xiaobai" | null]>(["qwerty", null])
@@ -428,6 +433,7 @@ export {
   forceVertical,
   autoSwitchKeyboardLayout,
   autoSwitchToT9Ime,
+  keyHintMode,
   currentKeyboardLayout,
   loading,
   schemaId,
