@@ -15,6 +15,7 @@ import {
   autoSwitchKeyboardLayout,
   autoSwitchToT9Ime,
   forceVertical,
+  keyHintMode,
   pageSize,
 } from "../control";
 import { QuestionCircle } from "@vicons/fa";
@@ -27,6 +28,12 @@ const options = [
 const t9options = [
   { label: "语燕九键", value: "yuyan_t9_pinyin" },
   { label: "小白九键", value: "xiaobai_simp" },
+];
+
+const keyHintOptions = [
+  { label: "字母+提示", value: "both" },
+  { label: "仅字母", value: "letter" },
+  { label: "仅提示", value: "hint" },
 ];
 </script>
 
@@ -65,6 +72,24 @@ const t9options = [
     <n-grid-item>
       <span>自动切换为：</span>
       <n-select :options="t9options" v-model:value="autoSwitchToT9Ime" />
+    </n-grid-item>
+    <n-grid-item>
+      <n-flex style="align-items: center; flex: 1">
+        键位提示
+        <n-tooltip>
+          <template #trigger>
+            <n-icon>
+              <QuestionCircle />
+            </n-icon>
+          </template>
+          在按键上显示注音/仓颉/五笔字根、双拼韵母等键位
+        </n-tooltip>
+        <n-select
+          v-model:value="keyHintMode"
+          style="width: 140px"
+          :options="keyHintOptions"
+        />
+      </n-flex>
     </n-grid-item>
   </n-grid>
 </template>
