@@ -75,7 +75,7 @@ const keyHintOptions = [
     </n-grid-item>
     <n-grid-item>
       <n-flex style="align-items: center; flex: 1">
-        键位提示
+        显示注音/仓颉/五笔字根等键位
         <n-tooltip>
           <template #trigger>
             <n-icon>

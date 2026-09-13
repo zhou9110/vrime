@@ -1,12 +1,12 @@
 {
   "name": "@aibuild/vr-pinyin",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "files": [
     "dist"
   ],
   "type": "module",
   "appName": "VR Pinyin Keyboard",
-  "homepage": "https://github.com/zhou9110/vr_pinyin",
+  "homepage": "https://vrime.org",
   "author": {
     "name": "David Zhou",
     "email": "david@aibuild.com",
