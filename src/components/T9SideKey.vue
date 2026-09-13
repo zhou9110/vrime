@@ -9,7 +9,6 @@ const slots = useSlots()
 
 function onKeyPress() {
   const slotText = slots.default?.()[0].children
-  console.log('slotText', slotText)
   if (typeof slotText === 'string') {
     emit('onKeyPress', slotText);
   }
