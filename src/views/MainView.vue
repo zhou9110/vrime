@@ -221,7 +221,6 @@ watch([isMobile, autoSwitchKeyboardLayout], ([isMobileVal, newAutoSwitch]) => {
 <template>
   <n-modal
     v-model:show="showDrawer"
-    @mask-click="showDrawer = false"
   >
     <n-card style="width: 80vw; margin-top: 10px; margin-bottom: 15px">
       <Settings
