@@ -11,7 +11,6 @@ function onKeyPress() {
   // When number and keyName are not provided, use the slot text instead
   if (props.number === undefined && props.keyName === undefined) {
     const slotText = slots.default?.()[0].children
-    console.log('slotText', slotText)
     if (typeof slotText === 'string') {
       emit('onKeyPress', slotText);
     }

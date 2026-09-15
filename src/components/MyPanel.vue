@@ -148,7 +148,6 @@ function insert(toInsert: string) {
 function handleBackspace() {
   const textarea = getTextarea()
   const { selectionStart, selectionEnd } = textarea
-  console.log({ selectionStart, selectionEnd })
   let newSelectionStart
   let newSelectionEnd
   if (selectionStart !== selectionEnd) {
@@ -220,7 +219,6 @@ async function analyze(result: RIME_RESULT, rimeKey: string) {
       if (numericSeq && isValidT9Sequence(numericSeq)) {
         currentT9Sequence.value = numericSeq
         const t9Seq = T9PinYinUtils.NumKey2T9Key(numericSeq)
-        console.log('t9Seq', t9Seq, 'candidates', T9PinYinUtils.t9KeyToPinyin(t9Seq))
         pinyinCandidates.value = T9PinYinUtils.t9KeyToPinyin(t9Seq)
       } else {
         pinyinCandidates.value = []
