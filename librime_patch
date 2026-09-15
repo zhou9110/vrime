@@ -102,6 +102,18 @@ index bb68bcdb..4ef84beb 100644
    bool page_down_cycle() const { return page_down_cycle_; }
    const string& select_keys() const { return select_keys_; }
    void set_select_keys(const string& keys) { select_keys_ = keys; }
+diff --git a/src/rime_api_impl.h b/src/rime_api_impl.h
+index 7749ce98..4d7a14ff 100644
+--- a/src/rime_api_impl.h
++++ b/src/rime_api_impl.h
+@@ -1,6 +1,7 @@
+ // intended to be included multiple times in c++ source files with different
+ // RIME_FLAVORED macro definitions
+
++#include <sstream>
+ #include <rime/common.h>
+ #include <rime/composition.h>
+ #include <rime/config.h>
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
 index 090a0fc0..a24cd51f 100644
 --- a/tools/CMakeLists.txt
